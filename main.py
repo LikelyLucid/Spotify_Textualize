@@ -1,7 +1,7 @@
 from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.screen import Screen
-from textual.widgets import Footer
+from textual.widgets import Footer, Placeholder
 
 
 class Main_Screen(Screen):
@@ -11,8 +11,7 @@ class Main_Screen(Screen):
     Footer
     Playing bar"""
     def compose(self) -> ComposeResult:
-        self.notify("footer", "Footer")
-        yield Footer(name="footer", id="footer", text="Footer")
+        
 
 class MainApp(App):
     def on_mount(self) -> None:
