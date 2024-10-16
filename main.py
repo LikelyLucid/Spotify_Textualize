@@ -11,7 +11,7 @@ class Main_Screen(Screen):
     Footer
     Playing bar"""
     def compose(self) -> ComposeResult:
-        yield Footer(text="Footer")
+        yield Footer(name="footer", id="footer", text="Footer")
 
 class MainApp(App):
     def on_mount(self) -> None:
