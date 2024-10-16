@@ -18,11 +18,9 @@ class Main_Screen(Screen):
                 yield Footer()
 
 class MainApp(App):
-    SCREENS = {
-        "main": Main_Screen,
-    }
     def on_mount(self) -> None:
         self.install_screen(Main_Screen(), "main")
+        self.push_screen("main")
 
 if __name__ == "__main__":
     app = MainApp()
