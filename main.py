@@ -14,9 +14,13 @@ class Main_Screen(Screen):
     def compose(self) -> ComposeResult:
         with Center():
             with Middle():
-                yield ProgressBar()
+                yield ProgressBar(total=30)
+                yield Footer()
 
 class MainApp(App):
+    SCREENS = {
+        "main": Main_Screen,
+    }
     def on_mount(self) -> None:
         self.install_screen(Main_Screen(), "main")
 
