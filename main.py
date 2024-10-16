@@ -1,22 +1,21 @@
 from textual.app import App, ComposeResult
 from textual.binding import Binding
+from textual.screen import Screen
 from textual.widgets import Footer
 
 
-class Spotify_app(App):
-    async def on_mount(self) -> None:
-        await super().on_mount()
-        self.bindings = [
-            Binding("q", "quit", "Quit"),
-            Binding("c", "compose", "Compose"),
-        ]
+class Main_Screen(Screen):
+    """The main page that contains:
+    Main side bar
+    Changelog
+    Footer
+    Playing bar"""
+    pass
 
-    def compose(self) -> ComposeResult:
-        return ComposeResult(
-            content="Hello, world!",
-            footer=Footer("Press 'q' to quit"),
-        )
+class MainApp(App):
+    def on_mount(self) -> None:
+        self.install_screen(Main_Screen(), "main")
 
 if __name__ == "__main__":
-    app = Spotify_app()
+    app = MainApp()
     app.run()
