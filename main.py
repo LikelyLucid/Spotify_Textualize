@@ -11,7 +11,7 @@ class Spotify_app(App):
             Binding("c", "compose", "Compose"),
         ]
 
-    async def compose(self) -> ComposeResult:
+    def compose(self) -> ComposeResult:
         return ComposeResult(
             content="Hello, world!",
             footer=Footer("Press 'q' to quit"),
