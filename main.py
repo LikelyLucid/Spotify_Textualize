@@ -13,7 +13,7 @@ class FooterApp(App):
             key_display="?",
         ),
         Binding(key="delete", action="delete", description="Delete the thing"),
-        Binding(key="j", action="down", description="Scroll down", show=False),
+        Binding(key="j", action="down", description="Scroll down", show=True),
     ]
 
     def compose(self) -> ComposeResult:
