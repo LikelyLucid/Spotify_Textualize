@@ -10,7 +10,8 @@ class Main_Screen(Screen):
     Changelog
     Footer
     Playing bar"""
-    pass
+    def compose(self) -> ComposeResult:
+        yield Footer(text="Footer")
 
 class MainApp(App):
     def on_mount(self) -> None:
