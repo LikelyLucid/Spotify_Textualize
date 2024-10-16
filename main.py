@@ -1,7 +1,8 @@
 from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.screen import Screen
-from textual.widgets import Footer, Placeholder
+from textual.containers import Center, Middle
+from textual.widgets import Footer, Placeholder, ProgressBar
 
 
 class Main_Screen(Screen):
@@ -11,7 +12,9 @@ class Main_Screen(Screen):
     Footer
     Playing bar"""
     def compose(self) -> ComposeResult:
-        
+        with Center():
+            with Middle():
+                yield ProgressBar()
 
 class MainApp(App):
     def on_mount(self) -> None:
