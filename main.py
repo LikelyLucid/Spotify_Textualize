@@ -3,23 +3,20 @@ from textual.binding import Binding
 from textual.widgets import Footer
 
 
-class FooterApp(App):
-    BINDINGS = [
-        Binding(key="q", action="quit", description="Quit the app"),
-        Binding(
-            key="question_mark",
-            action="help",
-            description="Show help screen",
-            key_display="?",
-        ),
-        Binding(key="delete", action="delete", description="Delete the thing"),
-        Binding(key="j", action="down", description="Scroll down", show=True),
-    ]
+class Spotify_app(App):
+    async def on_mount(self) -> None:
+        await super().on_mount()
+        self.bindings = [
+            Binding("q", "quit", "Quit"),
+            Binding("c", "compose", "Compose"),
+        ]
 
-    def compose(self) -> ComposeResult:
-        yield Footer()
-
+    async def compose(self) -> ComposeResult:
+        return ComposeResult(
+            content="Hello, world!",
+            footer=Footer("Press 'q' to quit"),
+        )
 
 if __name__ == "__main__":
-    app = FooterApp()
+    app = Spotify_app()
     app.run()
