@@ -34,7 +34,6 @@ Screen {
 #bar {
     width: 100%;
 }
-
 Current_Time_In_Track {
     width: 100%;
     content-align: left middle;
@@ -47,7 +46,9 @@ Track_Duration {
     padding: 0 0;
 }
 
-#controls {
-    column-span: 2;
-    width: 100%;
+#control_bar {
+    column-span: 4;
+    layout: grid;
+    grid-size: 4;
+    grid-columns: 1fr;
 }
