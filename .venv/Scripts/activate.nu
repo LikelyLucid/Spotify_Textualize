@@ -38,7 +38,7 @@ export-env {
         } | all {|i| $i == true}
     }
 
-    # Emulates a `test -z`, but better as it handles e.g 'false'
+    # Emulates a `test -z`, but btter as it handles e.g 'false'
     def is-env-true [name: string] {
       if (has-env $name) {
         # Try to parse 'true', '0', '1', and fail if not convertible
@@ -53,7 +53,7 @@ export-env {
       }
     }
 
-    let virtual_env = 'C:\Users\micoo\Spotify_Textualize\help'
+    let virtual_env = 'C:\Users\micoo\Spotify_Textualize\.venv'
     let bin = 'Scripts'
 
     let is_windows = ($nu.os-info.family) == 'windows'
@@ -68,10 +68,10 @@ export-env {
     let new_path = ($env | get $path_name | prepend $venv_path)
 
     # If there is no default prompt, then use the env name instead
-    let virtual_env_prompt = (if ('' | is-empty) {
+    let virtual_env_prompt = (if ('Spotify_Textualize' | is-empty) {
         ($virtual_env | path basename)
     } else {
-        ''
+        'Spotify_Textualize'
     })
 
     let new_env = {

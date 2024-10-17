@@ -58,8 +58,8 @@ deactivate -nondestructive
 $VIRTUAL_ENV = $BASE_DIR
 $env:VIRTUAL_ENV = $VIRTUAL_ENV
 
-if ("" -ne "") {
-    $env:VIRTUAL_ENV_PROMPT = ""
+if ("Spotify_Textualize" -ne "") {
+    $env:VIRTUAL_ENV_PROMPT = "Spotify_Textualize"
 }
 else {
     $env:VIRTUAL_ENV_PROMPT = $( Split-Path $env:VIRTUAL_ENV -Leaf )

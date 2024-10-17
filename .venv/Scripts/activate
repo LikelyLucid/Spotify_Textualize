@@ -84,8 +84,8 @@ _OLD_VIRTUAL_PATH="$PATH"
 PATH="$VIRTUAL_ENV/Scripts:$PATH"
 export PATH
 
-if [ "x" != x ] ; then
-    VIRTUAL_ENV_PROMPT=""
+if [ "xSpotify_Textualize" != x ] ; then
+    VIRTUAL_ENV_PROMPT="Spotify_Textualize"
 else
     VIRTUAL_ENV_PROMPT=$(basename "$VIRTUAL_ENV")
 fi
