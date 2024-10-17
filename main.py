@@ -32,8 +32,11 @@ class Current_Device(Widget):
         return "DEVICE PLACEHOLDER"
 
 class Playing_Information(Widget):
-    def render(self) -> str:
-        return "Playing info
+
+    def compose(self):
+        yield Current_Track()
+        yield Current_Device()
+        yield Current_Volume()
 
 class Main_Screen(Screen):
     """The main page that contains:
@@ -50,8 +53,7 @@ class Main_Screen(Screen):
         yield Placeholder("MAIN PAGE", id="main_page")
         yield Container(
             #Placeholder("CONTROLS", id="controls"),
-            Current_Track(),
-            Current_Volume(),
+            Playing_Information(),
             id="control_bar")
         yield Container(Current_Time_In_Track(),
                         Center(ProgressBar(total=100, id="bar", show_percentage=False, show_eta=False)), Track_Duration(),id="bar_container")
