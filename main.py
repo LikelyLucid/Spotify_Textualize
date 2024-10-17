@@ -35,7 +35,7 @@ class Current_Time_In_Track(Widget):
         return "0:00"
 
 class Track_Duration(Widget):
-    track_duration = reactive("track_time")
+    track_duration = Spotify_Playback_Data().track_time
     def render(self) -> str:
         return "3:00"
 
