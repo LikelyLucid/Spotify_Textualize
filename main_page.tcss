@@ -50,5 +50,6 @@ Track_Duration {
     column-span: 4;
     layout: grid;
     grid-size: 4;
-    grid-columns: 1fr;
+    grid-columns: 1fr auto auto auto 1fr;
 }
+
