@@ -52,4 +52,21 @@ Track_Duration {
     grid-size: 4;
     grid-columns: 1fr auto auto auto 1fr;
 }
-
+#Previous {
+    column-span: 1;
+    width: 100%;
+    content-align: center middle;
+    padding: 0 0;
+}
+#Play {
+    column-span: 1;
+    width: 100%;
+    content-align: center middle;
+    padding: 0 0;
+}
+#Next {
+    column-span: 1;
+    width: 100%;
+    content-align: center middle;
+    padding: 0 0;
+}
