@@ -53,6 +53,11 @@ Track_Duration {
     grid-columns: 1fr auto auto auto 1fr;
 }
 
+#Current_Track {
+    width: 100%;
+    content-align: center middle;
+    padding: 0 0;
+}
 #Previous {
     column-span: 1;
     width: 100%;
