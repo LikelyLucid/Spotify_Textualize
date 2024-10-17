@@ -77,6 +77,6 @@ Track_Duration {
 }
 
 #Current_Volume {
-    content-align: center middle;
-    padding: 0 0;
+    content-align: right middle;
+    padding: 1 1;
 }
