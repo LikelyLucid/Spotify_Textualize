@@ -6,6 +6,16 @@ from textual.containers import Container, Center, Middle, Horizontal, Vertical
 from textual.widgets import Footer, Placeholder, ProgressBar, Button
 from textual.reactive import reactive
 
+
+class Spotify_Song_Data():
+    def __init__(self, track:str, artist:str, album:str, track_time:str, volume:str, device:str):
+        self.track = track
+        self.artist = artist
+        self.album = album
+        self.track_time = track_time
+        self.volume = volume
+        self.device = device
+
 class Current_Time_In_Track(Widget):
     current_time = reactive("track_time")
     def render(self) -> str:
@@ -37,7 +47,7 @@ class Playing_Information(Widget):
         segments = []
 
         if current_track is not None:
-            
+
 
 class Main_Screen(Screen):
     """The main page that contains:
