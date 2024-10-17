@@ -26,7 +26,11 @@ class Current_Volume(Widget):
     def render(self) -> str:
         return "VOLUME PLACEHOLDER"
 
-class 
+class Current_Device(Widget):
+    current_device = reactive("device")
+    def render(self) -> str:
+        return "DEVICE PLACEHOLDER"
+
 class Main_Screen(Screen):
     """The main page that contains:
     Main side bar
