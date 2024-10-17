@@ -29,7 +29,7 @@ Screen {
     column-span: 3;
     layout: grid;
     grid-size: 3;
-    grid-columns: 1fr 10fr 1fr;
+    grid-columns: auto 5fr auto;
 }
 #bar {
     width: 100%;
@@ -37,12 +37,14 @@ Screen {
 
 Current_Time_In_Track {
     width: 100%;
-    content-align: left;
+    content-align: left middle;
+    padding: 0 0;
 }
 
 Track_Duration {
     width: 100%;
-    content-align: right;
+    content-align: right middle;
+    padding: 0 0;
 }
 
 #controls {
