@@ -31,6 +31,10 @@ class Current_Device(Widget):
     def render(self) -> str:
         return "DEVICE PLACEHOLDER"
 
+class Playing_Information(Widget):
+    def render(self) -> str:
+        return "Playing info
+
 class Main_Screen(Screen):
     """The main page that contains:
     Main side bar
