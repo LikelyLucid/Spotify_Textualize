@@ -34,6 +34,7 @@ Screen {
 #bar {
     width: 100%;
 }
+
 Current_Time_In_Track {
     width: auto;
     content-align: left middle;
@@ -51,6 +52,11 @@ Track_Duration {
     layout: grid;
     grid-size: 5;
     grid-columns: 1fr auto auto auto 1fr;
+}
+
+#Playing_Information {
+    layout: horizontal;
+    margin: 1
 }
 
 #Current_Track {

@@ -51,10 +51,7 @@ class Main_Screen(Screen):
         yield Placeholder("top_bar", id="top_bar")
         yield Placeholder("PLAYLISTS", id="sidebar")
         yield Placeholder("MAIN PAGE", id="main_page")
-        yield Container(
-            #Placeholder("CONTROLS", id="controls"),
-            Playing_Information(),
-            id="control_bar")
+        yield Playing_Information(),
         yield Container(Current_Time_In_Track(),
                         Center(ProgressBar(total=100, id="bar", show_percentage=False, show_eta=False)), Track_Duration(),id="bar_container")
 
