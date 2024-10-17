@@ -57,24 +57,6 @@ Track_Duration {
     content-align: center middle;
     padding: 2 2;
 }
-#Previous {
-    column-span: 1;
-    width: 100%;
-    content-align: center middle;
-    padding: 0 0;
-}
-#Play {
-    column-span: 1;
-    width: 100%;
-    content-align: center middle;
-    padding: 0 0;
-}
-#Next {
-    column-span: 1;
-    width: 100%;
-    content-align: center middle;
-    padding: 0 0;
-}
 
 #Current_Volume {
     content-align: right middle;

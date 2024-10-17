@@ -26,7 +26,7 @@ class Current_Volume(Widget):
     def render(self) -> str:
         return "VOLUME PLACEHOLDER"
 
-
+class 
 class Main_Screen(Screen):
     """The main page that contains:
     Main side bar
@@ -43,9 +43,6 @@ class Main_Screen(Screen):
         yield Container(
             #Placeholder("CONTROLS", id="controls"),
             Current_Track(),
-            Button("Previous", id="Previous"),
-            Button("Play/Pause", id="Play"),
-            Button("Next", id="Next"),
             Current_Volume(),
             id="control_bar")
         yield Container(Current_Time_In_Track(),
