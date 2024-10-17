@@ -27,6 +27,9 @@ Screen {
 }
 #bar_container {
     column-span: 3;
+    layout: grid;
+    grid-size: 3;
+    grid-columns: auto 1fr auto;
 }
 #bar {
     width: 90%;

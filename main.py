@@ -29,7 +29,8 @@ class Main_Screen(Screen):
         yield Placeholder("PLAYLISTS", id="sidebar")
         yield Placeholder("MAIN PAGE", id="main_page")
         yield Container(Placeholder("CONTROLS", id="controls"), id="Bottom")
-        yield Container( Current_Time_In_Track(), ProgressBar(total=100, id="bar", show_percentage=False, show_eta=False), Track_Duration(),id="bar_container")
+        yield Container(Current_Time_In_Track(),
+                        ProgressBar(total=100, id="bar", show_percentage=False, show_eta=False), Track_Duration(),id="bar_container")
 
 
 class MainApp(App):
