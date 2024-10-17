@@ -29,7 +29,7 @@ Screen {
     column-span: 3;
     layout: grid;
     grid-size: 3;
-    grid-columns: auto 1fr auto;
+    grid-columns: 1fr 10fr 1fr;
 }
 #bar {
     width: 100%;
