@@ -35,14 +35,14 @@ Screen {
     width: 100%;
 }
 Current_Time_In_Track {
-    width: 100%;
+    width: auto;
     content-align: left middle;
     padding: 0 0;
 }
 
 Track_Duration {
-    width: 100%;
-    content-align: right middle;
+    width: auto;
+    text-align: right;
     padding: 0 0;
 }
 
