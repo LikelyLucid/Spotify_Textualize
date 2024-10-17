@@ -37,10 +37,10 @@ class Main_Screen(Screen):
         yield Container(
             #Placeholder("CONTROLS", id="controls"),
             Current_Track(),
-            Middle(
+            Horizontal(
             Button("Previous", id="Previous"),
             Button("Play/Pause", id="Play"),
-            Button("Next", id="Next")),
+            Button("Next", id="Next"), id="controls"),
             id="control_bar")
         yield Container(Current_Time_In_Track(),
                         Center(ProgressBar(total=100, id="bar", show_percentage=False, show_eta=False)), Track_Duration(),id="bar_container")
