@@ -33,10 +33,8 @@ class Current_Device(Widget):
 
 class Playing_Information(Widget):
 
-    def compose(self):
-        yield Current_Track()
-        yield Current_Device()
-        yield Current_Volume()
+    def render_line(self, y:int):
+        
 
 class Main_Screen(Screen):
     """The main page that contains:
