@@ -49,13 +49,10 @@ Track_Duration {
 #control_bar {
     column-span: 4;
     layout: grid;
-    grid-size: 4;
+    grid-size: 5;
     grid-columns: 1fr auto auto auto 1fr;
 }
 
-#controls {
-    column-span: 3;
-}
 #Previous {
     column-span: 1;
     width: 100%;
