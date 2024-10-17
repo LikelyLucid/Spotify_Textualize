@@ -7,14 +7,27 @@ from textual.widgets import Footer, Placeholder, ProgressBar, Button
 from textual.reactive import reactive
 
 
-class Spotify_Song_Data():
-    def __init__(self, track:str, artist:str, album:str, track_time:str, volume:str, device:str):
+class Spotify_Playback_Data():
+    def __init__(self, track, track_time, volume, device, current_time, shuffle, repeat):
         self.track = track
-        self.artist = artist
-        self.album = album
         self.track_time = track_time
         self.volume = volume
         self.device = device
+        self.current_time = current_time
+        self.shuffle = shuffle
+        self.repeat = repeat
+
+    def __str__(self):
+        if self.device is not None:
+            return f"Playing({self.device} | Shuffle: {self.shuffle} | Repeat: {self.repeat} | Volume: {self.volume}"
+
+
+    def update(self):
+        self.track = "TRACK PLACEHOLDER"
+        self.track_time = "0:00"
+        self.volume = "VOLUME PLACEHOLDER"
+        self.device = "DEVICE PLACEHOLDER"
+
 
 class Current_Time_In_Track(Widget):
     current_time = reactive("track_time")
