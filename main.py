@@ -29,12 +29,12 @@ class Main_Screen(Screen):
         yield Placeholder("PLAYLISTS", id="sidebar")
         yield Placeholder("MAIN PAGE", id="main_page")
         yield Container(Placeholder("CONTROLS", id="controls"), id="Bottom")
-        yield Horizontal(id="bar_container",
-            Current_Time_In_Track(),
-            ProgressBar(
+        with Horizontal(id="bar_container"):
+            yield Current_Time_In_Track()
+            yield ProgressBar(
                     total=100, id="bar", show_percentage=False, show_eta=False
-                ),
-            Track_Duration())
+                )
+            yield Track_Duration()
 
 
 class MainApp(App):
