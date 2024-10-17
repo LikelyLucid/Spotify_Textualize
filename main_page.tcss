@@ -34,6 +34,17 @@ Screen {
 #bar {
     width: 100%;
 }
+
+Current_Time_In_Track {
+    width: 100%;
+    content-align: left;
+}
+
+Track_Duration {
+    width: 100%;
+    content-align: right;
+}
+
 #controls {
     column-span: 2;
     width: 100%;
