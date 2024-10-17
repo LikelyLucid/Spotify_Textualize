@@ -54,9 +54,8 @@ Track_Duration {
 }
 
 #Current_Track {
-    width: 100%;
     content-align: center middle;
-    padding: 0 0;
+    padding: 2 2;
 }
 #Previous {
     column-span: 1;
@@ -73,6 +72,11 @@ Track_Duration {
 #Next {
     column-span: 1;
     width: 100%;
+    content-align: center middle;
+    padding: 0 0;
+}
+
+#Current_Volume {
     content-align: center middle;
     padding: 0 0;
 }
