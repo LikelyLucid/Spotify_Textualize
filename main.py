@@ -67,9 +67,6 @@ class Spotify_Playback_Data:
         self.artists = [artist["name"] for artist in playback_data["item"]["artists"]]
         self.available_markets = playback_data["item"]["available_markets"]
 
-        # Actions
-        self.actions_disallows_resuming = playback_data["actions"]["disallows"]["resuming"]
-
 
 class Current_Time_In_Track(Widget):
     current_time = reactive("track_time")
