@@ -6,7 +6,7 @@ from config_helper import read_config, save_config, get_config_directory
 CONFIG_FILE = "spotify_creds.conf"
 
 
-scope = "user-library-read"
+scope = 'user-read-playback-state,user-modify-playback-state'
 
 
 def authenticate_user():
@@ -39,7 +39,7 @@ def authenticate_user():
     try:
         sp = spotipy.Spotify(
             auth_manager=SpotifyOAuth(
-                # scope=scope,
+                scope=scope,
                 client_id=client_id,
                 client_secret=client_secret,
                 redirect_uri=redirect_uri,
