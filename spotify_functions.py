@@ -1,5 +1,6 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
+from spotipy.cache_handler import MemoryCacheHandler
 from config_helper import read_config, save_config
 
 CONFIG_FILE = "spotify_creds.conf"
@@ -28,7 +29,7 @@ if credentials == None:
             client_id=client_id,
             client_secret=client_secret,
             redirect_uri=redirect_uri,
-            cache_handler="MemcacheCacheHandler",
+            cache_handler=MemoryCacheHandler(),
         )
     )
 
