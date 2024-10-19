@@ -1,7 +1,7 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 from spotipy.cache_handler import MemoryCacheHandler
-from config_helper import read_config, save_config
+from config_helper import read_config, save_config, get_config_directory
 
 CONFIG_FILE = "spotify_creds.conf"
 
@@ -43,7 +43,7 @@ def authenticate_user():
                 client_id=client_id,
                 client_secret=client_secret,
                 redirect_uri=redirect_uri,
-                cache_handler=MemoryCacheHandler(),
+                cache_path=f"{get_config_directory()}/.cache-{client_id}",
             )
         )
         if sp.me() is not None:  # Check if the user is authenticated
