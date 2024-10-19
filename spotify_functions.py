@@ -46,8 +46,4 @@ def authenticate_user():
         save_config(CONFIG_FILE, f"client_id: {client_id}\nclient_secret: {client_secret}\nredirect_url: {redirect_uri}")
         return sp
 
-
-print(credentials)
-
-# sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
-print(sp.me())
+    
