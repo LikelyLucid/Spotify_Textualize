@@ -89,6 +89,9 @@ class Main_Screen(Screen):
             Track_Duration(),
             id="bar_container",
         )
+    def on_mount(self) -> None:
+        def update_progress(timer_value: int):
+            self.query_one()
 
 
 class MainApp(App):
