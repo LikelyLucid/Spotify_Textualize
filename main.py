@@ -10,6 +10,12 @@ from spotify_functions import authenticate_user
 
 class Spotify_Playback_Data:
     def __init__(self):
+        """
+        Initialize the Spotify Playback Data object
+
+        Returns:
+        - None
+        """
         sp = authenticate_user()
         attempts = 0
         while sp is None:
@@ -22,6 +28,12 @@ class Spotify_Playback_Data:
         self.update()
 
     def update(self):
+        """
+        Update the playback data
+
+        Returns:
+        - None
+        """
         playback_data = self.sp.current_playback()
 
         # Device Information
@@ -68,7 +80,12 @@ class Spotify_Playback_Data:
         self.artists = [artist["name"] for artist in playback_data["item"]["artists"]]
         self.available_markets = playback_data["item"]["available_markets"]
 
-    def print_playback_data(self):
+    def _print_playback_data(self):
+        """
+        Print the playback data
+
+        Returns:
+        - None"""
         # Device Information
         print("=== Device Information ===")
         print(f"Device ID: {self.device_id}")
@@ -202,4 +219,3 @@ class MainApp(App):
 if __name__ == "__main__":
     app = MainApp()
     app.run()
-
