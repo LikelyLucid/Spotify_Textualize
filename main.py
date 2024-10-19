@@ -91,7 +91,7 @@ class Main_Screen(Screen):
         )
     def on_mount(self) -> None:
         def update_progress(timer_value: int):
-            self.query_one()
+            self.query_one(Current_Time_In_Track).update(progress = )
 
 
 class MainApp(App):
