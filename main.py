@@ -21,14 +21,54 @@ class Spotify_Playback_Data:
 
     def update(self):
         playback_data = self.sp.current_playback()
-        self.device = playback_data["device"]["name"]
+        playback_data = self.sp.current_playback()
+
+        # Device Information
+        self.device_id = playback_data["device"]["id"]
+        self.device_name = playback_data["device"]["name"]
+        self.device_is_active = playback_data["device"]["is_active"]
+        self.device_is_private_session = playback_data["device"]["is_private_session"]
+        self.device_is_restricted = playback_data["device"]["is_restricted"]
+        self.device_type = playback_data["device"]["type"]
+        self.device_supports_volume = playback_data["device"]["supports_volume"]
+
+        # Playback Information
         self.shuffle = playback_data["shuffle_state"]
+        self.smart_shuffle = playback_data["smart_shuffle"]
         self.repeat = playback_data["repeat_state"]
-        self.volume = playback_data["device"]["volume_percent"]
+        self.timestamp = playback_data["timestamp"]
+        self.progress_ms = playback_data["progress_ms"]
+        self.currently_playing_type = playback_data["currently_playing_type"]
+        self.is_playing = playback_data["is_playing"]
+
+        # Context Information
+        self.external_url = playback_data["context"]["external_urls"]["spotify"]
+        self.context_href = playback_data["context"]["href"]
+        self.context_type = playback_data["context"]["type"]
+        self.context_uri = playback_data["context"]["uri"]
+
+        # Track Information
         self.track = playback_data["item"]["name"]
-        self.track_time = playback_data["progress_ms"]
+        self.track_id = playback_data["item"]["id"]
+        self.track_uri = playback_data["item"]["uri"]
+        self.track_explicit = playback_data["item"]["explicit"]
+        self.track_popularity = playback_data["item"]["popularity"]
+        self.track_preview_url = playback_data["item"]["preview_url"]
+        self.track_number = playback_data["item"]["track_number"]
         self.track_duration = playback_data["item"]["duration_ms"]
-        self.playing = playback_data["is_playing"]
+
+        # Album Information
+        self.album_name = playback_data["item"]["album"]["name"]
+        self.album_id = playback_data["item"]["album"]["id"]
+        self.album_release_date = playback_data["item"]["album"]["release_date"]
+        self.album_total_tracks = playback_data["item"]["album"]["total_tracks"]
+
+        # Artist Information
+        self.artists = [artist["name"] for artist in playback_data["item"]["artists"]]
+        self.available_markets = playback_data["item"]["available_markets"]
+
+        # Actions
+        self.actions_disallows_resuming = playback_data["actions"]["disallows"]["resuming"]
 
 
 class Current_Time_In_Track(Widget):
