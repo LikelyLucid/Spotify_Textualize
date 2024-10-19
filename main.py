@@ -9,6 +9,19 @@ from spotify_main_class import Spotify_Playback_Data
 
 playback = Spotify_Playback_Data() # This is the object that will be used to get the playback data
 
+def ms_to_time(ms: int) -> str:
+    """
+    Convert milliseconds to a time string
+
+    Args:
+    - ms: The milliseconds to convert
+
+    Returns:
+    - A string in the format "MM:SS"
+    """
+    seconds = ms // 1000
+    minutes, seconds = divmod(seconds, 60)
+    return f"{minutes}:{seconds:02d}"
 
 class Current_Time_In_Track(Widget):
     current_time = reactive(playback.progress_ms)
