@@ -40,7 +40,11 @@ def save_config(config_filename: str, config_data: str):
 
     # Save the configuration data
     with config_file_path.open("w") as config_file:
-        config_file.write(config_data)
+        if isinstance(config_data, dict):
+            for key, value in config_data.items():
+                config_file.write(f"{key}: {value}\n")
+        else:
+            config_file.write(config_data)
 
     print(f"Configuration saved to: {config_file_path}")
 
@@ -59,10 +63,15 @@ def read_config(config_filename: str):
     config_dir = get_config_directory()
     config_file_path = config_dir / config_filename
 
+    config_data = {}
+
     if config_file_path.exists():
         with config_file_path.open("r") as config_file:
             config_data = config_file.read()
-            return config_data
+            for line in config_data.split():
+                key, value = line.split(":")
+                config_data[key] = value
+        return config_data
     else:
         print(f"Configuration file not found: {config_file_path}")
         return None
