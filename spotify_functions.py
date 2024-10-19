@@ -29,16 +29,22 @@ def authenticate_user():
 
         if redirect_uri == "":
             redirect_uri = default_redirect_uri
-        sp = spotipy.Spotify(
-            auth_manager=SpotifyOAuth(
-                scope=scope,
-                client_id=client_id,
-                client_secret=client_secret,
-                redirect_uri=redirect_uri,
-                cache_handler=MemoryCacheHandler(),
-            )
+    else:
+        client_id = credentials["client_id"]
+        client_secret = credentials["client_secret"]
+        redirect_uri = credentials["redirect_uri"]
+    sp = spotipy.Spotify(
+        auth_manager=SpotifyOAuth(
+            scope=scope,
+            client_id=client_id,
+            client_secret=client_secret,
+            redirect_uri=redirect_uri,
+            cache_handler=MemoryCacheHandler(),
         )
-        sp.me()
+    )
+    if sp.me() is not None:
+        save_config(CONFIG_FILE, f"client_id: {client_id}\nclient_secret: {client_secret}\nredirect_url: {redirect_uri}")
+        return sp
 
 
 print(credentials)
