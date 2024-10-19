@@ -30,6 +30,8 @@ class Current_Time_In_Track(Widget):
     def render(self) -> str:
         return ms_to_time(playback.progress_ms)
 
+    def watch_current_time(self, current_time_value: int):
+        self.query
 
 class Track_Duration(Widget):
     track_duration = reactive(playback.track_duration)
