@@ -11,28 +11,24 @@ class Spotify_Playback_Data:
     def __init__(
         self
     ):
-        sp = authenticate_user()]
-        try:
-            current_playback = sp.current_playback()
-            self.track = 
-            self.track_time = track_time
-            self.volume = volume
-            self.device = device
-            self.current_time = current_time
-            self.shuffle = shuffle
-            self.repeat = repeat
-        except Exception as e:
-            print(f"Error: {e}")
+        sp = authenticate_user()
+        self.sp = sp
+        self.update()
 
     def __str__(self):
         if self.device is not None:
             return f"Playing({self.device} | Shuffle: {self.shuffle} | Repeat: {self.repeat} | Volume: {self.volume}"
 
     def update(self):
-        self.track = "TRACK PLACEHOLDER"
-        self.track_time = "0:00"
-        self.volume = "VOLUME PLACEHOLDER"
-        self.device = "DEVICE PLACEHOLDER"
+        playback_data = self.sp.current_playback()
+        self.device = playback_data["device"]["name"]
+        self.shuffle = playback_data["shuffle_state"]
+        self.repeat = playback_data["repeat_state"]
+        self.volume = playback_data["device"]["volume_percent"]
+        self.track = playback_data["item"]["name"]
+        self.track_time = playback_data["progress_ms"]
+        self.track_duration = playback_data["item"]["duration_ms"]
+        self.playing = playback_data["is_playing"]
 
 
 class Current_Time_In_Track(Widget):
