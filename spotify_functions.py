@@ -8,6 +8,7 @@ CONFIG_FILE = "spotify_creds.conf"
 
 scope = "user-library-read"
 
+
 def authenticate_user():
     """
     Authenticate the user with Spotify using the SpotifyOAuth flow and config
@@ -29,21 +30,49 @@ def authenticate_user():
 
         if redirect_uri == "":
             redirect_uri = default_redirect_uri
-    else:
+
+    else:  # Use the saved credentials
         client_id = credentials["client_id"]
         client_secret = credentials["client_secret"]
         redirect_uri = credentials["redirect_uri"]
-    sp = spotipy.Spotify(
-        auth_manager=SpotifyOAuth(
-            scope=scope,
-            client_id=client_id,
-            client_secret=client_secret,
-            redirect_uri=redirect_uri,
-            cache_handler=MemoryCacheHandler(),
-        )
-    )
-    if sp.me() is not None:
-        save_config(CONFIG_FILE, f"client_id: {client_id}\nclient_secret: {client_secret}\nredirect_url: {redirect_uri}")
-        return sp
 
-    
+    try:
+        sp = spotipy.Spotify(
+            auth_manager=SpotifyOAuth(
+                scope=scope,
+                client_id=client_id,
+                client_secret=client_secret,
+                redirect_uri=redirect_uri,
+                cache_handler=MemoryCacheHandler(),
+            )
+        )
+        if sp.me() is not None:  # Check if the user is authenticated
+            if (
+                credentials is None
+            ):  # Save the credentials if they are not already saved
+                save_config(
+                    CONFIG_FILE,
+                    f"client_id: {client_id}\nclient_secret: {client_secret}\nredirect_url: {redirect_uri}",
+                )
+            return sp
+        else:
+            print("Authentication failed.")
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
+    return None # Return None if the user is not authenticated
+
+sp = authenticate_user()
+
+
+playlists = sp.user_playlists(sp.me()["id"])
+while playlists:
+    for i, playlist in enumerate(playlists["items"]):
+        print(
+            "%4d %s %s"
+            % (i + 1 + playlists["offset"], playlist["uri"], playlist["name"])
+        )
+    if playlists["next"]:
+        playlists = sp.next(playlists)
+    else:
+        playlists = None
