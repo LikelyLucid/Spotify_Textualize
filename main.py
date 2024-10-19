@@ -67,6 +67,66 @@ class Spotify_Playback_Data:
         self.artists = [artist["name"] for artist in playback_data["item"]["artists"]]
         self.available_markets = playback_data["item"]["available_markets"]
 
+    def print_playback_data(self):
+        # Device Information
+        print("=== Device Information ===")
+        print(f"Device ID: {self.device_id}")
+        print(f"Device Name: {self.device_name}")
+        print(f"Is Active: {self.device_is_active}")
+        print(f"Is Private Session: {self.device_is_private_session}")
+        print(f"Is Restricted: {self.device_is_restricted}")
+        print(f"Device Type: {self.device_type}")
+        print(f"Supports Volume: {self.device_supports_volume}")
+        print()
+
+        # Playback Information
+        print("=== Playback Information ===")
+        print(f"Shuffle: {self.shuffle}")
+        print(f"Smart Shuffle: {self.smart_shuffle}")
+        print(f"Repeat State: {self.repeat}")
+        print(f"Timestamp: {self.timestamp}")
+        print(f"Progress (ms): {self.progress_ms}")
+        print(f"Currently Playing Type: {self.currently_playing_type}")
+        print(f"Is Playing: {self.is_playing}")
+        print()
+
+        # Context Information
+        print("=== Context Information ===")
+        print(f"External URL: {self.external_url}")
+        print(f"Context Href: {self.context_href}")
+        print(f"Context Type: {self.context_type}")
+        print(f"Context URI: {self.context_uri}")
+        print()
+
+        # Track Information
+        print("=== Track Information ===")
+        print(f"Track Name: {self.track}")
+        print(f"Track ID: {self.track_id}")
+        print(f"Track URI: {self.track_uri}")
+        print(f"Explicit: {self.track_explicit}")
+        print(f"Popularity: {self.track_popularity}")
+        print(f"Preview URL: {self.track_preview_url}")
+        print(f"Track Number: {self.track_number}")
+        print(f"Track Duration (ms): {self.track_duration}")
+        print()
+
+        # Album Information
+        print("=== Album Information ===")
+        print(f"Album Name: {self.album_name}")
+        print(f"Album ID: {self.album_id}")
+        print(f"Album Release Date: {self.album_release_date}")
+        print(f"Total Tracks: {self.album_total_tracks}")
+        print()
+
+        # Artist Information
+        print("=== Artist Information ===")
+        print(f"Artists: {', '.join(self.artists)}")
+        print(f"Available Markets: {', '.join(self.available_markets)}")
+        print()
+
+        # Actions
+        print("=== Actions ===")
+        print(f"Disallows Resuming: {self.actions_disallows_resuming}")
 
 class Current_Time_In_Track(Widget):
     current_time = reactive("track_time")
@@ -141,6 +201,6 @@ class MainApp(App):
         self.push_screen("main")
 
 
-if __name__ == "__main__":
-    app = MainApp()
-    app.run()
+# if __name__ == "__main__":
+#     app = MainApp()
+#     app.run()
