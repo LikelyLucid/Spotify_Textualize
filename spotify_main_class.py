@@ -36,6 +36,7 @@ class Spotify_Playback_Data:
         self.device_is_restricted = playback_data["device"]["is_restricted"]
         self.device_type = playback_data["device"]["type"]
         self.device_supports_volume = playback_data["device"]["supports_volume"]
+        self.device_volume_percent = playback_data["device"]["volume_percent"]
 
         # Playback Information
         self.shuffle = playback_data["shuffle_state"]
@@ -87,6 +88,7 @@ class Spotify_Playback_Data:
         print(f"Is Restricted: {self.device_is_restricted}")
         print(f"Device Type: {self.device_type}")
         print(f"Supports Volume: {self.device_supports_volume}")
+        print(f"Volume Percent: {self.device_volume_percent}")
         print()
 
         # Playback Information

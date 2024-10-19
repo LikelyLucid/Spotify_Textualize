@@ -46,17 +46,17 @@ class Current_Track(Widget):
 
 
 class Current_Volume(Widget):
-    current_volume = reactive(playback.)
+    current_volume = reactive(playback.device_volume_percent)
 
     def render(self) -> str:
-        return "VOLUME PLACEHOLDER"
+        return f"{self.current_volume}%"
 
 
 class Current_Device(Widget):
-    current_device = reactive("device")
+    current_device = reactive(playback.device_name)
 
     def render(self) -> str:
-        return "DEVICE PLACEHOLDER"
+        return self.current_device
 
 
 class Playing_Information(Widget):
