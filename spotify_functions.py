@@ -65,4 +65,4 @@ def authenticate_user():
 
 sp = authenticate_user()
 print(sp.me())
-sp.current_user_playing_track()
+print(sp.current_user_saved_albums(limit=20, offset=0, market=None))
