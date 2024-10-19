@@ -43,7 +43,8 @@ def authenticate_user():
                 client_id=client_id,
                 client_secret=client_secret,
                 redirect_uri=redirect_uri,
-                cache_path=f"{get_config_directory()}/.cache-{client_id}",
+                # cache_path=f"{get_config_directory()}/.cache-{client_id}",
+                cache_handler=MemoryCacheHandler(),
             )
         )
         if sp.me() is not None:  # Check if the user is authenticated
@@ -63,4 +64,5 @@ def authenticate_user():
     return None # Return None if the user is not authenticated
 
 sp = authenticate_user()
-sp.current_playback()
+print(sp.me())
+sp.current_user_playing_track()
