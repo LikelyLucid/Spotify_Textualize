@@ -5,11 +5,13 @@ from textual.widget import Widget
 from textual.containers import Container, Center, Middle, Horizontal, Vertical
 from textual.widgets import Footer, Placeholder, ProgressBar, Button
 from textual.reactive import reactive
+from spotify_main_class import Spotify_Playback_Data
 
+playback = Spotify_Playback_Data() # This is the object that will be used to get the playback data
 
 
 class Current_Time_In_Track(Widget):
-    current_time = reactive("track_time")
+    current_time = reactive(playback.)
 
     def render(self) -> str:
         return "0:00"
