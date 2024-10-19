@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "pymemcache>=4.0.0",
     "spotipy[pymemcache]>=2.24.0",
     "textual>=0.83.0",
 ]
