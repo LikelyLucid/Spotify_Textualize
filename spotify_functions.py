@@ -11,10 +11,17 @@ scope = "user-library-read"
 credentials = read_config(CONFIG_FILE)
 if credentials == None:
     print("User not authenticated.")
+
+    default_redirect_uri = "http://localhost:8888/callback"
+
     client_id = input("Enter your client ID: ")
     client_secret = input("Enter your client secret: ")
-    redirect_uri = input("Enter your redirect URI: ")
+    redirect_uri = input(
+        f"Enter your redirect URI (leave blank for {default_redirect_uri}): "
+    )
 
+    if redirect_uri == "":
+        redirect_uri = default_redirect_uri
     sp = spotipy.Spotify(
         auth_manager=SpotifyOAuth(
             scope=scope,
@@ -23,8 +30,6 @@ if credentials == None:
             redirect_uri=redirect_uri,
         )
     )
-
-    
 
 
 print(credentials)
