@@ -62,7 +62,3 @@ def authenticate_user():
         print(f"Error: {e}")
         return None
     return None # Return None if the user is not authenticated
-
-sp = authenticate_user()
-
-print(sp.current_playback())

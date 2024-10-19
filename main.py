@@ -12,6 +12,9 @@ class Spotify_Playback_Data:
         self
     ):
         sp = authenticate_user()
+        if sp is None:
+            print("User not authenticated.")
+            exit(1)
         self.sp = sp
         self.update()
 
