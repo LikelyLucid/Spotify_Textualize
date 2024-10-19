@@ -63,16 +63,3 @@ def authenticate_user():
     return None # Return None if the user is not authenticated
 
 sp = authenticate_user()
-
-
-playlists = sp.user_playlists(sp.me()["id"])
-while playlists:
-    for i, playlist in enumerate(playlists["items"]):
-        print(
-            "%4d %s %s"
-            % (i + 1 + playlists["offset"], playlist["uri"], playlist["name"])
-        )
-    if playlists["next"]:
-        playlists = sp.next(playlists)
-    else:
-        playlists = None
