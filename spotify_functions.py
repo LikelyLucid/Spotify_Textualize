@@ -20,7 +20,7 @@ def authenticate_user():
     if credentials is None:
         print("User not authenticated.")
 
-        default_redirect_uri = "http://localhost:8888/callback"
+        default_redirect_uri = "http://localhost:8888"
 
         client_id = input("Enter your client ID: ")
         client_secret = input("Enter your client secret: ")
