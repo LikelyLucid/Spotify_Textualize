@@ -9,7 +9,14 @@ from textual.reactive import reactive
 
 class Spotify_Playback_Data:
     def __init__(
-        self, track, track_time, volume, device, current_time, shuffle, repeat
+        self,
+        track=None,
+        track_time=None,
+        volume=None,
+        device=None,
+        current_time=None,
+        shuffle=None,
+        repeat=None,
     ):
         self.track = track
         self.track_time = track_time
@@ -84,7 +91,7 @@ class Main_Screen(Screen):
         yield Placeholder("top_bar", id="top_bar")
         yield Placeholder("PLAYLISTS", id="sidebar")
         yield Placeholder("MAIN PAGE", id="main_page")
-        yield Playing_Information(),
+        # yield Playing_Information(),
         yield Container(
             Current_Time_In_Track(),
             Center(
