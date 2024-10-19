@@ -3,7 +3,8 @@ from pathlib import Path
 
 APP_NAME = "Spotify-Textualize"
 
-def get_config_directory(APP_NAME: str):
+
+def get_config_directory():
     """
     Get or create the .config directory for the given application name.
 
@@ -25,7 +26,7 @@ def get_config_directory(APP_NAME: str):
     return config_dir
 
 
-def save_config(APP_NAME: str, config_filename: str, config_data: str):
+def save_config(config_filename: str, config_data: str):
     """
     Save configuration data to a file in the application's .config directory.
 
@@ -34,7 +35,7 @@ def save_config(APP_NAME: str, config_filename: str, config_data: str):
     - config_filename: The name of the configuration file to save
     - config_data: The configuration data to write into the file
     """
-    config_dir = get_config_directory(APP_NAME)
+    config_dir = get_config_directory()
     config_file_path = config_dir / config_filename
 
     # Save the configuration data
@@ -44,7 +45,7 @@ def save_config(APP_NAME: str, config_filename: str, config_data: str):
     print(f"Configuration saved to: {config_file_path}")
 
 
-def read_config(APP_NAME: str, config_filename: str):
+def read_config(config_filename: str):
     """
     Read configuration data from a file in the application's .config directory.
 
@@ -55,7 +56,7 @@ def read_config(APP_NAME: str, config_filename: str):
     Returns:
     - A string containing the contents of the configuration file, or None if the file does not exist
     """
-    config_dir = get_config_directory(APP_NAME)
+    config_dir = get_config_directory()
     config_file_path = config_dir / config_filename
 
     if config_file_path.exists():
