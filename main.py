@@ -28,25 +28,25 @@ class Current_Time_In_Track(Widget):
 
 
     def render(self) -> str:
-        return "0:00"
+        return ms_to_time(playback.progress_ms)
 
 
 class Track_Duration(Widget):
-    track_duration = Spotify_Playback_Data().track_time
+    track_duration = reactive(playback.track_duration)
 
     def render(self) -> str:
-        return "3:00"
+        return ms_to_time(playback.track_duration)
 
 
 class Current_Track(Widget):
-    current_track = reactive("track")
+    current_track = reactive(playback.track)
 
     def render(self) -> str:
-        return "TRACK PLACEHOLDER"
+        return self.current_track
 
 
 class Current_Volume(Widget):
-    current_volume = reactive("volume")
+    current_volume = reactive(playback.)
 
     def render(self) -> str:
         return "VOLUME PLACEHOLDER"
