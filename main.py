@@ -9,15 +9,20 @@ from spotify_functions import authenticate_user
 
 class Spotify_Playback_Data:
     def __init__(
-        self, track=None, track_time=None, volume=None, device=None, current_time=None, shuffle=None, repeat=None
+        self
     ):
-        self.track = track
-        self.track_time = track_time
-        self.volume = volume
-        self.device = device
-        self.current_time = current_time
-        self.shuffle = shuffle
-        self.repeat = repeat
+        sp = authenticate_user()]
+        try:
+            current_playback = sp.current_playback()
+            self.track = 
+            self.track_time = track_time
+            self.volume = volume
+            self.device = device
+            self.current_time = current_time
+            self.shuffle = shuffle
+            self.repeat = repeat
+        except Exception as e:
+            print(f"Error: {e}")
 
     def __str__(self):
         if self.device is not None:
