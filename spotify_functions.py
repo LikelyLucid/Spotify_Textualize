@@ -52,7 +52,7 @@ def authenticate_user():
             ):  # Save the credentials if they are not already saved
                 save_config(
                     CONFIG_FILE,
-                    f"client_id: {client_id}\nclient_secret: {client_secret}\nredirect_url: {redirect_uri}",
+                    f"client_id: {client_id}\nclient_secret: {client_secret}\nredirect_uri: {redirect_uri}",
                 )
             return sp
         else:
