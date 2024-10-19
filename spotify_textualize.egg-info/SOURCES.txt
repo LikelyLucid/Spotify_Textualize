@@ -1,8 +1,0 @@
-README.md
-main.py
-pyproject.toml
-spotify_textualize.egg-info/PKG-INFO
-spotify_textualize.egg-info/SOURCES.txt
-spotify_textualize.egg-info/dependency_links.txt
-spotify_textualize.egg-info/requires.txt
-spotify_textualize.egg-info/top_level.txt
