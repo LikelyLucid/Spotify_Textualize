@@ -204,7 +204,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "spotipy", specifier = ">=2.24.0" },
+    { name = "spotipy", extras = ["pymemcache"], specifier = ">=2.24.0" },
     { name = "textual", specifier = ">=0.83.0" },
 ]
 
