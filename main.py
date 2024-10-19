@@ -11,7 +11,8 @@ playback = Spotify_Playback_Data() # This is the object that will be used to get
 
 
 class Current_Time_In_Track(Widget):
-    current_time = reactive(playback.)
+    current_time = reactive(playback.progress_ms)
+
 
     def render(self) -> str:
         return "0:00"
