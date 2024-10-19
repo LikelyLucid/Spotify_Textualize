@@ -26,14 +26,14 @@ def get_config_directory():
     return config_dir
 
 
-def save_config(config_filename: str, config_data: str):
+def save_config(config_filename: str, config_data):
     """
     Save configuration data to a file in the application's .config directory.
 
     Parameters:
     - APP_NAME: The name of the application, used to create a subdirectory within .config
     - config_filename: The name of the configuration file to save
-    - config_data: The configuration data to write into the file
+    - config_data: The configuration data to write into the file (either a dictionary or a string)
     """
     config_dir = get_config_directory()
     config_file_path = config_dir / config_filename
@@ -43,8 +43,10 @@ def save_config(config_filename: str, config_data: str):
         if isinstance(config_data, dict):
             for key, value in config_data.items():
                 config_file.write(f"{key}: {value}\n")
-        else:
+        elif isinstance(config_data, str):
             config_file.write(config_data)
+        else:
+            raise TypeError("config_data must be a dictionary or a string")
 
     print(f"Configuration saved to: {config_file_path}")
 
@@ -58,7 +60,7 @@ def read_config(config_filename: str):
     - config_filename: The name of the configuration file to read
 
     Returns:
-    - A string containing the contents of the configuration file, or None if the file does not exist
+    - A dictionary containing the key-value pairs from the configuration file, or None if the file does not exist
     """
     config_dir = get_config_directory()
     config_file_path = config_dir / config_filename
@@ -67,10 +69,15 @@ def read_config(config_filename: str):
 
     if config_file_path.exists():
         with config_file_path.open("r") as config_file:
-            config_data = config_file.read()
-            for line in config_data.split():
-                key, value = line.split(":")
-                config_data[key] = value
+            for line in config_file:
+                line = line.strip()  # Remove any leading/trailing whitespace
+                if line:
+                    key, value = line.split(
+                        ":", 1
+                    )  # Split at the first occurrence of ":" only
+                    config_data[key.strip()] = (
+                        value.strip()
+                    )  # Strip whitespace around key and value
         return config_data
     else:
         print(f"Configuration file not found: {config_file_path}")
