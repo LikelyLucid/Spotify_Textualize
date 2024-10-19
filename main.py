@@ -7,8 +7,10 @@ from textual.widgets import Footer, Placeholder, ProgressBar, Button
 from textual.reactive import reactive
 
 
-class Spotify_Playback_Data():
-    def __init__(self, track, track_time, volume, device, current_time, shuffle, repeat):
+class Spotify_Playback_Data:
+    def __init__(
+        self, track, track_time, volume, device, current_time, shuffle, repeat
+    ):
         self.track = track
         self.track_time = track_time
         self.volume = volume
@@ -21,7 +23,6 @@ class Spotify_Playback_Data():
         if self.device is not None:
             return f"Playing({self.device} | Shuffle: {self.shuffle} | Repeat: {self.repeat} | Volume: {self.volume}"
 
-
     def update(self):
         self.track = "TRACK PLACEHOLDER"
         self.track_time = "0:00"
@@ -31,35 +32,43 @@ class Spotify_Playback_Data():
 
 class Current_Time_In_Track(Widget):
     current_time = reactive("track_time")
+
     def render(self) -> str:
         return "0:00"
 
+
 class Track_Duration(Widget):
     track_duration = Spotify_Playback_Data().track_time
+
     def render(self) -> str:
         return "3:00"
 
+
 class Current_Track(Widget):
     current_track = reactive("track")
+
     def render(self) -> str:
         return "TRACK PLACEHOLDER"
 
+
 class Current_Volume(Widget):
     current_volume = reactive("volume")
+
     def render(self) -> str:
         return "VOLUME PLACEHOLDER"
 
+
 class Current_Device(Widget):
     current_device = reactive("device")
+
     def render(self) -> str:
         return "DEVICE PLACEHOLDER"
 
+
 class Playing_Information(Widget):
 
-    def render_line(self, y:int):
+    def render_line(self, y: int):
         segments = []
-
-
 
 
 class Main_Screen(Screen):
@@ -76,8 +85,14 @@ class Main_Screen(Screen):
         yield Placeholder("PLAYLISTS", id="sidebar")
         yield Placeholder("MAIN PAGE", id="main_page")
         yield Playing_Information(),
-        yield Container(Current_Time_In_Track(),
-                        Center(ProgressBar(total=100, id="bar", show_percentage=False, show_eta=False)), Track_Duration(),id="bar_container")
+        yield Container(
+            Current_Time_In_Track(),
+            Center(
+                ProgressBar(total=100, id="bar", show_percentage=False, show_eta=False)
+            ),
+            Track_Duration(),
+            id="bar_container",
+        )
 
 
 class MainApp(App):

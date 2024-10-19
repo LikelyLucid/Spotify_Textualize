@@ -88,7 +88,7 @@ wheels = [
 [[package]]
 name = "spotify-textualize"
 version = "0.1.0"
-source = { editable = "." }
+source = { virtual = "." }
 dependencies = [
     { name = "textual" },
 ]
