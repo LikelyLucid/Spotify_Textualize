@@ -59,7 +59,7 @@ class Playing_Information(Widget):
     def render_line(self, y:int):
         segments = []
 
-        if current_track is not None:
+
 
 
 class Main_Screen(Screen):
