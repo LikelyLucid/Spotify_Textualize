@@ -5,7 +5,7 @@ from textual.widget import Widget
 from textual.containers import Container, Center, Middle, Horizontal, Vertical
 from textual.widgets import Footer, Placeholder, ProgressBar, Button
 from textual.reactive import reactive
-
+from spotify_functions import authenticate_user
 
 class Spotify_Playback_Data:
     def __init__(
