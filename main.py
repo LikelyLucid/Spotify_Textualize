@@ -24,7 +24,6 @@ class Spotify_Playback_Data:
 
     def update(self):
         playback_data = self.sp.current_playback()
-        playback_data = self.sp.current_playback()
 
         # Device Information
         self.device_id = playback_data["device"]["id"]
