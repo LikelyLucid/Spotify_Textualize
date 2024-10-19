@@ -7,20 +7,19 @@ from textual.widgets import Footer, Placeholder, ProgressBar, Button
 from textual.reactive import reactive
 from spotify_functions import authenticate_user
 
+
 class Spotify_Playback_Data:
-    def __init__(
-        self
-    ):
+    def __init__(self):
         sp = authenticate_user()
-        if sp is None:
-            print("User not authenticated.")
-            exit(1)
+        attempts = 0
+        while sp is None:
+            sp = authenticate_user()
+            attempts += 1
+            if attempts > 3:
+                print("Failed to authenticate after 3 attempts.")
+                Exception("Failed to authenticate after 3 attempts  - exiting.")
         self.sp = sp
         self.update()
-
-    # def __str__(self):
-    #     if self.device is not None:
-    #         return f"Playing({self.device} | Shuffle: {self.shuffle} | Repeat: {self.repeat} | Volume: {self.volume}"
 
     def update(self):
         playback_data = self.sp.current_playback()
@@ -126,6 +125,7 @@ class Spotify_Playback_Data:
         print(f"Available Markets: {', '.join(self.available_markets)}")
         print()
 
+
 # class Current_Time_In_Track(Widget):
 #     current_time = reactive("track_time")
 
@@ -202,7 +202,4 @@ class Spotify_Playback_Data:
 # if __name__ == "__main__":
 #     app = MainApp()
 #     app.run()
-
-test = Spotify_Playback_Data()
-test.print_playback_data()
 
