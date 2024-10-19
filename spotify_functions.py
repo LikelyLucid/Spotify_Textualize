@@ -63,3 +63,4 @@ def authenticate_user():
     return None # Return None if the user is not authenticated
 
 sp = authenticate_user()
+sp.current_playback()
