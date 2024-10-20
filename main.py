@@ -7,7 +7,10 @@ from textual.widgets import Footer, Placeholder, ProgressBar, Button
 from textual.reactive import reactive
 from spotify_main_class import Spotify_Playback_Data
 
-playback = Spotify_Playback_Data() # This is the object that will be used to get the playback data
+playback = (
+    Spotify_Playback_Data()
+)  # This is the object that will be used to get the playback data
+
 
 def ms_to_time(ms: int) -> str:
     """
@@ -23,15 +26,16 @@ def ms_to_time(ms: int) -> str:
     minutes, seconds = divmod(seconds, 60)
     return f"{minutes}:{seconds:02d}"
 
+
 class Current_Time_In_Track(Widget):
     current_time = reactive(playback.progress_ms)
-
 
     def render(self) -> str:
         return ms_to_time(playback.progress_ms)
 
     # def watch_current_time(self, current_time: int):
     #     self.query_one(ProgressBar).update(progress=current_time)
+
 
 class Track_Duration(Widget):
     track_duration = reactive(playback.track_duration)
@@ -91,17 +95,21 @@ class Main_Screen(Screen):
             Track_Duration(),
             id="bar_container",
         )
+
     def on_mount(self) -> None:
         def update_progress(current_time: int):
-            self.query_one(ProgressBar).update(progress=current_time)
-            self.query_one(ProgressBar).update(total=playback.track_duration)
+            self.query_one(ProgressBar).update(
+                progress=current_time, total=playback.track_duration
+            )
 
         # Song change
         def update_song(song: str):
             self.query_one(Current_Track).update(current_track=song)
             self.query(Track_Duration).update()
 
-        self.watch(self.query_one(Current_Time_In_Track), "current_time", update_progress)
+        self.watch(
+            self.query_one(Current_Time_In_Track), "current_time", update_progress
+        )
 
 
 class MainApp(App):
