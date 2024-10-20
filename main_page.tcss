@@ -2,7 +2,7 @@ Screen {
     layout: grid;
     grid-size: 3;
     grid-columns: 1fr 3fr 0fr;
-    grid-rows: 5fr 1fr 1fr auto;
+    grid-rows: 5fr 1fr auto auto;
 }
 #sidebar {
     column-span: 1;
@@ -23,13 +23,14 @@ Screen {
     layout: grid;
     grid-size: 2;
     grid-columns: 1fr 1fr 1fr;
-    grid-rows: 1fr;
+    grid-rows: auto;
 }
 #bar_container {
     column-span: 3;
     layout: grid;
     grid-size: 3;
     grid-columns: auto 5fr auto;
+    height: 100%;
 }
 #bar {
     width: 100%;
