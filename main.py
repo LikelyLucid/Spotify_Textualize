@@ -74,13 +74,17 @@ class Playing_Information(Widget):
 
 
 class Bottom_Bar(Widget):
-    def __init__(self):
-        super().__init__()
+    # def __init__(self):
+    #     super().__init__()
 
     def compose(self):
-        yield Current_Time_In_Track(id = "current_time")
-        yield Center(ProgressBar(total=100, id="bar", show_percentage=False, show_eta=False))
-        yield Track_Duration(id = "track_duration")
+        yield Container(
+            Current_Time_In_Track(),
+            Center(
+                ProgressBar(total=100, id="bar", show_percentage=False, show_eta=False)
+            ),
+            Track_Duration(),
+        )
 
 
 class Main_Screen(Screen):
@@ -105,7 +109,9 @@ class Main_Screen(Screen):
         #     Track_Duration(),
         #     id="bar_container",
         # )
-        yield Bottom_Bar()
+        yield Bottom_Bar(
+            id="bar_container"
+        )
 
     def on_mount(self) -> None:
         def update_progress(current_time: int):
