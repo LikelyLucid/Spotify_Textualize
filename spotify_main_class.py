@@ -29,6 +29,10 @@ class Spotify_Playback_Data:
         playback_data = self.sp.current_playback()
 
         # Device Information
+        if playback_data is None:
+            print("No playback data available.")
+            self.device_id = None
+            return
         self.device_id = playback_data["device"]["id"]
         self.device_name = playback_data["device"]["name"]
         self.device_is_active = playback_data["device"]["is_active"]

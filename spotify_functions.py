@@ -62,3 +62,8 @@ def authenticate_user():
         print(f"Error: {e}")
         return None
     return None # Return None if the user is not authenticated
+
+if __name__ == "__main__":
+    sp = authenticate_user()
+    print(sp.me())
+    print(sp.current_playback())
