@@ -31,7 +31,7 @@ class Current_Time_In_Track(Widget):
     current_time = reactive(playback.progress_ms)
 
     def render(self) -> str:
-        return ms_to_time(playback.progress_ms)
+        return f"{ms_to_time(playback.progress_ms)}"
 
     # def watch_current_time(self, current_time: int):
     #     self.query_one(ProgressBar).update(progress=current_time)
