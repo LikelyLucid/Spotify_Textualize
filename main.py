@@ -87,6 +87,9 @@ class Bottom_Bar(Widget):
             id="bar_container",
         )
 
+    def on_mount(self):
+        self.widget.styles.border = ("heavy", "yellow")
+
 
 class Main_Screen(Screen):
     """The main page that contains:
