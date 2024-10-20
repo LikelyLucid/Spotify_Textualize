@@ -72,6 +72,17 @@ class Playing_Information(Widget):
             "(Device: DEVICE PLACEHOLDER | Shuffle: OFF | Repeat: OFF | Volume: 100%)"
         )
 
+class Bottom_Bar(Widget):
+    def compose(self):
+        yield Container(
+            Current_Time_In_Track(),
+            Center(
+                ProgressBar(total=100, id="bar", show_percentage=False, show_eta=False)
+            ),
+            Track_Duration(),
+            id="bar_container",
+        )
+
 
 class Main_Screen(Screen):
     """The main page that contains:
@@ -87,14 +98,15 @@ class Main_Screen(Screen):
         yield Placeholder("Spotify Stuff | Playlists", id="sidebar")
         yield Placeholder("Main Page", id="main_page")
         # yield Playing_Information(),
-        yield Container(
-            Current_Time_In_Track(),
-            Center(
-                ProgressBar(total=100, id="bar", show_percentage=False, show_eta=False)
-            ),
-            Track_Duration(),
-            id="bar_container",
-        )
+        # yield Container(
+        #     Current_Time_In_Track(),
+        #     Center(
+        #         ProgressBar(total=100, id="bar", show_percentage=False, show_eta=False)
+        #     ),
+        #     Track_Duration(),
+        #     id="bar_container",
+        # )
+        yield Bottom_Bar()
 
     def on_mount(self) -> None:
         def update_progress(current_time: int):
