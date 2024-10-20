@@ -72,17 +72,12 @@ class Playing_Information(Widget):
             "(Device: DEVICE PLACEHOLDER | Shuffle: OFF | Repeat: OFF | Volume: 100%)"
         )
 
+
 class Bottom_Bar(Widget):
     def compose(self):
-        self.widget = Container(
-            Current_Time_In_Track(),
-            Center(
-                ProgressBar(total=100, id="bar", show_percentage=False, show_eta=False)
-            ),
-            Track_Duration(),
-            id="bar_container",
-        )
-        yield self.widget
+        yield Current_Time_In_Track(),
+        yield Center(ProgressBar(total=100, id="bar", show_percentage=False, show_eta=False)),
+        yield Track_Duration()
 
 
 class Main_Screen(Screen):
