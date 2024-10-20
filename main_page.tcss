@@ -23,7 +23,7 @@ Screen {
     layout: grid;
     grid-size: 2;
     grid-columns: 1fr 1fr 1fr;
-    grid-rows: 1fr 1fr;
+    grid-rows: 1fr;
 }
 #bar_container {
     column-span: 3;
@@ -38,13 +38,13 @@ Screen {
 Current_Time_In_Track {
     width: auto;
     content-align: left top;
-    padding: 0 5;
+    padding: 0 1;
 }
 
 Track_Duration {
     width: auto;
     text-align: right;
-    padding: 0 0;
+    padding: 0 1;
 }
 
 #control_bar {
