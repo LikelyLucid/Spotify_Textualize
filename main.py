@@ -89,6 +89,7 @@ class Bottom_Bar(Widget):
 
     def on_mount(self):
         self.styles.border = ("hkey", "blue")
+        self.border_title = "TESTING"
 
 
 class Main_Screen(Screen):
