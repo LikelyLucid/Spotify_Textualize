@@ -94,10 +94,12 @@ class Main_Screen(Screen):
     def on_mount(self) -> None:
         def update_progress(current_time: int):
             self.query_one(ProgressBar).update(progress=current_time)
+            self.query_one(ProgressBar).update(total=playback.track_duration)
 
         # Song change
         def update_song(song: str):
             self.query_one(Current_Track).update(current_track=song)
+            self.query(Track_Duration).update()
 
         self.watch(self.query_one(Current_Time_In_Track), "current_time", update_progress)
 
