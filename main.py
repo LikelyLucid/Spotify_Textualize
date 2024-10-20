@@ -30,8 +30,8 @@ class Current_Time_In_Track(Widget):
     def render(self) -> str:
         return ms_to_time(playback.progress_ms)
 
-    def watch_current_time(self, current_time_value: int):
-        self.query_one(ProgressBar).update(progress=current_time_value)
+    # def watch_current_time(self, current_time: int):
+    #     self.query_one(ProgressBar).update(progress=current_time)
 
 class Track_Duration(Widget):
     track_duration = reactive(playback.track_duration)
@@ -94,6 +94,10 @@ class Main_Screen(Screen):
     def on_mount(self) -> None:
         def update_progress(current_time: int):
             self.query_one(ProgressBar).update(progress=current_time)
+
+        # Song change
+        def update_song(song: str):
+            self.query_one(Current_Track).update(current_track=song)
 
         self.watch(self.query_one(Current_Time_In_Track), "current_time", update_progress)
 
