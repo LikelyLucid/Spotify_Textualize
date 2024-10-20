@@ -37,7 +37,7 @@ Screen {
 
 Current_Time_In_Track {
     width: auto;
-    content-align: left middle;
+    content-align: left top;
     padding: 0 0;
 }
 
