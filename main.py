@@ -88,7 +88,7 @@ class Bottom_Bar(Widget):
         )
 
     def on_mount(self):
-        self.widget.styles.border = ("heavy", "yellow")
+        self.styles.border = ("heavy", "yellow")
 
 
 class Main_Screen(Screen):
