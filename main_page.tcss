@@ -1,6 +1,6 @@
 Screen {
     layout: grid;
-    grid-size: 2;
+    grid-size: 3;
     grid-columns: 1fr 2fr ;
     grid-rows: 5fr auto;
 }
@@ -9,7 +9,7 @@ Screen {
     row-span: 1;
 }
 #main_page {
-    column-span: 1;
+    column-span: 2;
     row-span: 1;
 }
 #top_bar {
@@ -28,7 +28,7 @@ Screen {
 
 #bottom_bar {
     column-span: 3;
-    height: 100%;
+    height: 10;
 }
 
 #bar_container {
@@ -36,7 +36,6 @@ Screen {
     layout: grid;
     grid-size: 3;
     grid-columns: auto 5fr auto;
-    height: 100%;
 }
 
 #bar {
