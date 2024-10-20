@@ -75,7 +75,7 @@ class Playing_Information(Widget):
 
 class Bottom_Bar(Widget):
     def compose(self):
-        yield Current_Time_In_Track(id = "current_time"),
+        # yield Current_Time_In_Track(id = "current_time"),
         yield Center(ProgressBar(total=100, id="bar", show_percentage=False, show_eta=False)),
         yield Track_Duration(id = "track_duration"),
 
