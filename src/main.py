@@ -6,6 +6,9 @@ from textual.containers import Container, Center, Middle, Horizontal, Vertical
 from textual.widgets import Footer, Placeholder, ProgressBar, Button
 from textual.reactive import reactive
 from spotify_main_class import Spotify_Playback_Data
+from textual import work
+from time import monotonic
+
 
 playback = (
     Spotify_Playback_Data()
@@ -31,7 +34,10 @@ class Current_Time_In_Track(Widget):
     current_time = reactive(playback.progress_ms)
 
     def render(self) -> str:
-        return f"{ms_to_time(playback.progress_ms)}"
+        if playback.progress_ms is not None:
+            return f"{ms_to_time(self.current_time)}"
+        else:
+            return ""
 
     # def watch_current_time(self, current_time: int):
     #     self.query_one(ProgressBar).update(progress=current_time)
@@ -41,7 +47,10 @@ class Track_Duration(Widget):
     track_duration = reactive(playback.track_duration)
 
     def render(self) -> str:
-        return ms_to_time(playback.track_duration)
+        if playback.track_duration is not None:
+            return ms_to_time(playback.track_duration)
+        else:
+            return ""
 
 
 class Current_Track(Widget):
@@ -88,9 +97,14 @@ class Bottom_Bar(Widget):
             id="bar_container",
         )
 
+    def update_progress(self):
+        self.query_one(Current_Time_In_Track).current_time += 1000
+
+
     def on_mount(self):
         self.styles.border = ("hkey", "blue")
         self.border_title = playback.playing_settings()
+        self.set_interval(1, self.update_progress)
 
 
 class Main_Screen(Screen):
@@ -124,9 +138,12 @@ class Main_Screen(Screen):
             )
 
         # Song change
-        def update_song(song: str):
-            self.query_one(Current_Track).update(current_track=song)
-            self.query(Track_Duration).update()
+        @work
+        async def update_stats():
+            old_song = playback.track
+            playback.update()
+            if old_song != playback.track:
+
 
         self.watch(
             self.query_one(Current_Time_In_Track), "current_time", update_progress

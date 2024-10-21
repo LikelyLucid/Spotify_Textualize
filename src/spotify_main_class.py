@@ -32,39 +32,39 @@ class Spotify_Playback_Data:
         # If playback_data is None, set all fields to empty strings or defaults
         if playback_data is None:
             print("No playback data available.")
-            self.device_id = ""
-            self.device_name = ""
-            self.device_is_active = False
-            self.device_is_private_session = False
-            self.device_is_restricted = False
-            self.device_type = ""
-            self.device_supports_volume = False
-            self.device_volume_percent = 0
-            self.shuffle = False
-            self.smart_shuffle = False
-            self.repeat = ""
-            self.timestamp = 0
-            self.progress_ms = 0
-            self.currently_playing_type = ""
-            self.is_playing = False
-            self.external_url = ""
-            self.context_href = ""
-            self.context_type = ""
-            self.context_uri = ""
-            self.track = ""
-            self.track_id = ""
-            self.track_uri = ""
-            self.track_explicit = False
-            self.track_popularity = 0
-            self.track_preview_url = ""
-            self.track_number = 0
-            self.track_duration = 0
-            self.album_name = ""
-            self.album_id = ""
-            self.album_release_date = ""
-            self.album_total_tracks = 0
-            self.artists = []
-            self.available_markets = []
+            self.device_id = None
+            self.device_name = None
+            self.device_is_active = None
+            self.device_is_private_session = None
+            self.device_is_restricted = None
+            self.device_type = None
+            self.device_supports_volume = None
+            self.device_volume_percent = None
+            self.shuffle = None
+            self.smart_shuffle = None
+            self.repeat = None
+            self.timestamp = None
+            self.progress_ms = None
+            self.currently_playing_type = None
+            self.is_playing = None
+            self.external_url = None
+            self.context_href = None
+            self.context_type = None
+            self.context_uri = None
+            self.track = None
+            self.track_id = None
+            self.track_uri = None
+            self.track_explicit = None
+            self.track_popularity = None
+            self.track_preview_url = None
+            self.track_number = None
+            self.track_duration = None
+            self.album_name = None
+            self.album_id = None
+            self.album_release_date = None
+            self.album_total_tracks = None
+            self.artists = None
+            self.available_markets = None
             return
 
         # Device Information
@@ -117,25 +117,36 @@ class Spotify_Playback_Data:
 
     def playing_settings(self):
         """ Creates the text above the progress bar"""
-
-        information = {}
-        result = "("
         if self.device_name is not None:
+            information = {}
+            result = "("
+
             information["Device"] = self.device_name
-        if self.shuffle is not None:
             if self.smart_shuffle:
                 information["Shuffle"] = "Smart"
             elif self.shuffle:
                 information["Shuffle"] = "On"
             else:
                 information["Shuffle"] = "Off"
-        if self.repeat is not None:
-            information["Repeat"] = self.repeat
-        if self.is_playing is not None:
-            information["Volume"] = self.device_volume_percent + "%"
 
-        for key, value in information.items():
-            result += f"{key}: {value} | "
-        result += ")"
+            if self.repeat == "context":
+                information["Repeat"] = "All"
+            elif self.repeat == "track":
+                information["Repeat"] = "Track"
+            else:
+                information["Repeat"] = "Off"
 
-        return result
+            information["Volume"] = str(self.device_volume_percent) + "%"
+
+            for key, value in information.items():
+                result += f"{key}: {value} | "
+            result += ")"
+
+            return result
+        else:
+            return None
+
+if __name__ == "__main__":
+    sp = Spotify_Playback_Data()
+    for key, value in sp.__dict__.items():
+        print(f"{key}: {value}")
