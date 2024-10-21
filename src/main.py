@@ -108,7 +108,7 @@ class Bottom_Bar(Widget):
                     )
                 ),
                 Track_Duration(),
-                id="bar_container",
+                id="bar_with_times",
             ),
         )
 
