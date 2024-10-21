@@ -68,12 +68,14 @@ class Current_Device(Widget):
 class Playing_Information(Widget):
 
     def __str__():
-        return f"(Device: {playback.device_name})"
+        information = "("
+        if playback.device_name is not None:
+            information += f"Device: {playback.device_name} | Shuffle: {playback.shuffle}"
 
     def render(self):
         # Return a string with playback info for the bottom bar
         return (
-            "(Device: DEVICE PLACEHOLDER | Shuffle: OFF | Repeat: OFF | Volume: 100%)"
+            f"{str(self)}"
         )
 
 
