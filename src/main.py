@@ -90,7 +90,7 @@ class Bottom_Bar(Widget):
 
     def on_mount(self):
         self.styles.border = ("hkey", "blue")
-        self.border_title = str(Playing_Information())
+        self.border_title = playback.playing_settings()
 
 
 class Main_Screen(Screen):

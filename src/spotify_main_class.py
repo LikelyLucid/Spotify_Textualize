@@ -119,6 +119,18 @@ class Spotify_Playback_Data:
         """ Creates the text above the progress bar"""
 
         information = {}
+        result = "("
+        if self.device_name is not None:
+            information["Device"] = self.device_name
+        if self.shuffle is not None:
+            information["Shuffle"] = self.shuffle
+        if self.repeat is not None:
+            information["Repeat"] = self.repeat
+        if self.is_playing is not None:
+            information["Volume"] = self.device_volume_percent
 
-        if self.track is not None:
-            
+        for key, value in information.items():
+            result += f"{key}: {value} | "
+        result += ")"
+
+        return result
