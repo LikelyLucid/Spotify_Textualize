@@ -29,10 +29,11 @@ Screen {
 }
 
 #bottom_bar {
-    column-span: 2;
-    /* row-span: 2; */
-    height: 5;
+    width
+    row-span: 10;
+    height: auto;
 }
+
 
 #bar_with_times {
     column-span: 2;

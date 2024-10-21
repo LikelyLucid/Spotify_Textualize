@@ -110,6 +110,7 @@ class Bottom_Bar(Widget):
                 Track_Duration(),
                 id="bar_with_times",
             ),
+            id = "bottom_bar"
         )
 
     def update_progress(self, progress=None):
@@ -152,7 +153,7 @@ class Main_Screen(Screen):
         yield Placeholder("top_bar", id="top_bar")
         yield Placeholder("Spotify Stuff | Playlists", id="sidebar")
         yield Placeholder("Main Page", id="main_page")
-        yield Bottom_Bar(id="bottom_bar")
+        yield Bottom_Bar()
 
     async def update_stats(self):
         old_song = playback.track
