@@ -123,11 +123,16 @@ class Spotify_Playback_Data:
         if self.device_name is not None:
             information["Device"] = self.device_name
         if self.shuffle is not None:
-            information["Shuffle"] = self.shuffle
+            if self.smart_shuffle:
+                information["Shuffle"] = "Smart"
+            elif self.shuffle:
+                information["Shuffle"] = "On"
+            else:
+                information["Shuffle"] = "Off"
         if self.repeat is not None:
             information["Repeat"] = self.repeat
         if self.is_playing is not None:
-            information["Volume"] = self.device_volume_percent
+            information["Volume"] = self.device_volume_percent + "%"
 
         for key, value in information.items():
             result += f"{key}: {value} | "
