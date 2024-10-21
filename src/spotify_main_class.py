@@ -118,4 +118,7 @@ class Spotify_Playback_Data:
     def playing_settings(self):
         """ Creates the text above the progress bar"""
 
-        
+        information = {}
+
+        if self.track is not None:
+            
