@@ -167,7 +167,7 @@ class Main_Screen(Screen):
             if playback.is_playing:
                 self.query_one(Bottom_Bar).song_change()
 
-            self.query_one(Bottom_Bar).update_playback_settings()
+        self.query_one(Bottom_Bar).update_playback_settings()
 
     def on_mount(self) -> None:
         self.set_interval(2, self.update_stats)
