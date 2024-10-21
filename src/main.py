@@ -3,7 +3,7 @@ from textual.binding import Binding
 from textual.screen import Screen
 from textual.widget import Widget
 from textual.containers import Container, Center, Middle, Horizontal, Vertical
-from textual.widgets import Footer, Placeholder, ProgressBar, Button, Static
+from textual.widgets import Footer, Placeholder, ProgressBar, Button, Static, ListView
 from textual.reactive import reactive
 from spotify_main_class import Spotify_Playback_Data
 from textual import work
@@ -148,11 +148,7 @@ class Side_Bar(Widget):
             yield Placeholder("Spotify Stuff", id="spotify_stuff")
             yield Placeholder("Playlists", id="playlists")
 
-
-
-
-
-
+class 
 
 class Main_Screen(Screen):
     """The main page that contains:
