@@ -4,7 +4,7 @@ Screen {
     layout: grid;
     grid-size: 5;
     grid-columns: 1fr 2fr;
-    grid-rows: 1fr 1fr 1fr 1fr 1fr;
+    grid-rows: 1fr 1fr 1fr auto auto;
 }
 #sidebar {
     column-span: 1;
