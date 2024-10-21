@@ -99,7 +99,7 @@ class Bottom_Bar(Widget):
         info = self.get_artist_info()
         print("WHAT THE FUCK")
         yield Container(
-            Static(f"{info}", id="artist_info"),
+            Static(f"{info}", expand=True, id="artist_info"),
             Current_Time_In_Track(),
             Center(
                 ProgressBar(total=100, id="bar", show_percentage=False, show_eta=False)
