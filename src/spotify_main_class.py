@@ -145,7 +145,10 @@ class Spotify_Playback_Data:
             return result
         else:
             return None
-
+    def get_playlists(self, type="user"):
+        """ Get the user's playlists """
+        playlists = self.sp.current_user_playlists()
+        return [playlist["name"] for playlist in playlists["items"]]
 if __name__ == "__main__":
     sp = Spotify_Playback_Data()
     for key, value in sp.__dict__.items():
