@@ -156,11 +156,16 @@ class Side_Bar(Widget):
             yield Placeholder("Spotify Stuff", id="spotify_stuff")
             # yield Placeholder("Playlists", id="playlists")
             # test with placeholders
-            featured_playlists = 
+            search_featured = playback.sp.featured_playlists(limit=5)
+            featured = {}
+            for playlist in search_featured["playlists"]["items"]:
+                featured[playlist["name"]] = playlist["id"]
+            for playlist in featured_playlists["playlists"]["items"]:
+
             yield Playlist_List(playlist_data=[
                     {"name": "Liked Songs", "id": "liked_songs"},
                     {"name": "Saved Episodes", "id": "saved_episodes"},
-                    {}
+
                 ]
             )
 
