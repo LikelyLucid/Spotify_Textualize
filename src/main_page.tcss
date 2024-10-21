@@ -14,9 +14,14 @@ Screen {
     layout: grid;
     grid-size: 2;
     grid-columns: 1fr 0;
-    grid-rows: 1fr 1fr;
+    grid-rows: 1fr 2fr;
 }
-
+#playlists {
+    column-span: 2;
+}
+#spotify_stuff {
+    column-span: 2;
+}
 
 #main_page {
     column-span: 4;
