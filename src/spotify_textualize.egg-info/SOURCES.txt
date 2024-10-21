@@ -1,0 +1,11 @@
+README.md
+pyproject.toml
+src/config_helper.py
+src/main.py
+src/spotify_functions.py
+src/spotify_main_class.py
+src/spotify_textualize.egg-info/PKG-INFO
+src/spotify_textualize.egg-info/SOURCES.txt
+src/spotify_textualize.egg-info/dependency_links.txt
+src/spotify_textualize.egg-info/requires.txt
+src/spotify_textualize.egg-info/top_level.txt
