@@ -153,9 +153,15 @@ class Side_Bar(Widget):
     def compose(self):
         with Container(id="sidebar_container"):
             yield Placeholder("Spotify Stuff", id="spotify_stuff")
-            #yield Placeholder("Playlists", id="playlists")
+            # yield Placeholder("Playlists", id="playlists")
             # test with placeholders
-            yield Playlist_List({"name": "Test Playlist", "id": "1234"})
+            yield Playlist_List(
+                [
+                    {"name": "Playlist 1", "id": "heyh"},
+                    {"name": "Playlist 2", "id": "erherh"},
+                    {"name": "Playlist 3", "id": "erhhj"},
+                ]
+            )
 
 
 class Playlist_List(Widget):
@@ -167,7 +173,12 @@ class Playlist_List(Widget):
     def compose(self):
         items = []
         for playlist in self.playlist_data:
-            items.append(ListItem(playlist["name"], id=playlist["id"]))
+            items.append(
+                ListItem(
+                    playlist["name"],
+                    id=playlist["id"],
+                )
+            )
         yield ListView(items)
 
 
