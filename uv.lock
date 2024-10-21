@@ -205,7 +205,7 @@ wheels = [
 [[package]]
 name = "spotify-textualize"
 version = "0.1.0"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "pymemcache" },
     { name = "spotipy" },
