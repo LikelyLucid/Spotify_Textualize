@@ -2,16 +2,16 @@
 
 Screen {
     layout: grid;
-    grid-size: 3;
-    grid-columns: 1fr 2fr ;
-    grid-rows: 5fr auto;
+    grid-size: 5;
+    grid-columns: 1fr 2fr;
+    grid-rows: auto;
 }
 #sidebar {
     column-span: 1;
     row-span: 1;
 }
 #main_page {
-    column-span: 2;
+    column-span: 3;
     row-span: 1;
 }
 #top_bar {
@@ -29,15 +29,22 @@ Screen {
 }
 
 #bottom_bar {
-    column-span: 3;
+    column-span: 5;
+    row-span: 2;
     height: 10;
 }
 
 #bar_container {
-    column-span: 3;
+    column-span: 5;
     layout: grid;
     grid-size: 3;
     grid-columns: auto 5fr auto;
+    grid-rows: 1fr 1fr;
+}
+
+#artist_info {
+    column-span: 3;
+    height: 5;
 }
 
 #bar {
