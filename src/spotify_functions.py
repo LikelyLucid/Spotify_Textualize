@@ -43,8 +43,8 @@ def authenticate_user():
                 client_id=client_id,
                 client_secret=client_secret,
                 redirect_uri=redirect_uri,
-                # cache_path=f"{get_config_directory()}/.cache-{client_id}",
-                cache_handler=MemoryCacheHandler(),
+                cache_path=f"{get_config_directory()}/.cache-{client_id}",
+                # cache_handler=MemoryCacheHandler(),
             )
         )
         if sp.me() is not None:  # Check if the user is authenticated

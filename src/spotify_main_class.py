@@ -27,7 +27,7 @@ class Spotify_Playback_Data:
         - None
         """
         playback_data = self.sp.current_playback()
-
+        print(playback_data)
         # Device Information
         if playback_data is None:
             print("No playback data available.")
