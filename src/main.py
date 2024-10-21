@@ -3,7 +3,15 @@ from textual.binding import Binding
 from textual.screen import Screen
 from textual.widget import Widget
 from textual.containers import Container, Center, Middle, Horizontal, Vertical
-from textual.widgets import Footer, Placeholder, ProgressBar, Button, Static, ListView
+from textual.widgets import (
+    Footer,
+    Placeholder,
+    ProgressBar,
+    Button,
+    Static,
+    ListView,
+    ListItem,
+)
 from textual.reactive import reactive
 from spotify_main_class import Spotify_Playback_Data
 from textual import work
@@ -86,9 +94,7 @@ class Bottom_Bar(Widget):
     def get_artist_info(self):
         print("HIT")
         if playback.track is not None:
-            artist_information = (
-                f"[b][italic]{playback.track}[/italic][/b] | "
-            )
+            artist_information = f"[b][italic]{playback.track}[/italic][/b] | "
             for artist in playback.artists:
                 artist_information += artist + ", "
             artist_information = artist_information[:-2]
@@ -112,7 +118,7 @@ class Bottom_Bar(Widget):
                 Track_Duration(),
                 id="bar_with_times",
             ),
-            id = "bottom_bar_collection"
+            id="bottom_bar_collection",
         )
 
     def update_progress(self, progress=None):
@@ -142,13 +148,23 @@ class Bottom_Bar(Widget):
         self.update_playback_settings()
         self.set_interval(1, self.update_progress)
 
+
 class Side_Bar(Widget):
     def compose(self):
-        with Container(id = "sidebar_container"):
+        with Container(id="sidebar_container"):
             yield Placeholder("Spotify Stuff", id="spotify_stuff")
             yield Placeholder("Playlists", id="playlists")
 
-class 
+
+class Playlist_List(Widget):
+    def __init__(self, playlist_data):
+        self.playlist_data = playlist_data
+        super().__init__()
+
+    def compose(self):
+        for playlist in self.playlist_data:
+            yield Label
+
 
 class Main_Screen(Screen):
     """The main page that contains:
