@@ -28,11 +28,46 @@ class Spotify_Playback_Data:
         """
         playback_data = self.sp.current_playback()
         print(playback_data)
-        # Device Information
+
+        # If playback_data is None, set all fields to empty strings or defaults
         if playback_data is None:
             print("No playback data available.")
-            self.device_id = None
+            self.device_id = ""
+            self.device_name = ""
+            self.device_is_active = False
+            self.device_is_private_session = False
+            self.device_is_restricted = False
+            self.device_type = ""
+            self.device_supports_volume = False
+            self.device_volume_percent = 0
+            self.shuffle = False
+            self.smart_shuffle = False
+            self.repeat = ""
+            self.timestamp = 0
+            self.progress_ms = 0
+            self.currently_playing_type = ""
+            self.is_playing = False
+            self.external_url = ""
+            self.context_href = ""
+            self.context_type = ""
+            self.context_uri = ""
+            self.track = ""
+            self.track_id = ""
+            self.track_uri = ""
+            self.track_explicit = False
+            self.track_popularity = 0
+            self.track_preview_url = ""
+            self.track_number = 0
+            self.track_duration = 0
+            self.album_name = ""
+            self.album_id = ""
+            self.album_release_date = ""
+            self.album_total_tracks = 0
+            self.artists = []
+            self.available_markets = []
             return
+
+        # Device Information
         self.device_id = playback_data["device"]["id"]
         self.device_name = playback_data["device"]["name"]
         self.device_is_active = playback_data["device"]["is_active"]
@@ -76,66 +111,3 @@ class Spotify_Playback_Data:
         # Artist Information
         self.artists = [artist["name"] for artist in playback_data["item"]["artists"]]
         self.available_markets = playback_data["item"]["available_markets"]
-
-    def _print_playback_data(self):
-        """
-        Print the playback data
-
-        Returns:
-        - None"""
-        # Device Information
-        print("=== Device Information ===")
-        print(f"Device ID: {self.device_id}")
-        print(f"Device Name: {self.device_name}")
-        print(f"Is Active: {self.device_is_active}")
-        print(f"Is Private Session: {self.device_is_private_session}")
-        print(f"Is Restricted: {self.device_is_restricted}")
-        print(f"Device Type: {self.device_type}")
-        print(f"Supports Volume: {self.device_supports_volume}")
-        print(f"Volume Percent: {self.device_volume_percent}")
-        print()
-
-        # Playback Information
-        print("=== Playback Information ===")
-        print(f"Shuffle: {self.shuffle}")
-        print(f"Smart Shuffle: {self.smart_shuffle}")
-        print(f"Repeat State: {self.repeat}")
-        print(f"Timestamp: {self.timestamp}")
-        print(f"Progress (ms): {self.progress_ms}")
-        print(f"Currently Playing Type: {self.currently_playing_type}")
-        print(f"Is Playing: {self.is_playing}")
-        print()
-
-        # Context Information
-        print("=== Context Information ===")
-        print(f"External URL: {self.external_url}")
-        print(f"Context Href: {self.context_href}")
-        print(f"Context Type: {self.context_type}")
-        print(f"Context URI: {self.context_uri}")
-        print()
-
-        # Track Information
-        print("=== Track Information ===")
-        print(f"Track Name: {self.track}")
-        print(f"Track ID: {self.track_id}")
-        print(f"Track URI: {self.track_uri}")
-        print(f"Explicit: {self.track_explicit}")
-        print(f"Popularity: {self.track_popularity}")
-        print(f"Preview URL: {self.track_preview_url}")
-        print(f"Track Number: {self.track_number}")
-        print(f"Track Duration (ms): {self.track_duration}")
-        print()
-
-        # Album Information
-        print("=== Album Information ===")
-        print(f"Album Name: {self.album_name}")
-        print(f"Album ID: {self.album_id}")
-        print(f"Album Release Date: {self.album_release_date}")
-        print(f"Total Tracks: {self.album_total_tracks}")
-        print()
-
-        # Artist Information
-        print("=== Artist Information ===")
-        print(f"Artists: {', '.join(self.artists)}")
-        print(f"Available Markets: {', '.join(self.available_markets)}")
-        print()
