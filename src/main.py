@@ -142,6 +142,11 @@ class Bottom_Bar(Widget):
         self.update_playback_settings()
         self.set_interval(1, self.update_progress)
 
+class Side_Bar(Widget):
+    def compose(self):
+        with Vertical(id="sidebar_container"):
+            yield Placeholder("Playlists", id="playlists")
+            yield Placeholder("Spotify Stuff", id="spotify_stuff")
 
 class Main_Screen(Screen):
     """The main page that contains:
@@ -154,7 +159,8 @@ class Main_Screen(Screen):
 
     def compose(self) -> ComposeResult:
         yield Placeholder("top_bar", id="top_bar")
-        yield Placeholder("Spotify Stuff | Playlists", id="sidebar")
+        # yield Placeholder("Spotify Stuff | Playlists", id="sidebar")
+        yield Side_Bar(id="sidebar")
         yield Placeholder("Main Page", id="main_page")
         yield Bottom_Bar(id="bottom_bar")
 

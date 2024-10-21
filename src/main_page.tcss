@@ -10,6 +10,12 @@ Screen {
     column-span: 1;
     row-span: 1;
 }
+#sidebar_container {
+    grid-columns: 1fr;
+    grid-rows: 1fr 1fr;
+}
+
+
 #main_page {
     column-span: 4;
     row-span: 1;
