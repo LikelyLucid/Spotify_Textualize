@@ -144,7 +144,7 @@ class Bottom_Bar(Widget):
 
 class Side_Bar(Widget):
     def compose(self):
-        with Vertical():
+        with Container(id = "sidebar_container"):
             yield Placeholder("Playlists", id="playlists")
             yield Placeholder("Spotify Stuff", id="spotify_stuff")
 
