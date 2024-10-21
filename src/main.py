@@ -153,7 +153,9 @@ class Side_Bar(Widget):
     def compose(self):
         with Container(id="sidebar_container"):
             yield Placeholder("Spotify Stuff", id="spotify_stuff")
-            yield Placeholder("Playlists", id="playlists")
+            #yield Placeholder("Playlists", id="playlists")
+            # test with placeholders
+            yield Playlist_List({"name": "Test Playlist", "id": "1234"})
 
 
 class Playlist_List(Widget):
