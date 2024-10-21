@@ -4,14 +4,14 @@ Screen {
     layout: grid;
     grid-size: 5;
     grid-columns: 1fr 2fr;
-    grid-rows: auto;
+    grid-rows: 1fr 1fr 1fr 1fr 1fr;
 }
 #sidebar {
     column-span: 1;
     row-span: 1;
 }
 #main_page {
-    column-span: 3;
+    column-span: 4;
     row-span: 1;
 }
 #top_bar {
