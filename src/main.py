@@ -68,7 +68,7 @@ class Current_Device(Widget):
 class Playing_Information(Widget):
 
     def __str__():
-        
+        return f"(Device: {playback.device_name})"
 
     def render(self):
         # Return a string with playback info for the bottom bar
