@@ -142,7 +142,11 @@ class Main_Screen(Screen):
         async def update_stats():
             old_song = playback.track
             playback.update()
-            if old_song != playback.track:
+            if playback.track is None
+                return
+            elif old_song != playback.track:
+                self.post_message("update")
+
 
 
         self.watch(
