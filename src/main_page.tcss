@@ -4,7 +4,7 @@ Screen {
     layout: grid;
     grid-size: 2;
     grid-columns: 1fr 2fr;
-    grid-rows: 1fr 4;
+    grid-rows: 1fr auto;
 }
 #sidebar {
     column-span: 1;
@@ -29,9 +29,9 @@ Screen {
 }
 
 #bottom_bar {
-    column-span: 5;
-    row-span: 2;
-    /* height: 10; */
+    column-span: 2;
+    /* row-span: 2; */
+    height: 5;
 }
 
 #bar_container {
