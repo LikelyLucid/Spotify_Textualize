@@ -158,8 +158,8 @@ class Side_Bar(Widget):
             # test with placeholders
             yield Playlist_List(playlist_data=[
                     {"name": "Liked Songs", "id": "liked_songs"},
-                    {"name": "Playlist 2", "id": "erherh"},
-                    {"name": "Playlist 3", "id": "erhhj"},
+                    {"name": "Saved Episodes", "id": "saved_episodes"},
+                    {}
                 ]
             )
 
