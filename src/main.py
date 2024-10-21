@@ -156,6 +156,7 @@ class Side_Bar(Widget):
             yield Placeholder("Spotify Stuff", id="spotify_stuff")
             # yield Placeholder("Playlists", id="playlists")
             # test with placeholders
+            featured_playlists = 
             yield Playlist_List(playlist_data=[
                     {"name": "Liked Songs", "id": "liked_songs"},
                     {"name": "Saved Episodes", "id": "saved_episodes"},
