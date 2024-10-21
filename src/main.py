@@ -67,11 +67,6 @@ class Current_Device(Widget):
 
 class Playing_Information(Widget):
 
-    def __str__():
-        information = "("
-        if playback.device_name is not None:
-            information += f"Device: {playback.device_name} | Shuffle: {playback.shuffle}"
-
     def render(self):
         # Return a string with playback info for the bottom bar
         return (
@@ -95,7 +90,7 @@ class Bottom_Bar(Widget):
 
     def on_mount(self):
         self.styles.border = ("hkey", "blue")
-        self.border_title = playback.track
+        self.border_title = str(Playing_Information())
 
 
 class Main_Screen(Screen):

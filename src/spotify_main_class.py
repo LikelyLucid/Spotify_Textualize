@@ -87,10 +87,13 @@ class Spotify_Playback_Data:
         self.is_playing = playback_data["is_playing"]
 
         # Context Information
-        self.external_url = playback_data["context"]["external_urls"]["spotify"]
-        self.context_href = playback_data["context"]["href"]
-        self.context_type = playback_data["context"]["type"]
-        self.context_uri = playback_data["context"]["uri"]
+        try:
+            self.external_url = playback_data["context"]["external_urls"]["spotify"]
+            self.context_href = playback_data["context"]["href"]
+            self.context_type = playback_data["context"]["type"]
+            self.context_uri = playback_data["context"]["uri"]
+        except:
+            pass
 
         # Track Information
         self.track = playback_data["item"]["name"]
@@ -111,3 +114,8 @@ class Spotify_Playback_Data:
         # Artist Information
         self.artists = [artist["name"] for artist in playback_data["item"]["artists"]]
         self.available_markets = playback_data["item"]["available_markets"]
+
+    def playing_settings(self):
+        """ Creates the text above the progress bar"""
+
+        
