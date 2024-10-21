@@ -129,7 +129,7 @@ class Bottom_Bar(Widget):
         self.query_one(Current_Time_In_Track).current_time = (
             get_current_time_with_offset()
         )
-        self.query_one("artist_info").text = f"{self.get_artist_info()}"
+        self.query_one("#artist_info").update = f"{self.get_artist_info()}"
 
     def update_playback_settings(self):
         self.border_title = playback.playing_settings()
