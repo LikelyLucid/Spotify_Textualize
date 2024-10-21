@@ -86,7 +86,9 @@ class Bottom_Bar(Widget):
     def get_artist_info(self):
         print("HIT")
         if playback.track is not None:
-            artist_information = f"[b][style size="30px"]{playback.track}[/b] | "
+            artist_information = (
+                f"[b]{playback.track}[/b] | "
+            )
             for artist in playback.artists:
                 artist_information += artist + ", "
             artist_information = artist_information[:-2]
