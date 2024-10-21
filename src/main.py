@@ -98,15 +98,16 @@ class Bottom_Bar(Widget):
     def compose(self):
         info = self.get_artist_info()
         print("WHAT THE FUCK")
-        yield Container(
-            Static(f"{info}", expand=True, id="artist_info"),
-            Current_Time_In_Track(),
-            Center(
-                ProgressBar(total=100, id="bar", show_percentage=False, show_eta=False)
-            ),
-            Track_Duration(),
-            id="bar_container",
-        )
+        with Horizontal():
+            yield Static(f"{info}", id="artist_info"),
+            yield Container(
+                Current_Time_In_Track(),
+                Center(
+                    ProgressBar(total=100, id="bar", show_percentage=False, show_eta=False)
+                ),
+                Track_Duration(),
+                id="bar_container",
+            )
 
     def update_progress(self, progress=None):
         current_time_widget = self.query_one(Current_Time_In_Track)

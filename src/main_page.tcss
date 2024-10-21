@@ -4,7 +4,7 @@ Screen {
     layout: grid;
     grid-size: 5;
     grid-columns: 1fr 2fr;
-    grid-rows: 1fr 1fr auto auto auto;
+    grid-rows: 1fr 1fr 1fr 1fr 1fr;
 }
 #sidebar {
     column-span: 1;
@@ -43,8 +43,7 @@ Screen {
 }
 
 #artist_info {
-    column-span: 3;
-    height: 5;
+    height: auto;
 }
 
 #bar {
