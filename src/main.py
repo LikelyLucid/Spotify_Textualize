@@ -11,6 +11,7 @@ from textual.widgets import (
     Static,
     ListView,
     ListItem,
+    Label,
 )
 from textual.reactive import reactive
 from spotify_main_class import Spotify_Playback_Data
@@ -174,9 +175,7 @@ class Playlist_List(Widget):
         items = []
         for playlist in self.playlist_data:
             items.append(
-                ListItem(
-                    playlist["name"],
-                    id=playlist["id"],
+                ListItem(Label(f"{playlist['name']}")
                 )
             )
         yield ListView(items)
