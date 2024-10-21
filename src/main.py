@@ -157,13 +157,16 @@ class Side_Bar(Widget):
 
 
 class Playlist_List(Widget):
+
     def __init__(self, playlist_data):
         self.playlist_data = playlist_data
         super().__init__()
 
     def compose(self):
+        items = []
         for playlist in self.playlist_data:
-            yield Label
+            items.append(ListItem(playlist["name"], id=playlist["id"]))
+        yield ListView(items)
 
 
 class Main_Screen(Screen):
