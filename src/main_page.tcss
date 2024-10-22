@@ -16,10 +16,10 @@ Screen {
     grid-columns: 1fr 0;
     grid-rows: 1fr 3fr;
 }
-#playlists_list {
+#user_playlists_list {
     column-span: 2;
 }
-#spotify_stuff_list {
+#featured_playlists_list {
     column-span: 2;
     height: 100%;
 }
