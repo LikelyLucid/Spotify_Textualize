@@ -2,7 +2,7 @@ from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.screen import Screen
 from textual.widget import Widget
-from textual.containers import Container, Center, Middle, Horizontal, Vertical
+from textual.containers import Container, Center, Middle, Horizontal, Vertical, ScrollableContainer
 from textual.widgets import (
     Footer,
     Placeholder,
@@ -152,37 +152,27 @@ class Bottom_Bar(Widget):
 
 class Side_Bar(Widget):
     def compose(self):
-        with Container(id="sidebar_container"):
-            yield Placeholder("Spotify Stuff", id="spotify_stuff")
-            # yield Placeholder("Playlists", id="playlists")
-            # test with placeholders
-            search_featured = playback.sp.featured_playlists(limit=5)
-            featured = {}
-            for playlist in search_featured["playlists"]["items"]:
-                featured[playlist["name"]] = playlist["id"]
-            for playlist in featured_playlists["playlists"]["items"]:
+        with ScrollableContainer(id="sidebar_container"):
+            yield Static("Spotify Stuff", id="spotify_stuff_header")
+            yield Playlist_List(playlist_data=self.get_spotify_stuff(), id="spotify_stuff_list")
+            yield Static("Your Playlists", id="playlists_header")
+            yield Playlist_List(playlist_data=playback.get_playlists(), id="playlists_list")
 
-            yield Playlist_List(playlist_data=[
-                    {"name": "Liked Songs", "id": "liked_songs"},
-                    {"name": "Saved Episodes", "id": "saved_episodes"},
-
-                ]
-            )
-
+    def get_spotify_stuff(self):
+        spotify_stuff = [
+            playback.get_liked_songs_playlist(),
+            playback.get_saved_episodes_playlist()
+        ]
+        spotify_stuff.extend(playback.get_featured_playlists(limit=5))
+        return spotify_stuff
 
 class Playlist_List(Widget):
-
-    def __init__(self, playlist_data):
+    def __init__(self, playlist_data, id=None):
         self.playlist_data = playlist_data
-        super().__init__()
+        super().__init__(id=id)
 
     def compose(self):
-        items = []
-        for playlist in self.playlist_data:
-            items.append(
-                ListItem(Label(f"{playlist['name']}")
-                )
-            )
+        items = [ListItem(Label(f"{playlist['name']}")) for playlist in self.playlist_data]
         yield ListView(*items)
 
 

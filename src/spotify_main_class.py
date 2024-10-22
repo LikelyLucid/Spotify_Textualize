@@ -145,10 +145,23 @@ class Spotify_Playback_Data:
             return result
         else:
             return None
-    def get_playlists(self, specific_ids=[]):
+    def get_playlists(self):
         """ Get the user's playlists """
         playlists = self.sp.current_user_playlists()
-        return [playlist["name"] for playlist in playlists["items"]]
+        return [{"name": playlist["name"], "id": playlist["id"]} for playlist in playlists["items"]]
+
+    def get_featured_playlists(self, limit=5):
+        """ Get featured playlists """
+        featured = self.sp.featured_playlists(limit=limit)
+        return [{"name": playlist["name"], "id": playlist["id"]} for playlist in featured["playlists"]["items"]]
+
+    def get_liked_songs_playlist(self):
+        """ Get the Liked Songs playlist """
+        return {"name": "Liked Songs", "id": "liked_songs"}
+
+    def get_saved_episodes_playlist(self):
+        """ Get the Saved Episodes playlist """
+        return {"name": "Saved Episodes", "id": "saved_episodes"}
 
 
 
