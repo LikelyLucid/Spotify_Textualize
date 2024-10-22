@@ -157,18 +157,18 @@ class Bottom_Bar(Widget):
 class Side_Bar(Widget):
     def compose(self):
         with ScrollableContainer(id="sidebar_container"):
-            #yield Static("Featured Playlists", id="featured_playlists_header")
-            yield Playlist_List(playlist_data=playback.get_featured_playlists(limit=5), id="featured_playlists_list")
-            #yield Static("Your Library", id="your_library_header")
-            yield Playlist_List(playlist_data=playback.get_user_playlists(), id="user_playlists_list")
+            yield Static("Featured Playlists", id="featured_playlists_header")
+            yield Library_List(library_data=playback.get_featured_playlists(limit=5), id="featured_playlists_list")
+            yield Static("Your Library", id="your_library_header")
+            yield Library_List(library_data=playback.get_user_library(), id="user_library_list")
 
-class Playlist_List(Widget):
-    def __init__(self, playlist_data, id=None):
-        self.playlist_data = playlist_data
+class Library_List(Widget):
+    def __init__(self, library_data, id=None):
+        self.library_data = library_data
         super().__init__(id=id)
 
     def compose(self):
-        items = [ListItem(Label(f"{playlist['name']}")) for playlist in self.playlist_data]
+        items = [ListItem(Label(f"{item['name']} ({item['type'].capitalize()})")) for item in self.library_data]
         yield ListView(*items)
 
 

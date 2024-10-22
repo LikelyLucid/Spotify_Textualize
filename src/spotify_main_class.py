@@ -145,29 +145,30 @@ class Spotify_Playback_Data:
             return result
         else:
             return None
-    def get_user_playlists(self):
-        """ Get all user-related playlists """
-        playlists = []
+    def get_user_library(self):
+        """ Get all user-related playlists, albums, and other items """
+        library = []
 
         # Add Liked Songs
-        playlists.append({"name": "Liked Songs", "id": "liked_songs"})
+        library.append({"name": "Liked Songs", "id": "liked_songs", "type": "playlist"})
 
         # Add Saved Episodes
-        playlists.append({"name": "Your Episodes", "id": "saved_episodes"})
-
-        # Add Saved Albums
-        playlists.append({"name": "Saved Albums", "id": "saved_albums"})
+        library.append({"name": "Your Episodes", "id": "saved_episodes", "type": "playlist"})
 
         # Add user's playlists
         user_playlists = self.sp.current_user_playlists()
-        playlists.extend([{"name": playlist["name"], "id": playlist["id"]} for playlist in user_playlists["items"]])
+        library.extend([{"name": playlist["name"], "id": playlist["id"], "type": "playlist"} for playlist in user_playlists["items"]])
 
-        return playlists
+        # Add Saved Albums
+        saved_albums = self.sp.current_user_saved_albums()
+        library.extend([{"name": album["album"]["name"], "id": album["album"]["id"], "type": "album"} for album in saved_albums["items"]])
+
+        return library
 
     def get_featured_playlists(self, limit=5):
         """ Get featured playlists """
         featured = self.sp.featured_playlists(limit=limit)
-        return [{"name": playlist["name"], "id": playlist["id"]} for playlist in featured["playlists"]["items"]]
+        return [{"name": playlist["name"], "id": playlist["id"], "type": "playlist"} for playlist in featured["playlists"]["items"]]
 
 
 
