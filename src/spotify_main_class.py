@@ -1,5 +1,6 @@
 from spotify_functions import authenticate_user
 
+
 class Spotify_Playback_Data:
     def __init__(self):
         """
@@ -116,7 +117,7 @@ class Spotify_Playback_Data:
         self.available_markets = playback_data["item"]["available_markets"]
 
     def playing_settings(self):
-        """ Creates the text above the progress bar"""
+        """Creates the text above the progress bar"""
         if self.device_name is not None:
             information = {}
             result = "("
@@ -145,39 +146,59 @@ class Spotify_Playback_Data:
             return result
         else:
             return None
+
     def get_user_library(self):
-        """ Get all user-related playlists, albums, and other items """
+        """Get all user-related playlists, albums, and other items"""
         library = []
 
         # Add Liked Songs
         library.append({"name": "Liked Songs", "id": "liked_songs", "type": "playlist"})
 
         # Add Saved Episodes
-        library.append({"name": "Your Episodes", "id": "saved_episodes", "type": "playlist"})
+        library.append(
+            {"name": "Your Episodes", "id": "saved_episodes", "type": "playlist"}
+        )
 
         # Add user's playlists
         user_playlists = self.sp.current_user_playlists()
-        library.extend([{"name": playlist["name"], "id": playlist["id"], "type": "playlist"} for playlist in user_playlists["items"]])
+        library.extend(
+            [
+                {"name": playlist["name"], "id": playlist["id"], "type": "playlist"}
+                for playlist in user_playlists["items"]
+            ]
+        )
 
         # Add Saved Albums
         saved_albums = self.sp.current_user_saved_albums()
-        library.extend([{"name": album["album"]["name"], "id": album["album"]["id"], "type": "album"} for album in saved_albums["items"]])
+        library.extend(
+            [
+                {
+                    "name": album["album"]["name"],
+                    "id": album["album"]["id"],
+                    "type": "album",
+                }
+                for album in saved_albums["items"]
+            ]
+        )
 
         return library
 
     def get_featured_playlists(self, limit=5):
-        """ Get featured playlists """
+        """Get featured playlists"""
         featured = self.sp.featured_playlists(limit=limit)
-        return [{"name": playlist["name"], "id": playlist["id"], "type": "playlist"} for playlist in featured["playlists"]["items"]]
+        return [
+            {"name": playlist["name"], "id": playlist["id"], "type": "playlist"}
+            for playlist in featured["playlists"]["items"]
+        ]
 
     def get_playlist_tracks(self, playlist_id):
-        """ Get tracks from a playlist """
+        """Get tracks from a playlist"""
         playlist = self.sp.playlist_tracks(playlist_id, limit=500)
-        return [{"name": track["track"]["name"], "id": track["track"]["id"], "type": "track"} for track in playlist["items"]]
-
+        print(playlist)
 
 
 if __name__ == "__main__":
     sp = Spotify_Playback_Data()
     for key, value in sp.__dict__.items():
         print(f"{key}: {value}")
+    
