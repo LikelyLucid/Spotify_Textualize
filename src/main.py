@@ -171,6 +171,11 @@ class Library_List(Widget):
         items = [ListItem(Label(f"{item['name']} ({item['type'].capitalize()})")) for item in self.library_data]
         yield ListView(*items)
 
+class Main_Page(Widget):
+    def compose(self):
+        with Container(id="main_page_container"):
+            yield Static("Main Page", id="main_page_header")
+            
 
 class Main_Screen(Screen):
     """The main page that contains:
