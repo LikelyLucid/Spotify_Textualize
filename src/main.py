@@ -33,6 +33,8 @@ def ms_to_time(ms: int) -> str:
     Returns:
     - A string in the format "MM:SS"
     """
+    if ms is None:
+        return "0:00"
     seconds = ms // 1000
     minutes, seconds = divmod(seconds, 60)
     return f"{minutes}:{seconds:02d}"
@@ -45,6 +47,8 @@ def get_current_time_with_offset() -> int:
     Returns:
     - The current time in milliseconds.
     """
+    if playback.progress_ms is None:
+        return 0
     offset = int(time.time() * 1000) - playback.timestamp
     print(f"Offset: {offset}")
     return playback.progress_ms + offset
@@ -153,9 +157,9 @@ class Bottom_Bar(Widget):
 class Side_Bar(Widget):
     def compose(self):
         with ScrollableContainer(id="sidebar_container"):
-            yield Static("Spotify Stuff", id="spotify_stuff_header")
+            # yield Static("Spotify Stuff", id="spotify_stuff_header")
             yield Playlist_List(playlist_data=self.get_spotify_stuff(), id="spotify_stuff_list")
-            yield Static("Your Playlists", id="playlists_header")
+            # yield Static("Your Playlists", id="playlists_header")
             yield Playlist_List(playlist_data=playback.get_playlists(), id="playlists_list")
 
     def get_spotify_stuff(self):
