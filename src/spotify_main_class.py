@@ -145,23 +145,29 @@ class Spotify_Playback_Data:
             return result
         else:
             return None
-    def get_playlists(self):
-        """ Get the user's playlists """
-        playlists = self.sp.current_user_playlists()
-        return [{"name": playlist["name"], "id": playlist["id"]} for playlist in playlists["items"]]
+    def get_user_playlists(self):
+        """ Get all user-related playlists """
+        playlists = []
+
+        # Add Liked Songs
+        playlists.append({"name": "Liked Songs", "id": "liked_songs"})
+
+        # Add Saved Episodes
+        playlists.append({"name": "Your Episodes", "id": "saved_episodes"})
+
+        # Add Saved Albums
+        playlists.append({"name": "Saved Albums", "id": "saved_albums"})
+
+        # Add user's playlists
+        user_playlists = self.sp.current_user_playlists()
+        playlists.extend([{"name": playlist["name"], "id": playlist["id"]} for playlist in user_playlists["items"]])
+
+        return playlists
 
     def get_featured_playlists(self, limit=5):
         """ Get featured playlists """
         featured = self.sp.featured_playlists(limit=limit)
         return [{"name": playlist["name"], "id": playlist["id"]} for playlist in featured["playlists"]["items"]]
-
-    def get_liked_songs_playlist(self):
-        """ Get the Liked Songs playlist """
-        return {"name": "Liked Songs", "id": "liked_songs"}
-
-    def get_saved_episodes_playlist(self):
-        """ Get the Saved Episodes playlist """
-        return {"name": "Saved Episodes", "id": "saved_episodes"}
 
 
 

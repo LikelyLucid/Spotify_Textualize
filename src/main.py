@@ -157,18 +157,10 @@ class Bottom_Bar(Widget):
 class Side_Bar(Widget):
     def compose(self):
         with ScrollableContainer(id="sidebar_container"):
-            # yield Static("Spotify Stuff", id="spotify_stuff_header")
-            yield Playlist_List(playlist_data=self.get_spotify_stuff(), id="spotify_stuff_list")
-            # yield Static("Your Playlists", id="playlists_header")
-            yield Playlist_List(playlist_data=playback.get_playlists(), id="playlists_list")
-
-    def get_spotify_stuff(self):
-        spotify_stuff = [
-            playback.get_liked_songs_playlist(),
-            playback.get_saved_episodes_playlist()
-        ]
-        spotify_stuff.extend(playback.get_featured_playlists(limit=5))
-        return spotify_stuff
+            yield Static("Featured Playlists", id="featured_playlists_header")
+            yield Playlist_List(playlist_data=playback.get_featured_playlists(limit=5), id="featured_playlists_list")
+            yield Static("Your Library", id="your_library_header")
+            yield Playlist_List(playlist_data=playback.get_user_playlists(), id="user_playlists_list")
 
 class Playlist_List(Widget):
     def __init__(self, playlist_data, id=None):
