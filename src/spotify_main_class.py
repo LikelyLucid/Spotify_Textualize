@@ -170,6 +170,11 @@ class Spotify_Playback_Data:
         featured = self.sp.featured_playlists(limit=limit)
         return [{"name": playlist["name"], "id": playlist["id"], "type": "playlist"} for playlist in featured["playlists"]["items"]]
 
+    def get_playlist_tracks(self, playlist_id):
+        """ Get tracks from a playlist """
+        playlist = self.sp.playlist_tracks(playlist_id, limit=500)
+        return [{"name": track["track"]["name"], "id": track["track"]["id"], "type": "track"} for track in playlist["items"]]
+
 
 
 if __name__ == "__main__":
