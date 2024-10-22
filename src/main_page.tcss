@@ -14,14 +14,14 @@ Screen {
     layout: grid;
     grid-size: 2;
     grid-columns: 1fr 0;
-    grid-rows: auto auto;
+    /* grid-rows: auto auto; */
 }
 #playlists_list {
     column-span: 2;
 }
 #spotify_stuff_list {
     column-span: 2;
-    h
+    height: 100%;
 }
 
 #main_page {
