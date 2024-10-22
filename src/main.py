@@ -157,9 +157,9 @@ class Bottom_Bar(Widget):
 class Side_Bar(Widget):
     def compose(self):
         with ScrollableContainer(id="sidebar_container"):
-            yield Static("Featured Playlists", id="featured_playlists_header")
+            #yield Static("Featured Playlists", id="featured_playlists_header")
             yield Library_List(library_data=playback.get_featured_playlists(limit=5), id="featured_playlists_list")
-            yield Static("Your Library", id="your_library_header")
+            #yield Static("Your Library", id="your_library_header")
             yield Library_List(library_data=playback.get_user_library(), id="user_library_list")
 
 class Library_List(Widget):
