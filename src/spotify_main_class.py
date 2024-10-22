@@ -201,4 +201,5 @@ if __name__ == "__main__":
     sp = Spotify_Playback_Data()
     for key, value in sp.__dict__.items():
         print(f"{key}: {value}")
-    
+    print()
+    print(sp.get_playlist_tracks())
