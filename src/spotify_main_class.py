@@ -193,47 +193,31 @@ class Spotify_Playback_Data:
 
     def get_playlist_tracks(self, playlist_id):
         """Get tracks from a playlist"""
-        offset = 0
         playlist_items = []
-        max_iterations = 100  # Set a maximum limit to prevent infinite loops
+        offset = 0
+        limit = 100 if playlist_id != "liked_songs" else 20
+        fetch_function = (
+            self.sp.playlist_tracks if playlist_id != "liked_songs" else self.sp.current_user_saved_tracks
+        )
 
-        if playlist_id == "liked_songs":
-            iterations = 0
-            while iterations < max_iterations:
-                playlist = self.sp.current_user_saved_tracks(limit=20, offset=offset)
-                for track in playlist["items"]:
-                    playlist_items.append(
-                        {
-                            "name": track["track"]["name"],
-                            "id": track["track"]["id"],
-                            "type": "track",
-                        }
-                    )
+        while True:
+            playlist = fetch_function(playlist_id, limit=limit, offset=offset)
+            items = playlist["items"]
 
-                if len(playlist_items) - offset == 20:
-                    offset += 20
-                else:
-                    break
-                iterations += 1
+            for item in items:
+                track = item["track"] if playlist_id == "liked_songs" else item["track"]
+                playlist_items.append(
+                    {
+                        "name": track["name"],
+                        "id": track["id"],
+                        "type": "track",
+                    }
+                )
 
-        else:
-            iterations = 0
-            while iterations < max_iterations:
-                playlist = self.sp.playlist_tracks(playlist_id, limit=100, offset=offset)
-                for track in playlist["items"]:
-                    playlist_items.append(
-                        {
-                            "name": track["track"]["name"],
-                            "id": track["track"]["id"],
-                            "type": "track",
-                        }
-                    )
-                # 100 is the maximum number of items that can be returned
-                if len(playlist['items']) == 100:  # 100 is the maximum number of items that can be returned
-                    offset += 100
-                else:
-                    break
-                iterations += 1
+            if len(items) < limit:
+                break
+            offset += limit
+
         return playlist_items
 
 if __name__ == "__main__":
