@@ -150,7 +150,6 @@ class Playlist_Track_View(Widget):
     # weighting
     track_weight, artist_weight, album_weight = 2, 1, 1
 
-
     def __init__(self, playlist_id, max_title_length=40, id=None):
         self.playlist_id = playlist_id
         self.max_title_length = max_title_length
@@ -161,7 +160,8 @@ class Playlist_Track_View(Widget):
 
     def set_tracks(self, tracks):
         table = self.query_one(DataTable)
-        table.clear_rows()
+        table.add_columns("#", "Title", "Artist", "Album", "Duration", "Liked")
+        table.clear()
         height, width = table.size
 
         max_length = width - 5
@@ -170,7 +170,6 @@ class Playlist_Track_View(Widget):
         max_track_length = max_length * self.track_weight // (self.track_weight + self.artist_weight + self.album_weight)
         max_artist_length = max_length * self.artist_weight // (self.track_weight + self.artist_weight + self.album_weight)
         max_album_length = max_length * self.album_weight // (self.track_weight + self.artist_weight + self.album_weight)
-
 
         for i, track in enumerate(tracks):
             track_name = track['name']
@@ -191,7 +190,6 @@ class Playlist_Track_View(Widget):
             if len(album_name) > max_album_length:
                 album_name = album_name[:max_album_length] + "..."
 
-
             table.add_row(
                 i,
                 track_name,
@@ -205,7 +203,6 @@ class Playlist_Track_View(Widget):
         table = self.query_one(DataTable)
         table.cursor_type = "row"
         tracks = playback.get_playlist_tracks(self.playlist_id)
-        table.add_columns("#", "Title", "Artist", "Album", "Duration", "Liked")
 
         self.set_tracks(tracks)
 
