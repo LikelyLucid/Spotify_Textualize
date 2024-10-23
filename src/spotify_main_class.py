@@ -193,7 +193,10 @@ class Spotify_Playback_Data:
 
     def get_playlist_tracks(self, playlist_id):
         """Get tracks from a playlist"""
-        playlist = self.sp.playlist_tracks(playlist_id, limit=100)
+        offset = 0
+
+
+        playlist = self.sp.playlist_tracks(playlist_id, limit=100, offset=offset)
         print(playlist)
         # return [
         #     {
@@ -212,7 +215,7 @@ class Spotify_Playback_Data:
                     "type": "track",
                 }
             )
-        
+
         if len(playlist["items"]) == 100:
             return []
 
