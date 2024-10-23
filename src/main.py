@@ -146,7 +146,7 @@ class Main_Page(Widget):
             yield Playlist_Track_View(playlist_id="liked_songs", id="playlist_tracks")
 
 class Playlist_Track_View(Widget):
-    def __init__(self, playlist_id, max_title_length=20, id=None):
+    def __init__(self, playlist_id, max_title_length=40, id=None):
         self.playlist_id = playlist_id
         self.max_title_length = max_title_length
         super().__init__(id=id)
@@ -164,9 +164,11 @@ class Playlist_Track_View(Widget):
                 track['name'] = track['name'][:self.max_title_length] + "..."
             artist_string = ", ".join(track.get('artists', []))
             if len(artist_string) > self.max_title_length:
-                track['artists'] = artist_string[:self.max_title_length] + "..."
+                artist_string = artist_string[:self.max_title_length] + "..."
             if len(track.get('artists', '')) > self.max_title_length:
                 track['artists'] = track['artists'][:self.max_title_length] + "..."
+            if len(track.get('album', '')) > self.max_title_length:
+                track['album'] = track['album'][:self.max_title_length] + "..."
 
             table.add_row(
                 i,
