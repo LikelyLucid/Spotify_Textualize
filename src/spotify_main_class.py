@@ -198,7 +198,7 @@ class Spotify_Playback_Data:
         if playlist_id == "liked_songs":
             while True:
                 playlist = self.sp.current_user_saved_tracks(limit=20, offset=offset)
-                print(playlist)
+                # print(playlist)
                 for track in playlist["items"]:
                     playlist_items.append(
                         {
@@ -232,8 +232,7 @@ class Spotify_Playback_Data:
                 else:
                     # return playlist_items
                     break
-        for i, item in enumerate(playlist_items):
-            print(f"{i}, {item['name']}")
+        return playlist_items
 
 if __name__ == "__main__":
     sp = Spotify_Playback_Data()
