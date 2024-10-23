@@ -174,11 +174,11 @@ class Playlist_Track_View(Widget):
 
             table.add_row(
                 i,
-                track_name,
+                str(self.size),
                 artist_string,
                 album_name,
-                self.format_duration(track.get('duration_ms', 0)),
-                "♥" if track.get('is_liked', False) else ""
+                self.format_duration(track.get("duration_ms", 0)),
+                "♥" if track.get("is_liked", False) else "",
             )
             print(self.size)
 
@@ -186,8 +186,6 @@ class Playlist_Track_View(Widget):
         seconds = ms // 1000
         minutes, seconds = divmod(seconds, 60)
         return f"{minutes}:{seconds:02d}"
-
-
 
 
 class Main_Screen(Screen):
