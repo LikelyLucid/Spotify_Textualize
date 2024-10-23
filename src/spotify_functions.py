@@ -1,6 +1,6 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-from spotipy.cache_handler import MemoryCacheHandler
+# from spotipy.cache_handler import MemoryCacheHandler
 from config_helper import read_config, save_config, get_config_directory
 
 CONFIG_FILE = "spotify_creds.conf"

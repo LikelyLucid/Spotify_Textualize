@@ -9,6 +9,7 @@ import time
 
 playback = Spotify_Playback_Data()
 
+
 def ms_to_time(ms: int) -> str:
     if ms is None:
         return "0:00"
@@ -16,11 +17,13 @@ def ms_to_time(ms: int) -> str:
     minutes, seconds = divmod(seconds, 60)
     return f"{minutes}:{seconds:02d}"
 
+
 def get_current_time_with_offset() -> int:
     if playback.progress_ms is None:
         return 0
     offset = int(time.time() * 1000) - playback.timestamp
     return playback.progress_ms + offset
+
 
 class Current_Time_In_Track(Widget):
     current_time = reactive(get_current_time_with_offset())
@@ -28,11 +31,15 @@ class Current_Time_In_Track(Widget):
     def render(self) -> str:
         return ms_to_time(self.current_time) if playback.progress_ms is not None else ""
 
+
 class Track_Duration(Widget):
     track_duration = reactive(playback.track_duration)
 
     def render(self) -> str:
-        return ms_to_time(self.track_duration) if self.track_duration is not None else ""
+        return (
+            ms_to_time(self.track_duration) if self.track_duration is not None else ""
+        )
+
 
 class Current_Track(Widget):
     current_track = reactive(playback.track)
@@ -40,17 +47,20 @@ class Current_Track(Widget):
     def render(self) -> str:
         return self.current_track
 
+
 class Current_Volume(Widget):
     current_volume = reactive(playback.device_volume_percent)
 
     def render(self) -> str:
         return f"{self.current_volume}%"
 
+
 class Current_Device(Widget):
     current_device = reactive(playback.device_name)
 
     def render(self) -> str:
         return self.current_device
+
 
 class Bottom_Bar(Widget):
     def get_artist_info(self):
@@ -65,7 +75,11 @@ class Bottom_Bar(Widget):
             Static(self.get_artist_info(), id="artist_info"),
             Container(
                 Current_Time_In_Track(),
-                Center(ProgressBar(total=100, id="bar", show_percentage=False, show_eta=False)),
+                Center(
+                    ProgressBar(
+                        total=100, id="bar", show_percentage=False, show_eta=False
+                    )
+                ),
                 Track_Duration(),
                 id="bar_with_times",
             ),
@@ -85,7 +99,9 @@ class Bottom_Bar(Widget):
 
     def song_change(self):
         self.query_one(Track_Duration).track_duration = playback.track_duration
-        self.query_one(Current_Time_In_Track).current_time = get_current_time_with_offset()
+        self.query_one(Current_Time_In_Track).current_time = (
+            get_current_time_with_offset()
+        )
         self.query_one("#artist_info").update(self.get_artist_info())
 
     def update_playback_settings(self):
@@ -97,11 +113,18 @@ class Bottom_Bar(Widget):
         self.update_playback_settings()
         self.set_interval(1, self.update_progress)
 
+
 class Side_Bar(Widget):
     def compose(self):
         with ScrollableContainer(id="sidebar_container"):
-            yield Library_List(library_data=playback.get_featured_playlists(limit=5), id="featured_playlists_list")
-            yield Library_List(library_data=playback.get_user_library(), id="user_library_list")
+            yield Library_List(
+                library_data=playback.get_featured_playlists(limit=5),
+                id="featured_playlists_list",
+            )
+            yield Library_List(
+                library_data=playback.get_user_library(), id="user_library_list"
+            )
+
 
 class Library_List(Widget):
     def __init__(self, library_data, id=None):
@@ -109,13 +132,18 @@ class Library_List(Widget):
         super().__init__(id=id)
 
     def compose(self):
-        items = [ListItem(Label(f"{item['name']} ({item['type'].capitalize()})")) for item in self.library_data]
+        items = [
+            ListItem(Label(f"{item['name']} ({item['type'].capitalize()})"))
+            for item in self.library_data
+        ]
         yield ListView(*items)
+
 
 class Main_Page(Widget):
     def compose(self):
         with Container(id="main_page_container"):
             yield Static("Main Page", id="main_page_header")
+
 
 class Playlist_Track_View(Widget):
     def __init__(self, playlist_id, id=None):
@@ -128,6 +156,7 @@ class Playlist_Track_View(Widget):
     def compose(self):
         # TODO: Implement the composition of playlist tracks
         pass
+
 
 class Main_Screen(Screen):
     CSS_PATH = "main_page.tcss"
@@ -155,10 +184,12 @@ class Main_Screen(Screen):
     def on_mount(self) -> None:
         self.set_interval(2, self.update_stats)
 
+
 class MainApp(App):
     def on_mount(self) -> None:
         self.install_screen(Main_Screen(), "main")
         self.push_screen("main")
+
 
 if __name__ == "__main__":
     app = MainApp(ansi_color=True)
