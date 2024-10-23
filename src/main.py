@@ -159,22 +159,24 @@ class Playlist_Track_View(Widget):
         table.cursor_type = "row"
         tracks = playback.get_playlist_tracks(self.playlist_id)
         table.add_columns("#", "Title", "Artist", "Album", "Duration", "Liked")
+
         for i, track in enumerate(tracks):
-            if len(track['name']) > self.max_title_length:
-                track['name'] = track['name'][:self.max_title_length] + "..."
+            track_name = track['name']
             artist_string = ", ".join(track.get('artists', []))
+            album_name = track.get('album', '')
+
+            if len(track_name) > self.max_title_length:
+                track_name = track_name[:self.max_title_length] + "..."
             if len(artist_string) > self.max_title_length:
                 artist_string = artist_string[:self.max_title_length] + "..."
-            if len(track.get('artists', '')) > self.max_title_length:
-                track['artists'] = track['artists'][:self.max_title_length] + "..."
-            if len(track.get('album', '')) > self.max_title_length:
-                track['album'] = track['album'][:self.max_title_length] + "..."
+            if len(album_name) > self.max_title_length:
+                album_name = album_name[:self.max_title_length] + "..."
 
             table.add_row(
                 i,
-                track['name'],
+                track_name,
                 artist_string,
-                track.get('album', ''),
+                album_name,
                 self.format_duration(track.get('duration_ms', 0)),
                 "♥" if track.get('is_liked', False) else ""
             )
