@@ -180,6 +180,7 @@ class Playlist_Track_View(Widget):
                 self.format_duration(track.get('duration_ms', 0)),
                 "♥" if track.get('is_liked', False) else ""
             )
+            print(self.size)
 
     def format_duration(self, ms):
         seconds = ms // 1000
