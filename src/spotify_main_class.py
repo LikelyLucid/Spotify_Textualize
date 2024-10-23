@@ -239,7 +239,6 @@ class Spotify_Playback_Data:
         with playlist_cache.open("w") as cache_file:
             for item in playlist_items:
                 cache_file.write(f"{item['name']} ({item['type']})\n")
-                
 
         return playlist_items
 
