@@ -272,7 +272,7 @@ class Spotify_Playback_Data:
         # Fetch all liked songs
         liked_songs = []
         offset = 0
-        limit = 50
+        limit = 20
 
         while True:
             results = self.sp.current_user_saved_tracks(limit=limit, offset=offset)
