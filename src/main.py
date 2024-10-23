@@ -191,7 +191,8 @@ class Main_Screen(Screen):
     def compose(self) -> ComposeResult:
         yield Placeholder("top_bar", id="top_bar")
         yield Side_Bar(id="sidebar")
-        yield Placeholder("Main Page", id="main_page")
+        yield Main_Page(id="main_page")
+        # yield Placeholder("Main Page", id="main_page")
         yield Bottom_Bar(id="bottom_bar")
 
     async def update_stats(self):
