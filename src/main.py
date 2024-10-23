@@ -146,7 +146,7 @@ class Main_Page(Widget):
             yield Playlist_Track_View(playlist_id="liked_songs", id="playlist_tracks")
 
 class Playlist_Track_View(Widget):
-    def __init__(self, playlist_id, max_title_length=10, id=None):
+    def __init__(self, playlist_id, max_title_length=20, id=None):
         self.playlist_id = playlist_id
         self.max_title_length = max_title_length
         super().__init__(id=id)
