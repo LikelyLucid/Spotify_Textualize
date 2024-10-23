@@ -142,7 +142,7 @@ class Library_List(Widget):
 class Main_Page(Widget):
     def compose(self):
         with Container(id="main_page_container"):
-            yield Static("Main Page", id="main_page_header")
+            # yield Static("Main Page", id="main_page_header")
             yield Playlist_Track_View(playlist_id="liked_songs", id="playlist_tracks")
 
 class Playlist_Track_View(Widget):
@@ -155,11 +155,12 @@ class Playlist_Track_View(Widget):
 
     def on_mount(self) -> None:
         table = self.query_one(DataTable)
-        table.cursor_type = 
+        table.cursor_type = "row"
         tracks = playback.get_playlist_tracks(self.playlist_id)
-        table.add_columns("Title", "Artist", "Album", "Duration", "Liked")
-        for track in tracks:
+        table.add_columns("#", "Title", "Artist", "Album", "Duration", "Liked")
+        for i, track in enumerate(tracks):
             table.add_row(
+                i,
                 track['name'],
                 ", ".join(track.get('artists', [])),
                 track.get('album', ''),
