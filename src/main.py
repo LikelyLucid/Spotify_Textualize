@@ -175,7 +175,18 @@ class Main_Page(Widget):
     def compose(self):
         with Container(id="main_page_container"):
             yield Static("Main Page", id="main_page_header")
-            
+
+class Playlist_Track_View(Widget):
+    def __init__(self, playlist_id, id=None):
+        self.playlist_id = playlist_id
+        super().__init__(id=id)
+
+    def get_playlist_tracks(self):
+        return playback.get_playlist_tracks(self.playlist_id)
+
+    def compose(self):
+
+
 
 class Main_Screen(Screen):
     """The main page that contains:
