@@ -1,5 +1,5 @@
 from spotify_functions import authenticate_user
-
+from config_helper import get_config_directory
 
 class Spotify_Playback_Data:
     def __init__(self):
@@ -201,6 +201,19 @@ class Spotify_Playback_Data:
             self.sp.playlist_tracks if playlist_id != "liked_songs" else self.sp.current_user_saved_tracks
         )
 
+        # Check to see if the playlist is cached in the user directory
+        # If it is, return the cached playlist
+        # Otherwise, fetch the playlist from the Spotify API
+
+        directory = get_config_directory() + "\playlist_caches"
+        playlist_cache = directory / f"{playlist_id}.cache"
+        if playlist_cache.exists():
+            with playlist_cache.open("r") as cache_file:
+                total_items = fetch_function(playlist_id)["total"]
+                playlist_items = cache_file.readlines()
+                if len(playlist_items) == total_items:
+                    return playlist_items
+
         while True:
             if playlist_id == "liked_songs":
                 playlist = fetch_function(limit=limit, offset=offset)
@@ -221,6 +234,12 @@ class Spotify_Playback_Data:
             if len(items) < limit:
                 break
             offset += limit
+
+        # Cache the playlist in the user directory
+        with playlist_cache.open("w") as cache_file:
+            for item in playlist_items:
+                cache_file.write(f"{item['name']} ({item['type']})\n")
+                
 
         return playlist_items
 
