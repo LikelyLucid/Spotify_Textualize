@@ -26,6 +26,28 @@ def get_config_directory():
     return config_dir
 
 
+def get_cache_directory():
+    """
+    Get or create the cache directory for the given application name.
+
+    Parameters:
+    - APP_NAME: The name of the application, used to create a subdirectory within .config/cache
+
+    Returns:
+    - Path object representing the cache directory
+    """
+    # Get the user's home directory
+    home = Path.home()
+
+    # Construct the .config/cache path regardless of OS
+    cache_dir = home / ".config" / APP_NAME / "cache"
+
+    # Create the directory if it doesn't exist
+    cache_dir.mkdir(parents=True, exist_ok=True)
+
+    return cache_dir
+
+
 def save_config(config_filename: str, config_data):
     """
     Save configuration data to a file in the application's .config directory.
