@@ -195,29 +195,23 @@ class Spotify_Playback_Data:
         """Get tracks from a playlist"""
         offset = 0
 
+        while True:
+            playlist = self.sp.playlist_tracks(playlist_id, limit=100, offset=offset)
 
-        playlist = self.sp.playlist_tracks(playlist_id, limit=100, offset=offset)
-        print(playlist)
-        # return [
-        #     {
-        #         "name": track["track"]["name"],
-        #         "id": track["track"]["id"],
-        #         "type": "track",
-        #     }
-        #     for track in playlist["items"]
-        # ]
-        playlist_items = []
-        for track in playlist["items"]:
-            playlist_items.append(
-                {
-                    "name": track["track"]["name"],
-                    "id": track["track"]["id"],
-                    "type": "track",
-                }
-            )
+            playlist_items = []
+            for track in playlist["items"]:
+                playlist_items.append(
+                    {
+                        "name": track["track"]["name"],
+                        "id": track["track"]["id"],
+                        "type": "track",
+                    }
+                )
 
-        if len(playlist["items"]) == 100:
-            return []
+            if len(playlist_items) == 100: # 100 is the maximum number of items that can be returned
+                offset += 100
+            else:
+                return playlist_items
 
 if __name__ == "__main__":
     sp = Spotify_Playback_Data()
