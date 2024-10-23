@@ -203,6 +203,16 @@ class Spotify_Playback_Data:
         #     }
         #     for track in playlist["items"]
         # ]
+        playlist_items = []
+        for track in playlist["items"]:
+            playlist_items.append(
+                {
+                    "name": track["track"]["name"],
+                    "id": track["track"]["id"],
+                    "type": "track",
+                }
+            )
+        
         if len(playlist["items"]) == 100:
             return []
 
