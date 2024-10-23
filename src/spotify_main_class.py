@@ -1,5 +1,5 @@
 from spotify_functions import authenticate_user
-from config_helper import get_config_directory
+from config_helper import get_config_directory, get_cache_directory
 import os
 
 class Spotify_Playback_Data:
@@ -207,7 +207,7 @@ class Spotify_Playback_Data:
         # If it is, return the cached playlist
         # Otherwise, fetch the playlist from the Spotify API
 
-        directory = get_config_directory()
+        directory = get_cache_directory()
         playlist_cache = os.path.join(directory, f"{playlist_id}.cache")
         if os.path.exists(playlist_cache):
             with open(playlist_cache, "r") as cache_file:
