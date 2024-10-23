@@ -2,7 +2,15 @@ from textual.app import App, ComposeResult
 from textual.screen import Screen
 from textual.widget import Widget
 from textual.containers import Container, Center, Vertical, ScrollableContainer
-from textual.widgets import Placeholder, ProgressBar, Static, ListView, ListItem, Label, DataTable
+from textual.widgets import (
+    Placeholder,
+    ProgressBar,
+    Static,
+    ListView,
+    ListItem,
+    Label,
+    DataTable,
+)
 from textual.reactive import reactive
 from spotify_main_class import Spotify_Playback_Data
 import time
@@ -145,6 +153,7 @@ class Main_Page(Widget):
             # yield Static("Main Page", id="main_page_header")
             yield Playlist_Track_View(playlist_id="liked_songs", id="playlist_tracks")
 
+
 class Playlist_Track_View(Widget):
 
     # weighting
@@ -168,16 +177,28 @@ class Playlist_Track_View(Widget):
             max_length = width - 5
 
             # get max lengths according ot the weights
-            max_track_length = max_length * self.track_weight // (self.track_weight + self.artist_weight + self.album_weight)
-            max_artist_length = max_length * self.artist_weight // (self.track_weight + self.artist_weight + self.album_weight)
-            max_album_length = max_length * self.album_weight // (self.track_weight + self.artist_weight + self.album_weight)
+            max_track_length = (
+                max_length
+                * self.track_weight
+                // (self.track_weight + self.artist_weight + self.album_weight)
+            )
+            max_artist_length = (
+                max_length
+                * self.artist_weight
+                // (self.track_weight + self.artist_weight + self.album_weight)
+            )
+            max_album_length = (
+                max_length
+                * self.album_weight
+                // (self.track_weight + self.artist_weight + self.album_weight)
+            )
         else:
             max_track_length, max_artist_length, max_album_length = lengths
 
         for i, track in enumerate(tracks):
-            track_name = track['name']
-            artist_string = ", ".join(track.get('artists', []))
-            album_name = track.get('album', '')
+            track_name = track["name"]
+            artist_string = ", ".join(track.get("artists", []))
+            album_name = track.get("album", "")
 
             # if len(track_name) > self.max_title_length:
             #     track_name = track_name[:self.max_title_length] + "..."
@@ -193,7 +214,7 @@ class Playlist_Track_View(Widget):
             if len(album_name) > max_album_length:
                 album_name = album_name[:max_album_length] + "..."
 
-            table.add_row(
+            table.add_row(  # TODO: THIS IS WEIRD FOR SOME REASON
                 i,
                 track_name,
                 artist_string,
@@ -211,9 +232,21 @@ class Playlist_Track_View(Widget):
         max_length = width - 5
 
         # get max lengths according ot the weights
-        max_track_length = max_length * self.track_weight // (self.track_weight + self.artist_weight + self.album_weight)
-        max_artist_length = max_length * self.artist_weight // (self.track_weight + self.artist_weight + self.album_weight)
-        max_album_length = max_length * self.album_weight // (self.track_weight +self.artist_weight + self.album_weight)
+        max_track_length = (
+            max_length
+            * self.track_weight
+            // (self.track_weight + self.artist_weight + self.album_weight)
+        )
+        max_artist_length = (
+            max_length
+            * self.artist_weight
+            // (self.track_weight + self.artist_weight + self.album_weight)
+        )
+        max_album_length = (
+            max_length
+            * self.album_weight
+            // (self.track_weight + self.artist_weight + self.album_weight)
+        )
 
         lengths = (max_track_length, max_artist_length, max_album_length)
         self.set_tracks(tracks, lengths=lengths)
