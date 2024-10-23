@@ -162,15 +162,16 @@ class Playlist_Track_View(Widget):
         for i, track in enumerate(tracks):
             if len(track['name']) > self.max_title_length:
                 track['name'] = track['name'][:self.max_title_length] + "..."
-            if len(track.get('album', '')) > self.max_title_length:
-                track['album'] = track['album'][:self.max_title_length] + "..."
+            artist_string = ", ".join(track.get('artists', []))
+            if len(artist_string) > self.max_title_length:
+                track['artists'] = artist_string[:self.max_title_length] + "..."
             if len(track.get('artists', '')) > self.max_title_length:
                 track['artists'] = track['artists'][:self.max_title_length] + "..."
 
             table.add_row(
                 i,
                 track['name'],
-                ", ".join(track.get('artists', [])),
+                artist_string,
                 track.get('album', ''),
                 self.format_duration(track.get('duration_ms', 0)),
                 "♥" if track.get('is_liked', False) else ""
