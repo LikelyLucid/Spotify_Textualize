@@ -172,17 +172,6 @@ class Playlist_Track_View(Widget):
         return f"{minutes}:{seconds:02d}"
 
 
-class Playlist_Track_View(Widget):
-    def __init__(self, playlist_id, id=None):
-        self.playlist_id = playlist_id
-        super().__init__(id=id)
-
-    def get_playlist_tracks(self):
-        return playback.get_playlist_tracks(self.playlist_id)
-
-    def compose(self):
-        # TODO: Implement the composition of playlist tracks
-        pass
 
 
 class Main_Screen(Screen):
