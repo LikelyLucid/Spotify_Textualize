@@ -206,4 +206,4 @@ if __name__ == "__main__":
     library = sp.get_user_library()
     print(library)
     print()
-    print(sp.get_playlist_tracks("3yE07D1ZglwRnCDMM3mq1V"))
+    sp.get_playlist_tracks("3yE07D1ZglwRnCDMM3mq1V")
