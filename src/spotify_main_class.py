@@ -1,6 +1,6 @@
 from spotify_functions import authenticate_user
 from config_helper import get_config_directory
-
+import os
 
 class Spotify_Playback_Data:
     def __init__(self):
@@ -209,7 +209,7 @@ class Spotify_Playback_Data:
         # Otherwise, fetch the playlist from the Spotify API
 
         directory = get_config_directory()
-        playlist_cache = f"{directory}/{playlist_id}.cache"
+        playlist_cache = os.path.join(directory, f"{playlist_id}.cache")
         if playlist_cache.exists():
             with playlist_cache.open("r") as cache_file:
                 total_items = fetch_function(playlist_id)["total"]
