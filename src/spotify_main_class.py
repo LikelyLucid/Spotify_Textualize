@@ -195,34 +195,54 @@ class Spotify_Playback_Data:
         """Get tracks from a playlist"""
         offset = 0
         playlist_items = []
-        while True:
-            playlist = self.sp.playlist_tracks(playlist_id, limit=100, offset=offset)
+        if playlist_id == "liked_songs":
+            while True:
+                playlist = self.sp.current_user_saved_tracks(limit=20, offset=offset)
+                print(playlist)
+                for track in playlist_id["items"]:
+                    playlist_items.append(
+                        {
+                            "name": track["track"]["name"],
+                            "id": track["track"]["id"],
+                            "type": "track",
+                        }
+                    )
+
+                if len(playlist['items']) == 20:
+                    offset += 20
+                else:
+                    break
 
 
-            for track in playlist["items"]:
-                playlist_items.append(
-                    {
-                        "name": track["track"]["name"],
-                        "id": track["track"]["id"],
-                        "type": "track",
-                    }
-                )
 
-            if len(playlist_items) == 100: # 100 is the maximum number of items that can be returned
-                offset += 100
-            else:
-                # return playlist_items
-                break
+        else:
+            while True:
+                playlist = self.sp.playlist_tracks(playlist_id, limit=100, offset=offset)
+                for track in playlist["items"]:
+                    playlist_items.append(
+                        {
+                            "name": track["track"]["name"],
+                            "id": track["track"]["id"],
+                            "type": "track",
+                        }
+                    )
+
+                if len(playlist['items']) == 100: # 100 is the maximum number of items that can be returned
+                    offset += 100
+                else:
+                    # return playlist_items
+                    break
         for i, item in enumerate(playlist_items):
             print(f"{i}, {item['name']}")
 
 if __name__ == "__main__":
     sp = Spotify_Playback_Data()
-    for key, value in sp.__dict__.items():
-        print(f"{key}: {value}")
+    # for key, value in sp.__dict__.items():
+    #     print(f"{key}: {value}")
+    # print()
+    # # test playlist items with liked songs
+    # library = sp.get_user_library()
+    # print(library)
+    print(sp.get_playlist_tracks("liked_songs"))
     print()
-    # test playlist items with liked songs
-    library = sp.get_user_library()
-    print(library)
-    print()
-    print(sp.get_playlist_tracks("3yE07D1ZglwRnCDMM3mq1V"))
+    # print(sp.get_playlist_tracks("3yE07D1ZglwRnCDMM3mq1V"))
