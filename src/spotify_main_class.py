@@ -193,10 +193,16 @@ class Spotify_Playback_Data:
 
     def get_playlist_tracks(self, playlist_id):
         """Get tracks from a playlist"""
-        playlist = self.sp.playlist_tracks(playlist_id, limit=50)
+        playlist = self.sp.playlist_tracks(playlist_id, limit=100)
         print(playlist)
-        with open("playlist.json", "w") as f:
-            f.write(str(playlist))
+        return [
+            {
+                "name": track["track"]["name"],
+                "id": track["track"]["id"],
+                "type": "track",
+            }
+            for track in playlist["items"]
+        ]
 
 
 if __name__ == "__main__":
@@ -208,4 +214,4 @@ if __name__ == "__main__":
     library = sp.get_user_library()
     print(library)
     print()
-    sp.get_playlist_tracks("3yE07D1ZglwRnCDMM3mq1V")
+    print(sp.get_playlist_tracks("3yE07D1ZglwRnCDMM3mq1V"))
