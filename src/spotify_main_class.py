@@ -202,4 +202,7 @@ if __name__ == "__main__":
     for key, value in sp.__dict__.items():
         print(f"{key}: {value}")
     print()
-    print(sp.get_playlist_tracks())
+    # test playlist items with liked songs
+    library = sp.get_user_library()
+    print(library)
+    
