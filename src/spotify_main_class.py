@@ -1,6 +1,7 @@
 from spotify_functions import authenticate_user
 from config_helper import get_config_directory, get_cache_directory
 import os
+import json
 
 class Spotify_Playback_Data:
     def __init__(self):
@@ -203,18 +204,19 @@ class Spotify_Playback_Data:
             else self.sp.current_user_saved_tracks
         )
 
-        # Check to see if the playlist is cached in the user directory
-        # If it is, return the cached playlist
-        # Otherwise, fetch the playlist from the Spotify API
+        # Check and update liked songs cache
+        liked_songs = self._get_liked_songs()
 
         directory = get_cache_directory()
         playlist_cache = os.path.join(directory, f"{playlist_id}.cache")
+
+        # Check if the playlist is cached and up-to-date
         if os.path.exists(playlist_cache):
             with open(playlist_cache, "r") as cache_file:
+                cached_items = json.load(cache_file)
                 total_items = fetch_function(playlist_id)["total"]
-                playlist_items = cache_file.readlines()
-                if len(playlist_items) == total_items:
-                    return playlist_items
+                if len(cached_items) == total_items:
+                    return cached_items
 
         while True:
             if playlist_id == "liked_songs":
@@ -225,11 +227,13 @@ class Spotify_Playback_Data:
 
             for item in items:
                 track = item["track"]
+                track_id = track["id"]
                 playlist_items.append(
                     {
                         "name": track["name"],
-                        "id": track["id"],
+                        "id": track_id,
                         "type": "track",
+                        "is_liked": track_id in liked_songs
                     }
                 )
 
@@ -237,12 +241,43 @@ class Spotify_Playback_Data:
                 break
             offset += limit
 
-        # Cache the playlist in the user directory
-        with playlist_cache.open("w") as cache_file:
-            for item in playlist_items:
-                cache_file.write(f"{item['name']} ({item['type']})\n")
+        # Cache the playlist
+        with open(playlist_cache, "w") as cache_file:
+            json.dump(playlist_items, cache_file)
 
         return playlist_items
+
+    def _get_liked_songs(self):
+        """Get and cache liked songs"""
+        config_dir = get_config_directory()
+        liked_songs_file = os.path.join(config_dir, "liked_songs.json")
+
+        # Check if liked songs cache exists and is up-to-date
+        if os.path.exists(liked_songs_file):
+            with open(liked_songs_file, "r") as f:
+                cached_liked_songs = json.load(f)
+            total_liked = self.sp.current_user_saved_tracks(limit=1)["total"]
+            if len(cached_liked_songs) == total_liked:
+                return set(cached_liked_songs)
+
+        # Fetch all liked songs
+        liked_songs = []
+        offset = 0
+        limit = 50
+
+        while True:
+            results = self.sp.current_user_saved_tracks(limit=limit, offset=offset)
+            items = results["items"]
+            liked_songs.extend([track["track"]["id"] for track in items])
+            if len(items) < limit:
+                break
+            offset += limit
+
+        # Cache the liked songs
+        with open(liked_songs_file, "w") as f:
+            json.dump(liked_songs, f)
+
+        return set(liked_songs)
 
 
 if __name__ == "__main__":
