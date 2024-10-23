@@ -214,7 +214,10 @@ class Spotify_Playback_Data:
         if os.path.exists(playlist_cache):
             with open(playlist_cache, "r") as cache_file:
                 cached_items = json.load(cache_file)
-                total_items = fetch_function(playlist_id)["total"]
+                if playlist_id == "liked_songs":
+                    total_items = self.sp.current_user_saved_tracks(limit=1)["total"]
+                else:
+                    total_items = fetch_function(playlist_id)["total"]
                 if len(cached_items) == total_items:
                     return cached_items
 
