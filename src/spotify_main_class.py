@@ -195,10 +195,12 @@ class Spotify_Playback_Data:
         """Get tracks from a playlist"""
         offset = 0
         playlist_items = []
+        max_iterations = 100  # Set a maximum limit to prevent infinite loops
+
         if playlist_id == "liked_songs":
-            while True:
+            iterations = 0
+            while iterations < max_iterations:
                 playlist = self.sp.current_user_saved_tracks(limit=20, offset=offset)
-                # print(playlist)
                 for track in playlist["items"]:
                     playlist_items.append(
                         {
@@ -212,11 +214,11 @@ class Spotify_Playback_Data:
                     offset += 20
                 else:
                     break
-
-
+                iterations += 1
 
         else:
-            while True:
+            iterations = 0
+            while iterations < max_iterations:
                 playlist = self.sp.playlist_tracks(playlist_id, limit=100, offset=offset)
                 for track in playlist["items"]:
                     playlist_items.append(
@@ -226,12 +228,12 @@ class Spotify_Playback_Data:
                             "type": "track",
                         }
                     )
-
-                if len(playlist['items']) == 100: # 100 is the maximum number of items that can be returned
+                # 100 is the maximum number of items that can be returned
+                if len(playlist['items']) == 100:  # 100 is the maximum number of items that can be returned
                     offset += 100
                 else:
-                    # return playlist_items
                     break
+                iterations += 1
         return playlist_items
 
 if __name__ == "__main__":
