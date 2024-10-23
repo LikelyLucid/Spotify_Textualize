@@ -196,6 +196,7 @@ class Spotify_Playback_Data:
         playlist_items = []
         offset = 0
         limit = 100 if playlist_id != "liked_songs" else 20
+        print(limit)
         fetch_function = (
             self.sp.playlist_tracks if playlist_id != "liked_songs" else self.sp.current_user_saved_tracks
         )
