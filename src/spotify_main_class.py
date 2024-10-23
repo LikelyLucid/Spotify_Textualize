@@ -199,7 +199,7 @@ class Spotify_Playback_Data:
             while True:
                 playlist = self.sp.current_user_saved_tracks(limit=20, offset=offset)
                 print(playlist)
-                for track in playlist_id["items"]:
+                for track in playlist["items"]:
                     playlist_items.append(
                         {
                             "name": track["track"]["name"],
