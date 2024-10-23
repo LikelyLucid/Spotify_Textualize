@@ -197,7 +197,6 @@ class Spotify_Playback_Data:
         playlist_items = []
         offset = 0
         limit = 100 if playlist_id != "liked_songs" else 20
-        # print(limit)
         fetch_function = (
             self.sp.playlist_tracks
             if playlist_id != "liked_songs"
@@ -210,8 +209,8 @@ class Spotify_Playback_Data:
 
         directory = get_config_directory()
         playlist_cache = os.path.join(directory, f"{playlist_id}.cache")
-        if playlist_cache.exists():
-            with playlist_cache.open("r") as cache_file:
+        if os.path.exists(playlist_cache):
+            with open(playlist_cache, "r") as cache_file:
                 total_items = fetch_function(playlist_id)["total"]
                 playlist_items = cache_file.readlines()
                 if len(playlist_items) == total_items:
