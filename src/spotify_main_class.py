@@ -195,6 +195,8 @@ class Spotify_Playback_Data:
         """Get tracks from a playlist"""
         playlist = self.sp.playlist_tracks(playlist_id, limit=50)
         print(playlist)
+        with open("playlist.json", "w") as f:
+            f.write(str(playlist))
 
 
 if __name__ == "__main__":
