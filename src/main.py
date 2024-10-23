@@ -158,18 +158,21 @@ class Playlist_Track_View(Widget):
     def compose(self) -> ComposeResult:
         yield DataTable()
 
-    def set_tracks(self, tracks):
+    def set_tracks(self, tracks, lengths=None):
         table = self.query_one(DataTable)
         table.add_columns("#", "Title", "Artist", "Album", "Duration", "Liked")
         table.clear()
-        height, width = table.size
 
-        max_length = width - 5
+        if lengths is None:
+            height, width = table.size
+            max_length = width - 5
 
-        # get max lengths according ot the weights
-        max_track_length = max_length * self.track_weight // (self.track_weight + self.artist_weight + self.album_weight)
-        max_artist_length = max_length * self.artist_weight // (self.track_weight + self.artist_weight + self.album_weight)
-        max_album_length = max_length * self.album_weight // (self.track_weight + self.artist_weight + self.album_weight)
+            # get max lengths according ot the weights
+            max_track_length = max_length * self.track_weight // (self.track_weight + self.artist_weight + self.album_weight)
+            max_artist_length = max_length * self.artist_weight // (self.track_weight + self.artist_weight + self.album_weight)
+            max_album_length = max_length * self.album_weight // (self.track_weight + self.artist_weight + self.album_weight)
+        else:
+            max_track_length, max_artist_length, max_album_length = lengths
 
         for i, track in enumerate(tracks):
             track_name = track['name']
@@ -204,7 +207,16 @@ class Playlist_Track_View(Widget):
         table.cursor_type = "row"
         tracks = playback.get_playlist_tracks(self.playlist_id)
 
-        self.set_tracks(tracks)
+        height, width = table.size
+        max_length = width - 5
+
+        # get max lengths according ot the weights
+        max_track_length = max_length * self.track_weight // (self.track_weight + self.artist_weight + self.album_weight)
+        max_artist_length = max_length * self.artist_weight // (self.track_weight + self.artist_weight + self.album_weight)
+        max_album_length = max_length * self.album_weight // (self.track_weight +self.artist_weight + self.album_weight)
+
+        lengths = (max_track_length, max_artist_length, max_album_length)
+        self.set_tracks(tracks, lengths=lengths)
 
     def format_duration(self, ms):
         seconds = ms // 1000
