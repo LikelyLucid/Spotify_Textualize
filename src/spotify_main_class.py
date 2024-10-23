@@ -208,7 +208,7 @@ class Spotify_Playback_Data:
                         }
                     )
 
-                if len(playlist['items']) == 20:
+                if len(playlist_items) - offset == 20:
                     offset += 20
                 else:
                     break
