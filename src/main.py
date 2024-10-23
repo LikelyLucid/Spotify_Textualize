@@ -2,7 +2,7 @@ from textual.app import App, ComposeResult
 from textual.screen import Screen
 from textual.widget import Widget
 from textual.containers import Container, Center, Vertical, ScrollableContainer
-from textual.widgets import Placeholder, ProgressBar, Static, ListView, ListItem, Label
+from textual.widgets import Placeholder, ProgressBar, Static, ListView, ListItem, Label, DataTable
 from textual.reactive import reactive
 from spotify_main_class import Spotify_Playback_Data
 import time
@@ -143,6 +143,33 @@ class Main_Page(Widget):
     def compose(self):
         with Container(id="main_page_container"):
             yield Static("Main Page", id="main_page_header")
+            yield Playlist_Track_View(playlist_id="3yE07D1ZglwRnCDMM3mq1V", id="playlist_tracks")
+
+class Playlist_Track_View(Widget):
+    def __init__(self, playlist_id, id=None):
+        self.playlist_id = playlist_id
+        super().__init__(id=id)
+
+    def compose(self) -> ComposeResult:
+        yield DataTable()
+
+    def on_mount(self) -> None:
+        table = self.query_one(DataTable)
+        tracks = playback.get_playlist_tracks(self.playlist_id)
+        table.add_columns("Title", "Artist", "Album", "Duration", "Liked")
+        for track in tracks:
+            table.add_row(
+                track['name'],
+                ", ".join(track.get('artists', [])),
+                track.get('album', ''),
+                self.format_duration(track.get('duration_ms', 0)),
+                "♥" if track.get('is_liked', False) else ""
+            )
+
+    def format_duration(self, ms):
+        seconds = ms // 1000
+        minutes, seconds = divmod(seconds, 60)
+        return f"{minutes}:{seconds:02d}"
 
 
 class Playlist_Track_View(Widget):
