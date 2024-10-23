@@ -228,11 +228,20 @@ class Spotify_Playback_Data:
             for item in items:
                 track = item["track"]
                 track_id = track["id"]
+                # playlist_items.append(
+                #     {
+                #         "name": track["name"],
+                #         "id": track_id,
+                #         "type": "track",
+                #         "is_liked": track_id in liked_songs
+                #     }
+                # )
                 playlist_items.append(
                     {
                         "name": track["name"],
-                        "id": track_id,
-                        "type": "track",
+                        "artists": [artist["name"] for artist in track["artists"]],
+                        "album": track["album"]["name"],
+                        "duration_ms": track["duration_ms"],
                         "is_liked": track_id in liked_songs
                     }
                 )
