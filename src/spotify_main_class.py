@@ -193,7 +193,7 @@ class Spotify_Playback_Data:
 
     def get_playlist_tracks(self, playlist_id):
         """Get tracks from a playlist"""
-        playlist = self.sp.playlist_tracks(playlist_id, limit=500)
+        playlist = self.sp.playlist_tracks(playlist_id, limit=50)
         print(playlist)
 
 
