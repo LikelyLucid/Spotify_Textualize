@@ -205,4 +205,5 @@ if __name__ == "__main__":
     # test playlist items with liked songs
     library = sp.get_user_library()
     print(library)
-    
+    print()
+    print(sp.get_playlist_tracks("liked_songs"))
