@@ -154,12 +154,9 @@ class Playlist_Track_View(Widget):
     def compose(self) -> ComposeResult:
         yield DataTable()
 
-    def on_mount(self) -> None:
+    def set_tracks(self, tracks):
         table = self.query_one(DataTable)
-        table.cursor_type = "row"
-        tracks = playback.get_playlist_tracks(self.playlist_id)
-        table.add_columns("#", "Title", "Artist", "Album", "Duration", "Liked")
-
+        table.clear_rows()
         for i, track in enumerate(tracks):
             track_name = track['name']
             artist_string = ", ".join(track.get('artists', []))
@@ -174,13 +171,20 @@ class Playlist_Track_View(Widget):
 
             table.add_row(
                 i,
-                str(self.size),
+                track_name,
                 artist_string,
                 album_name,
                 self.format_duration(track.get("duration_ms", 0)),
                 "♥" if track.get("is_liked", False) else "",
             )
-            print(self.size)
+
+    def on_mount(self) -> None:
+        table = self.query_one(DataTable)
+        table.cursor_type = "row"
+        tracks = playback.get_playlist_tracks(self.playlist_id)
+        table.add_columns("#", "Title", "Artist", "Album", "Duration", "Liked")
+
+        self.set_tracks(tracks)
 
     def format_duration(self, ms):
         seconds = ms // 1000
