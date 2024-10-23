@@ -155,6 +155,7 @@ class Playlist_Track_View(Widget):
 
     def on_mount(self) -> None:
         table = self.query_one(DataTable)
+        table.cursor_type = 
         tracks = playback.get_playlist_tracks(self.playlist_id)
         table.add_columns("Title", "Artist", "Album", "Duration", "Liked")
         for track in tracks:
