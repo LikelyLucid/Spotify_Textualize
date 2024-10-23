@@ -196,17 +196,20 @@ class Spotify_Playback_Data:
         playlist_items = []
         offset = 0
         limit = 100 if playlist_id != "liked_songs" else 20
-        print(limit)
+        # print(limit)
         fetch_function = (
             self.sp.playlist_tracks if playlist_id != "liked_songs" else self.sp.current_user_saved_tracks
         )
 
         while True:
-            playlist = fetch_function(playlist_id, limit=limit, offset=offset)
+            if playlist_id == "liked_songs":
+                playlist = fetch_function(limit=limit, offset=offset)
+            else:
+                playlist = fetch_function(playlist_id, limit=limit, offset=offset)
             items = playlist["items"]
 
             for item in items:
-                track = item["track"] if playlist_id == "liked_songs" else item["track"]
+                track = item["track"]
                 playlist_items.append(
                     {
                         "name": track["name"],
@@ -229,6 +232,6 @@ if __name__ == "__main__":
     # # test playlist items with liked songs
     # library = sp.get_user_library()
     # print(library)
-    print(sp.get_playlist_tracks("liked_songs"))
+    # print(sp.get_playlist_tracks("liked_songs"))
     print()
-    # print(sp.get_playlist_tracks("3yE07D1ZglwRnCDMM3mq1V"))
+    print(sp.get_playlist_tracks("3yE07D1ZglwRnCDMM3mq1V"))
