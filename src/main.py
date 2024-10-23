@@ -146,6 +146,11 @@ class Main_Page(Widget):
             yield Playlist_Track_View(playlist_id="liked_songs", id="playlist_tracks")
 
 class Playlist_Track_View(Widget):
+
+    # weighting
+    track_weight, artist_weight, album_weight = 2, 1, 1
+
+
     def __init__(self, playlist_id, max_title_length=40, id=None):
         self.playlist_id = playlist_id
         self.max_title_length = max_title_length
@@ -157,17 +162,35 @@ class Playlist_Track_View(Widget):
     def set_tracks(self, tracks):
         table = self.query_one(DataTable)
         table.clear_rows()
+        height, width = table.size
+
+        max_length = width - 5
+
+        # get max lengths according ot the weights
+        max_track_length = max_length * self.track_weight // (self.track_weight + self.artist_weight + self.album_weight)
+        max_artist_length = max_length * self.artist_weight // (self.track_weight + self.artist_weight + self.album_weight)
+        max_album_length = max_length * self.album_weight // (self.track_weight + self.artist_weight + self.album_weight)
+
+
         for i, track in enumerate(tracks):
             track_name = track['name']
             artist_string = ", ".join(track.get('artists', []))
             album_name = track.get('album', '')
 
-            if len(track_name) > self.max_title_length:
-                track_name = track_name[:self.max_title_length] + "..."
-            if len(artist_string) > self.max_title_length:
-                artist_string = artist_string[:self.max_title_length] + "..."
-            if len(album_name) > self.max_title_length:
-                album_name = album_name[:self.max_title_length] + "..."
+            # if len(track_name) > self.max_title_length:
+            #     track_name = track_name[:self.max_title_length] + "..."
+            # if len(artist_string) > self.max_title_length:
+            #     artist_string = artist_string[:self.max_title_length] + "..."
+            # if len(album_name) > self.max_title_length:
+            #     album_name = album_name[:self.max_title_length] + "..."
+
+            if len(track_name) > max_track_length:
+                track_name = track_name[:max_track_length] + "..."
+            if len(artist_string) > max_artist_length:
+                artist_string = artist_string[:max_artist_length] + "..."
+            if len(album_name) > max_album_length:
+                album_name = album_name[:max_album_length] + "..."
+
 
             table.add_row(
                 i,
