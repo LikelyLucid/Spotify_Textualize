@@ -186,7 +186,7 @@ class Playlist_Track_View(Widget):
         tracks = playback.get_playlist_tracks(self.playlist_id)
 
         if lengths is None:
-            width = table.size[1]
+            h, width = table.size
             max_length = width
 
             # get max lengths according ot the weights
@@ -208,7 +208,7 @@ class Playlist_Track_View(Widget):
         else:
             max_track_length, max_artist_length, max_album_length = lengths
 
-
+        self.notify(str(width))
 
         for i, track in enumerate(tracks):
             track_name = str(track["name"])
@@ -218,8 +218,6 @@ class Playlist_Track_View(Widget):
             track_name = cut_string_if_long(track_name, max_track_length)
             artist_string = cut_string_if_long(artist_string, max_artist_length)
             album_name = cut_string_if_long(album_name, max_album_length)
-
-            debug_file.write(f"{track_name} | {artist_string} | {album_name}\n")
 
             table.add_row(
                 str(i + 1),
