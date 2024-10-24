@@ -186,16 +186,11 @@ class Playlist_Track_View(Widget):
     async def set_tracks(self, lengths=[100, 100, 100]):
         table = self.query_one(DataTable)
         table.loading = True
-        # columns = table.add_columns("#", "Title", "Artist", "Album", "Duration", "Liked")
-        # for column in columns:
-        #     column.auto_width = True
-        # table.clear()
-        table.add_column("#", auto_width=True)
-        table.add_column("Title", auto_width=True)
-        table.add_column("Artist", auto_width=True)
-        table.add_column("Album", auto_width=True)
-        table.add_column("Duration", auto_width=True)
-        table.add_column("Liked", auto_width=True)
+        columns = table.add_columns("#", "Title", "Artist", "Album", "Duration", "Liked")
+        for column in columns:
+            column.auto_width = True
+        table.clear()
+
 
         tracks = playback.get_playlist_tracks(self.playlist_id)
 
