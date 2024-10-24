@@ -178,29 +178,14 @@ class Playlist_Track_View(Widget):
     def compose(self) -> ComposeResult:
         yield DataTable()
 
-
-    # def render(self) -> None:
-        # self.set_tracks()
-
-
-
     @work
     async def set_tracks(self, lengths=[100, 100, 100]):
         table = self.query_one(DataTable)
         table.loading = True
         table.styles.width = "100%"
-        columns = table.add_columns("#", "Title", "Artist", "Album", "Duration", "Liked")
-        # for column in columns:
-        #     column.width = 5
-        # table.add_column("#", width=5)
-        # table.add_column("Title", width=100)
-        # table.add_column("Artist", width=100)
-        # table.add_column("Album", width=100)
-        # table.add_column("Duration", width=10)
-        # table.add_column("Liked", width=5)
-
         table.clear()
 
+        columns = table.add_columns("#", "Title", "Artist", "Album", "Duration", "Liked")
 
         tracks = playback.get_playlist_tracks(self.playlist_id)
 
@@ -208,7 +193,7 @@ class Playlist_Track_View(Widget):
             h, width = table.size()
             max_length = width
 
-            # get max lengths according ot the weights
+            # calculate max lengths according to the weights
             max_track_length = (
                 max_length
                 * self.track_weight
@@ -226,8 +211,6 @@ class Playlist_Track_View(Widget):
             )
         else:
             max_track_length, max_artist_length, max_album_length = lengths
-
-        # self.notify(str(width))
 
         for i, track in enumerate(tracks):
             track_name = str(track["name"])
@@ -248,15 +231,17 @@ class Playlist_Track_View(Widget):
             )
         table.loading = False
 
+        # After setting the tracks, apply the auto-resizing hook
+        self.post_display_hook()
+
     def on_mount(self) -> None:
         table = self.query_one(DataTable)
         table.cursor_type = "row"
 
-
         height, width = table.size
         max_length = width - 5
 
-        # get max lengths according ot the weights
+        # calculate max lengths according to the weights
         max_track_length = (
             max_length
             * self.track_weight
@@ -274,15 +259,27 @@ class Playlist_Track_View(Widget):
         )
 
         lengths = (max_track_length, max_artist_length, max_album_length)
-        # self.set_tracks(tracks, lengths=lengths)
 
-        # call it async to avoid blocking the main thread
+        # Call the async method to set tracks
         self.set_tracks()
 
-    # def format_duration(self, ms):
-    #     seconds = ms // 1000
-    #     minutes, seconds = divmod(seconds, 60)
-    #     return f"{minutes}:{seconds:02d}"
+    def post_display_hook(self) -> None:
+        # This method adjusts the column widths based on the table size
+        table = self.query_one(DataTable)
+        size = table.size
+
+        if all([c for c in size]):  # Ensure we have a valid size
+
+            for c in table.columns.values():
+                c.auto_width = False
+                if not hasattr(c, "percentage_width") or (c.percentage_width is None):
+                    c.percentage_width = c.width
+
+                # Adjust width based on the percentage of table size
+                c.width = int(self.size[0] * (c.percentage_width / 100))
+
+        # Refresh the table display
+        table.refresh()
 
 
 class Main_Screen(Screen):
