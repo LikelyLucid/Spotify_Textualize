@@ -95,7 +95,8 @@ class Spotify_Playback_Data:
             self.context_href = playback_data["context"]["href"]
             self.context_type = playback_data["context"]["type"]
             self.context_uri = playback_data["context"]["uri"]
-        except:
+        except Exception as e:
+            print(e)
             pass
 
         # Track Information
