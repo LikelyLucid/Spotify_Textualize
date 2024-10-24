@@ -226,7 +226,7 @@ class Playlist_Track_View(Widget):
     def on_mount(self) -> None:
         table = self.query_one(DataTable)
         table.cursor_type = "row"
-        tracks = playback.get_playlist_tracks(self.playlist_id)
+        tracks = await playback.get_playlist_tracks(self.playlist_id)
 
         height, width = table.size
         max_length = width - 5
