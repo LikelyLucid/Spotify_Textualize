@@ -177,7 +177,7 @@ class Playlist_Track_View(Widget):
         yield DataTable()
 
 
-    def on_size(self) -> None:
+    def render(self) -> None:
         self.set_tracks()
 
     @work
