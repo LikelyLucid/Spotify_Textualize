@@ -176,6 +176,10 @@ class Playlist_Track_View(Widget):
     def compose(self) -> ComposeResult:
         yield DataTable()
 
+
+    def on_size(self) -> None:
+        self.set_tracks()
+
     @work
     async def set_tracks(self, lengths=None):
         table = self.query_one(DataTable)
@@ -258,7 +262,7 @@ class Playlist_Track_View(Widget):
         # self.set_tracks(tracks, lengths=lengths)
 
         # call it async to avoid blocking the main thread
-        self.set_tracks()
+        # self.set_tracks()
 
     # def format_duration(self, ms):
     #     seconds = ms // 1000
