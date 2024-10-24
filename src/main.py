@@ -182,7 +182,7 @@ class Playlist_Track_View(Widget):
         if lengths is None:
             # Get terminal size for dynamic width calculation
             terminal_size = shutil.get_terminal_size()
-            total_width = terminal_size.columns
+            height, total_width = table.size
 
             # Fixed widths for columns with constant content
             fixed_columns_width = 5 + 8 + 5 + (2 * 5)  # Adjust for paddings and fixed columns
