@@ -167,12 +167,12 @@ class Playlist_Track_View(Widget):
     def compose(self) -> ComposeResult:
         yield DataTable()
 
-    def set_tracks(self, lengths=None):
+    async def set_tracks(self, lengths=None):
         table = self.query_one(DataTable)
         table.add_columns("#", "Title", "Artist", "Album", "Duration", "Liked")
         table.clear()
 
-        tracks = playback.get_playlist_tracks(self.playlist_id)
+        tracks = await playback.get_playlist_tracks(self.playlist_id)
 
         if lengths is None:
             height, width = table.size
