@@ -190,7 +190,12 @@ class Playlist_Track_View(Widget):
         # for column in columns:
         #     column.auto_width = True
         # table.clear()
-        
+        table.add_column("#", auto_width=True)
+        table.add_column("Title", auto_width=True)
+        table.add_column("Artist", auto_width=True)
+        table.add_column("Album", auto_width=True)
+        table.add_column("Duration", auto_width=True)
+        table.add_column("Liked", auto_width=True)
 
         tracks = playback.get_playlist_tracks(self.playlist_id)
 
