@@ -203,21 +203,28 @@ class Playlist_Track_View(Widget):
         else:
             max_track_length, max_artist_length, max_album_length = lengths
 
+        debug_file = open("tracks.txt", "w")
+        # remove all charecters that are not ascii
+        debug_tracks = [track for track in tracks if all(ord(c) < 128 for c in track["name"])]
+        debug_file.write(str(debug_tracks))
+
         for i, track in enumerate(tracks):
             track_name = str(track["name"])
             artist_string = str(", ".join(track.get("artists", [])))
             album_name = str(track.get("album", ""))
 
-            track_name = track_name[:max_track_length].rstrip() + '...' if len(track_name) > max_track_length else track_name
-            artist_string = artist_string[:max_artist_length].rstrip() + '...' if len(artist_string) > max_artist_length else artist_string
-            album_name = album_name[:max_album_length].rstrip() + '...' if len(album_name) > max_album_length else album_name
+            track_name = track_name[:max_track_length].strip() + '...' if len(track_name) > max_track_length else track_name
+            artist_string = artist_string[:max_artist_length].strip() + '...' if len(artist_string) > max_artist_length else artist_string
+            album_name = album_name[:max_album_length].strip() + '...' if len(album_name) > max_album_length else album_name
+
+            debug_file.write(f"{track_name} | {artist_string} | {album_name}\n")
 
             table.add_row(
                 str(i + 1),
                 track_name,
                 artist_string,
                 album_name,
-                self.format_duration(track.get("duration_ms", 0)),
+                ms_to_time(track.get("duration_ms", 0)),
                 "♥" if track.get("is_liked", False) else "",
             )
 
@@ -250,7 +257,7 @@ class Playlist_Track_View(Widget):
         # self.set_tracks(tracks, lengths=lengths)
 
         # call it async to avoid blocking the main thread
-        # self.set_tracks(lengths=lengths)
+        self.set_tracks(lengths=lengths)
 
     # def format_duration(self, ms):
     #     seconds = ms // 1000
