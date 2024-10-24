@@ -214,7 +214,7 @@ class Playlist_Track_View(Widget):
         else:
             max_track_length, max_artist_length, max_album_length = lengths
 
-        self.notify(str(width))
+        # self.notify(str(width))
 
         for i, track in enumerate(tracks):
             track_name = str(track["name"])
