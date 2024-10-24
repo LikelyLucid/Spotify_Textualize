@@ -177,8 +177,9 @@ class Playlist_Track_View(Widget):
         yield DataTable()
 
     @work
-    def set_tracks(self, lengths=None):
+    async def set_tracks(self, lengths=None):
         table = self.query_one(DataTable)
+        table.loading = True
         table.add_columns("#", "Title", "Artist", "Album", "Duration", "Liked")
         table.clear()
 
@@ -226,12 +227,13 @@ class Playlist_Track_View(Widget):
 
             table.add_row(
                 str(i + 1),
-                track_name,
-                artist_string,
-                album_name,
+                max_track_length,
+                max_artist_length,
+                max_album_length,
                 ms_to_time(track.get("duration_ms", 0)),
                 "♥" if track.get("is_liked", False) else "",
             )
+        table.loading = False
 
     def on_mount(self) -> None:
         table = self.query_one(DataTable)
