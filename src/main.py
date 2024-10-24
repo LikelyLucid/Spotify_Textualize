@@ -223,7 +223,7 @@ class Playlist_Track_View(Widget):
                 "♥" if track.get("is_liked", False) else "",
             )
 
-    def on_mount(self) -> None:
+    async def on_mount(self) -> None:
         table = self.query_one(DataTable)
         table.cursor_type = "row"
         tracks = await playback.get_playlist_tracks(self.playlist_id)
