@@ -2,6 +2,7 @@ from textual.app import App, ComposeResult
 from textual.screen import Screen
 from textual.widget import Widget
 from textual.containers import Container, Center, Vertical, ScrollableContainer
+from textual.lazy import Lazy
 from textual.widgets import (
     Placeholder,
     ProgressBar,
@@ -10,6 +11,7 @@ from textual.widgets import (
     ListItem,
     Label,
     DataTable,
+    # Lazy,
 )
 from textual.reactive import reactive
 from spotify_main_class import Spotify_Playback_Data
@@ -160,7 +162,7 @@ class Main_Page(Widget):
     def compose(self):
         with Container(id="main_page_container"):
             # yield Static("Main Page", id="main_page_header")
-            yield Playlist_Track_View(playlist_id="liked_songs", id="playlist_tracks")
+            yield Lazy(Playlist_Track_View(playlist_id="liked_songs", id="playlist_tracks"))
 
 
 class Playlist_Track_View(Widget):
