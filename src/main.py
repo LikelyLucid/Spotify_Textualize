@@ -188,7 +188,7 @@ class Playlist_Track_View(Widget):
         table.loading = True
         columns = table.add_columns("#", "Title", "Artist", "Album", "Duration", "Liked")
         for column in columns:
-            column.auto_width = True
+            column.width = 5
         table.clear()
 
 
