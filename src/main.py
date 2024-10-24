@@ -199,15 +199,8 @@ class Playlist_Track_View(Widget):
 
         for i, track in enumerate(tracks):
             track_name = str(track["name"])
-            artist_string = str(", ".join(track.get("artists", [])))
-            album_name = str(track.get("album", ""))
-
-            # if len(track_name) > self.max_title_length:
-            #     track_name = track_name[:self.max_title_length] + "..."
-            # if len(artist_string) > self.max_title_length:
-            #     artist_string = artist_string[:self.max_title_length] + "..."
-            # if len(album_name) > self.max_title_length:
-            #     album_name = album_name[:self.max_title_length] + "..."
+            artist_string = str(", ".join(artist["name"] for artist in track.get("artists", [])))
+            album_name = str(track.get("album", {}).get("name", ""))
 
             if len(track_name) > max_track_length:
                 track_name = track_name[:max_track_length] + "..."
