@@ -203,10 +203,11 @@ class Playlist_Track_View(Widget):
         else:
             max_track_length, max_artist_length, max_album_length = lengths
 
-        debug_file = open("tracks.txt", "w")
-        # remove all charecters that are not ascii
+        debug_file = open("tracks.txt", "w", encoding="utf-8")
+        # remove all characters that are not ASCII
         debug_tracks = [track for track in tracks if all(ord(c) < 128 for c in track["name"])]
         debug_file.write(str(debug_tracks))
+
 
         for i, track in enumerate(tracks):
             track_name = str(track["name"])
