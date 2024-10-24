@@ -112,9 +112,10 @@ class Bottom_Bar(Widget):
 
     def song_change(self):
         self.query_one(Track_Duration).track_duration = playback.track_duration
-        self.query_one(Current_Time_In_Track).current_time = (
-            get_current_time_with_offset()
-        )
+        # self.query_one(Current_Time_In_Track).current_time = (
+        #     get_current_time_with_offset()
+        # )
+        self.update_progress()
         self.query_one("#artist_info").update(self.get_artist_info())
 
     def update_playback_settings(self):
