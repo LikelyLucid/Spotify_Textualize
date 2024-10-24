@@ -186,7 +186,9 @@ class Playlist_Track_View(Widget):
     async def set_tracks(self, lengths=[100, 100, 100]):
         table = self.query_one(DataTable)
         table.loading = True
-        table.add_columns("#", "Title", "Artist", "Album", "Duration", "Liked")
+        columns = table.add_columns("#", "Title", "Artist", "Album", "Duration", "Liked")
+        for column in columns:
+            column.align = "left"
         # table.clear()
 
         tracks = playback.get_playlist_tracks(self.playlist_id)
