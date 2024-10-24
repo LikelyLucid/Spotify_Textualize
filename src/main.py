@@ -209,7 +209,7 @@ class Playlist_Track_View(Widget):
         debug_file.write(str(debug_tracks))
 
 
-        for i, track in enumerate(tracks):
+        for i, track in enumerate(debug_tracks):
             track_name = str(track["name"])
             artist_string = str(", ".join(track.get("artists", [])))
             album_name = str(track.get("album", ""))
