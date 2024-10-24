@@ -186,7 +186,7 @@ class Playlist_Track_View(Widget):
         tracks = playback.get_playlist_tracks(self.playlist_id)
 
         if lengths is None:
-            width = table.get_content_width()
+            width = table.get_content_width(container=True)
             max_length = width - 5
 
             # get max lengths according ot the weights
@@ -264,7 +264,7 @@ class Playlist_Track_View(Widget):
         # self.set_tracks(tracks, lengths=lengths)
 
         # call it async to avoid blocking the main thread
-        self.set_tracks(lengths=lengths)
+        self.set_tracks()
 
     # def format_duration(self, ms):
     #     seconds = ms // 1000
