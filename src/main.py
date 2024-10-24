@@ -96,10 +96,7 @@ class Bottom_Bar(Widget):
 
     def update_progress(self, progress=None):
         current_time_widget = self.query_one(Current_Time_In_Track)
-        if playback.is_playing and progress is None:
-            current_time_widget.current_time += 1000
-        else:
-            current_time_widget.current_time = progress
+
         try:
             self.query_one(ProgressBar).update(
                 progress=current_time_widget.current_time,
@@ -107,6 +104,10 @@ class Bottom_Bar(Widget):
             )
         except TypeError:
             pass
+        if playback.is_playing and progress is None:
+            current_time_widget.current_time += 1000
+        else:
+            current_time_widget.current_time = progress
 
     def song_change(self):
         self.query_one(Track_Duration).track_duration = playback.track_duration
