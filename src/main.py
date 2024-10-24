@@ -19,7 +19,7 @@ from textual import work
 playback = Spotify_Playback_Data()
 
 def cut_string_if_long(string: str, max_length: int) -> str:
-    return string[:max_length].strip() + "..." if len(string) > max_length else string
+    return string[:abs(max_length)].strip() + "..." if len(string) > abs(max_length) else string
 
 def ms_to_time(ms: int) -> str:
     if ms is None:
@@ -186,7 +186,7 @@ class Playlist_Track_View(Widget):
         tracks = playback.get_playlist_tracks(self.playlist_id)
 
         if lengths is None:
-            width = 
+            width = table.get_content_width()
             max_length = width - 5
 
             # get max lengths according ot the weights
@@ -227,9 +227,9 @@ class Playlist_Track_View(Widget):
 
             table.add_row(
                 str(i + 1),
-                max_track_length,
-                max_artist_length,
-                max_album_length,
+                track_name,
+                artist_string,
+                album_name,
                 ms_to_time(track.get("duration_ms", 0)),
                 "♥" if track.get("is_liked", False) else "",
             )
