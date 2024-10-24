@@ -14,9 +14,6 @@ from textual.widgets import (
 from textual.reactive import reactive
 from spotify_main_class import Spotify_Playback_Data
 import time
-import textwrap
-import shutil
-
 
 playback = Spotify_Playback_Data()
 
@@ -170,55 +167,44 @@ class Playlist_Track_View(Widget):
     def compose(self) -> ComposeResult:
         yield DataTable()
 
-
-
     def set_tracks(self, lengths=None):
         table = self.query_one(DataTable)
-        table.clear()
         table.add_columns("#", "Title", "Artist", "Album", "Duration", "Liked")
+        table.clear()
 
         tracks = playback.get_playlist_tracks(self.playlist_id)
 
         if lengths is None:
-            # Get terminal size for dynamic width calculation
-            terminal_size = shutil.get_terminal_size()
-            height, total_width = table.size
+            height, width = table.size
+            max_length = width - 5
 
-            # Fixed widths for columns with constant content
-            fixed_columns_width = 5 + 8 + 5 + (2 * 5)  # Adjust for paddings and fixed columns
-
-            # Available width for dynamic columns
-            available_width = total_width - fixed_columns_width
-
-            # Total weight for dynamic columns
-            total_weight = self.track_weight + self.artist_weight + self.album_weight
-
-            # Calculate max lengths based on weights
-            max_track_length = (available_width * self.track_weight) // total_weight
-            max_artist_length = (available_width * self.artist_weight) // total_weight
-            max_album_length = (available_width * self.album_weight) // total_weight
+            # get max lengths according ot the weights
+            max_track_length = (
+                max_length
+                * self.track_weight
+                // (self.track_weight + self.artist_weight + self.album_weight)
+            )
+            max_artist_length = (
+                max_length
+                * self.artist_weight
+                // (self.track_weight + self.artist_weight + self.album_weight)
+            )
+            max_album_length = (
+                max_length
+                * self.album_weight
+                // (self.track_weight + self.artist_weight + self.album_weight)
+            )
         else:
             max_track_length, max_artist_length, max_album_length = lengths
-
-        def truncate_text(text, max_length):
-            if len(text) > max_length:
-                # Use textwrap to avoid breaking words
-                truncated = textwrap.shorten(text, width=max_length - 3, placeholder='')
-                # Ensure the string is exactly max_length
-                return truncated.ljust(max_length - 3) + '...'
-            else:
-                # Pad shorter strings with spaces
-                return text.ljust(max_length)
 
         for i, track in enumerate(tracks):
             track_name = str(track["name"])
             artist_string = str(", ".join(track.get("artists", [])))
             album_name = str(track.get("album", ""))
 
-            # Apply improved truncation logic
-            track_name = truncate_text(track_name, max_track_length)
-            artist_string = truncate_text(artist_string, max_artist_length)
-            album_name = truncate_text(album_name, max_album_length)
+            track_name = track_name[:max_track_length].strip() + '...' if len(track_name) > max_track_length else track_name
+            artist_string = artist_string[:max_artist_length].strip() + '...' if len(artist_string) > max_artist_length else artist_string
+            album_name = album_name[:max_album_length].strip() + '...' if len(album_name) > max_album_length else album_name
 
             table.add_row(
                 str(i + 1),
@@ -228,7 +214,6 @@ class Playlist_Track_View(Widget):
                 self.format_duration(track.get("duration_ms", 0)),
                 "♥" if track.get("is_liked", False) else "",
             )
-
 
     def on_mount(self) -> None:
         table = self.query_one(DataTable)
