@@ -182,20 +182,7 @@ class Playlist_Track_View(Widget):
     # def render(self) -> None:
         # self.set_tracks()
 
-        def post_display_hook(this) -> None:
-        table = self.query_one(DataTable)
-        size = table.size
 
-        if all([c for c in size]):
-
-            for c in table.columns.values():
-                c.auto_width=False
-                if (not hasattr(c,"percentage_width") or (c.percentage_width is None)):
-                    c.percentage_width = c.width
-
-                c.width = int(this.size[0] * (c.percentage_width / 100))
-
-        table.refresh()
 
     @work
     async def set_tracks(self, lengths=[100, 100, 100]):
