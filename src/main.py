@@ -249,6 +249,9 @@ class Playlist_Track_View(Widget):
         )
 
         lengths = (max_track_length, max_artist_length, max_album_length)
+        # self.set_tracks(tracks, lengths=lengths)
+
+        # call it async to avoid blocking the main thread
         self.set_tracks(tracks, lengths=lengths)
 
     def format_duration(self, ms):
