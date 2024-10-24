@@ -167,10 +167,12 @@ class Playlist_Track_View(Widget):
     def compose(self) -> ComposeResult:
         yield DataTable()
 
-    async def set_tracks(self, tracks, lengths=None):
+    async def set_tracks(self, lengths=None):
         table = self.query_one(DataTable)
         table.add_columns("#", "Title", "Artist", "Album", "Duration", "Liked")
         table.clear()
+
+        tracks = playback.get_playlist_tracks(self.playlist_id)
 
         if lengths is None:
             height, width = table.size
@@ -223,10 +225,10 @@ class Playlist_Track_View(Widget):
                 "♥" if track.get("is_liked", False) else "",
             )
 
-    async def on_mount(self) -> None:
+    def on_mount(self) -> None:
         table = self.query_one(DataTable)
         table.cursor_type = "row"
-        tracks = await playback.get_playlist_tracks(self.playlist_id)
+
 
         height, width = table.size
         max_length = width - 5
@@ -252,7 +254,7 @@ class Playlist_Track_View(Widget):
         # self.set_tracks(tracks, lengths=lengths)
 
         # call it async to avoid blocking the main thread
-        self.set_tracks(tracks, lengths=lengths)
+        self.set_tracks(lengths=lengths)
 
     def format_duration(self, ms):
         seconds = ms // 1000
