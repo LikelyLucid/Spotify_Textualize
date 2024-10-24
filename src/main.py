@@ -100,10 +100,13 @@ class Bottom_Bar(Widget):
             current_time_widget.current_time += 1000
         else:
             current_time_widget.current_time = progress
-        self.query_one(ProgressBar).update(
-            progress=current_time_widget.current_time,
-            total=playback.track_duration,
-        )
+        try:
+            self.query_one(ProgressBar).update(
+                progress=current_time_widget.current_time,
+                total=playback.track_duration,
+            )
+        except TypeError:
+            pass
 
     def song_change(self):
         self.query_one(Track_Duration).track_duration = playback.track_duration
