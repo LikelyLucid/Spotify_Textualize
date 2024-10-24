@@ -162,7 +162,7 @@ class Main_Page(Widget):
     def compose(self):
         with Container(id="main_page_container"):
             # yield Static("Main Page", id="main_page_header")
-            yield Lazy(Playlist_Track_View(playlist_id="liked_songs", id="playlist_tracks"))
+            yield Playlist_Track_View(playlist_id="liked_songs", id="playlist_tracks")
 
 
 class Playlist_Track_View(Widget):
@@ -187,12 +187,12 @@ class Playlist_Track_View(Widget):
         table = self.query_one(DataTable)
         table.loading = True
         table.add_columns("#", "Title", "Artist", "Album", "Duration", "Liked")
-        table.clear()
+        # table.clear()
 
         tracks = playback.get_playlist_tracks(self.playlist_id)
 
         if lengths is None:
-            h, width = table.get_content_width()
+            h, width = table.size()
             max_length = width
 
             # get max lengths according ot the weights
@@ -264,7 +264,7 @@ class Playlist_Track_View(Widget):
         # self.set_tracks(tracks, lengths=lengths)
 
         # call it async to avoid blocking the main thread
-        # self.set_tracks()
+        self.set_tracks()
 
     # def format_duration(self, ms):
     #     seconds = ms // 1000
