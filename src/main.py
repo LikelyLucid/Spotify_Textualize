@@ -249,10 +249,10 @@ class Playlist_Track_View(Widget):
         # call it async to avoid blocking the main thread
         # self.set_tracks(lengths=lengths)
 
-    def format_duration(self, ms):
-        seconds = ms // 1000
-        minutes, seconds = divmod(seconds, 60)
-        return f"{minutes}:{seconds:02d}"
+    # def format_duration(self, ms):
+    #     seconds = ms // 1000
+    #     minutes, seconds = divmod(seconds, 60)
+    #     return f"{minutes}:{seconds:02d}"
 
 
 class Main_Screen(Screen):
