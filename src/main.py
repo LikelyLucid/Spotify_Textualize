@@ -186,7 +186,7 @@ class Playlist_Track_View(Widget):
         tracks = playback.get_playlist_tracks(self.playlist_id)
 
         if lengths is None:
-            h, width = table.size
+            h, width = table.get_content_width()
             max_length = width
 
             # get max lengths according ot the weights
