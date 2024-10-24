@@ -193,7 +193,7 @@ class Spotify_Playback_Data:
             for playlist in featured["playlists"]["items"]
         ]
 
-    async def get_playlist_tracks(self, playlist_id):
+    def get_playlist_tracks(self, playlist_id):
         """Get tracks from a playlist"""
         playlist_items = []
         offset = 0
