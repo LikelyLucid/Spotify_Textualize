@@ -14,6 +14,7 @@ from textual.widgets import (
 from textual.reactive import reactive
 from spotify_main_class import Spotify_Playback_Data
 import time
+from textual import work
 
 playback = Spotify_Playback_Data()
 
