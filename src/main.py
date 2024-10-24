@@ -17,6 +17,8 @@ import time
 
 playback = Spotify_Playback_Data()
 
+def cut_string_if_long(string: str, max_length: int) -> str:
+    return string[:max_length].strip() + "..." if len(string) > max_length else string
 
 def ms_to_time(ms: int) -> str:
     if ms is None:
@@ -214,9 +216,9 @@ class Playlist_Track_View(Widget):
             artist_string = str(", ".join(track.get("artists", [])))
             album_name = str(track.get("album", ""))
 
-            track_name = track_name[:max_track_length].strip() + '...' if len(track_name) > max_track_length else track_name
-            artist_string = artist_string[:max_artist_length].strip() + '...' if len(artist_string) > max_artist_length else artist_string
-            album_name = album_name[:max_album_length].strip() + '...' if len(album_name) > max_album_length else album_name
+            track_name = cut_string_if_long(track_name, max_track_length)
+            artist_string = cut_string_if_long(artist_string, max_artist_length)
+            album_name = cut_string_if_long(album_name, max_album_length)
 
             debug_file.write(f"{track_name} | {artist_string} | {album_name}\n")
 
