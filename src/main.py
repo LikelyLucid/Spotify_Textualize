@@ -202,15 +202,12 @@ class Playlist_Track_View(Widget):
             artist_string = str(", ".join(track.get("artists", [])))
             album_name = str(track.get("album", ""))
 
-            if len(track_name) > max_track_length:
-                track_name = track_name[:max_track_length] + "..."
-            if len(artist_string) > max_artist_length:
-                artist_string = artist_string[:max_artist_length] + "..."
-            if len(album_name) > max_album_length:
-                album_name = album_name[:max_album_length] + "..."
+            track_name = track_name[:max_track_length] + "..." if len(track_name) > max_track_length else track_name
+            artist_string = artist_string[:max_artist_length] + "..." if len(artist_string) > max_artist_length else artist_string
+            album_name = album_name[:max_album_length] + "..." if len(album_name) > max_album_length else album_name
 
-            table.add_row(  # TODO: THIS IS WEIRD FOR SOME REASON
-                i,
+            table.add_row(
+                str(i + 1),
                 track_name,
                 artist_string,
                 album_name,
