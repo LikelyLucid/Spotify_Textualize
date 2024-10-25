@@ -316,7 +316,7 @@ class Playlist_Track_View(Widget):
                 c.auto_width = True
             else:
                 pass
-            taken_chars += c.width
+            taken_chars += c.get_render_width(table)
             # else:
             #     c.percentage_width = None
             #     c.width = int((size[0]-5) / (len(table.columns)-3))
