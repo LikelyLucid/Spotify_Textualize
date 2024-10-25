@@ -240,7 +240,7 @@ class Playlist_Track_View(Widget):
     def on_mount(self) -> None:
         table = self.query_one(DataTable)
         table.cursor_type = "row"
-        table.zebra_stripes = True
+        # table.zebra_stripes = True
         # table.styles.scrollbar_size_vertical = 0
         table.styles.scrollbar_size_horizontal = 0
         # table.styles.border = ("heavy", "blue")
