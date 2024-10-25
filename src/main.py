@@ -158,11 +158,12 @@ class Library_List(Widget):
         for item in self.library_data:
             if item["name"] == selected_item.item.name:
                 playlist_id = item["id"]
+                self.notify(f"playlist_id: {playlist_id}")
                 break
 
-        datatable = self.query_one(Playlist_Track_View)
-        datatable.playlist_id = playlist_id
-        datatable.set_tracks()
+        # datatable = self.query_one(Playlist_Track_View)
+        # datatable.playlist_id = playlist_id
+        # datatable.set_tracks()
 
     def compose(self):
         items = [
