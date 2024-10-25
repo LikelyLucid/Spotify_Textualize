@@ -202,6 +202,10 @@ class Spotify_Playback_Data:
             for playlist in featured["playlists"]["items"]
         ]
 
+    def play_playlist(self, playlist_id):
+        """Play a playlist given its ID"""
+        self.sp.start_playback(context_uri=f"spotify:playlist:{playlist_id}")
+
     def get_playlist_tracks(self, playlist_id):
         """Get tracks from a playlist"""
         playlist_items = []

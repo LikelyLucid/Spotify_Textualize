@@ -147,9 +147,16 @@ class Side_Bar(Widget):
 
 
 class Library_List(Widget):
+
+
+
     def __init__(self, library_data, id=None):
         self.library_data = library_data
         super().__init__(id=id)
+
+    def on_list_view_selected(self, item):
+        self.notify("List item selected: " + item.name)
+
 
     def compose(self):
         items = [
