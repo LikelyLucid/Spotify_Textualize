@@ -268,6 +268,8 @@ class Playlist_Track_View(Widget):
         table = self.query_one(DataTable)
         size = table.size
 
+        self.notify(f"size: {size[0]}")
+
         if all([c for c in size]):  # Ensure we have a valid size
 
             for c in table.columns.values():
