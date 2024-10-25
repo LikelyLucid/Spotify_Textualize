@@ -294,7 +294,7 @@ class Playlist_Track_View(Widget):
 
             if c.label == "#":
                 c.percentage_width = None
-                c.width = 4
+                c.auto_width = True
             elif c.label == "Duration":
                 c.percentage_width = None
                 c.width = 5
@@ -306,7 +306,7 @@ class Playlist_Track_View(Widget):
                 c.width = int(size[0] / len(table.columns))
 
             # c.width = int(size[0] / len(table.columns))
-            # self.notify(f"Column: {c.label}, width: {c.width}")
+            self.notify(f"Column: {c.label}, width: {c.width}")
         # Refresh the table display
         table.refresh()
 
