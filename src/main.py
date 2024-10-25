@@ -180,9 +180,8 @@ class Playlist_Track_View(Widget):
         self.max_title_length = max_title_length
         super().__init__(id=id)
 
-    def on_row_selected(self, row):
+    def on_data_table_row_selected(self, row):
         self.notify(f"Row selected: {row}")
-
 
     def adjust_columns(self):
         current_size = self.query_one(DataTable).size[0]
