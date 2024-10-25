@@ -188,7 +188,7 @@ class Playlist_Track_View(Widget):
         # table.styles.width = "100%"
         table.clear()
 
-        columns = table.add_columns("#", "Title", "Artist", "Album", "Duration", "Liked", "       ")
+        columns = table.add_columns("#", "Title", "Artist", "Album", "Duration", "Liked")
 
         tracks = playback.get_playlist_tracks(self.playlist_id)
 
@@ -327,7 +327,7 @@ class Playlist_Track_View(Widget):
         # Refresh the table display
         for c in table.columns.values():
             if str(c.label) in ["Title", "Artist", "Album"]:
-                c.width = int((size[0] - taken_chars) / (len(table.columns) - 3))
+                c.width = int((size[0] - taken_chars) / (len(table.columns) - 3))+1
         table.refresh()
 
 
