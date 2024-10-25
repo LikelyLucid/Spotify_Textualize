@@ -22,7 +22,7 @@ class Spotify_Playback_Data:
         self.sp = sp
         self.update()
 
-    def update(self):
+    async def update(self):
         """
         Update the playback data
 
@@ -30,7 +30,7 @@ class Spotify_Playback_Data:
         - None
         """
         playback_data = self.sp.current_playback()
-        print(playback_data)
+        # print(playback_data)
 
         # If playback_data is None, set all fields to empty strings or defaults
         if playback_data is None:
