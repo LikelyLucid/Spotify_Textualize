@@ -278,7 +278,10 @@ class Playlist_Track_View(Widget):
         self.notify(f"size: {str(size)}, {self.is_mounted}")  # Debugging output
 
         for c in table.columns.values():
+            self.notify(f"Column: {c.label}")
             c.auto_width = False
+            if c.label in ["Title", "Artist", "Album"]:
+                c.percentage_width = 100 / 3
             if not hasattr(c, "percentage_width") or (c.percentage_width is None):
                 c.percentage_width = c.width
 
