@@ -293,12 +293,16 @@ class Playlist_Track_View(Widget):
             # 'Liked' should be 4 characters wide
 
             if c.label == "#":
+                c.percentage_width = None
                 c.width = 4
             elif c.label == "Duration":
+                c.percentage_width = None
                 c.width = 5
             elif c.label == "Liked":
+                c.percentage_width = None
                 c.width = 4
             else:
+                c.percentage_width = None
                 c.width = int(size[0] / len(table.columns))
 
             # c.width = int(size[0] / len(table.columns))
