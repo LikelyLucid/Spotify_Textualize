@@ -268,7 +268,7 @@ class Playlist_Track_View(Widget):
         table = self.query_one(DataTable)
         size = table.container_size
 
-        self.notify(f"size: {size[0]}")
+        self.notify(f"size: {str(size)}")
 
         if all([c for c in size]):  # Ensure we have a valid size
 
