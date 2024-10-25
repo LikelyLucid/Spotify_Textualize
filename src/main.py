@@ -178,11 +178,13 @@ class Playlist_Track_View(Widget):
     def __init__(self, playlist_id, max_title_length=40, id=None):
         self.playlist_id = playlist_id
         self.max_title_length = max_title_length
+        self.tracks = []
         super().__init__(id=id)
 
     def on_data_table_row_selected(self, row):
         self.notify(f"Row selected: {row}")
-        selected_track =
+        selected_track = self.tracks[row.cursor_row]
+        self.notify(f"Selected track: {selected_track}")
 
     def adjust_columns(self):
         current_size = self.query_one(DataTable).size[0]
@@ -205,7 +207,7 @@ class Playlist_Track_View(Widget):
 
         columns = table.add_columns("#", "Title", "Artist", "Album", "Duration", "Liked")
 
-        tracks = playback.get_playlist_tracks(self.playlist_id)
+        self.tracks = playback.get_playlist_tracks(self.playlist_id)
 
         # if lengths is None:
         #     h, width = table.size()
@@ -230,14 +232,14 @@ class Playlist_Track_View(Widget):
         # else:
         #     max_track_length, max_artist_length, max_album_length = lengths
 
-        for i, track in enumerate(tracks):
+        for i, track in enumerate(self.tracks):
             track_name = str(track["name"])
             artist_string = str(", ".join(track.get("artists", [])))
             album_name = str(track.get("album", ""))
 
-            track_name = cut_string_if_long(track_name, max_track_length)
-            artist_string = cut_string_if_long(artist_string, max_artist_length)
-            album_name = cut_string_if_long(album_name, max_album_length)
+            # track_name = cut_string_if_long(track_name, max_track_length)
+            # artist_string = cut_string_if_long(artist_string, max_artist_length)
+            # album_name = cut_string_if_long(album_name, max_album_length)
 
             table.add_row(
                 str(i + 1),
