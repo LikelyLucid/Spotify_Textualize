@@ -281,7 +281,7 @@ class Playlist_Track_View(Widget):
 
         # Call the async method to set tracks
         self.set_tracks()
-        self.set_interval(5, self.adjust_columns)
+        # self.set_interval(5, self.adjust_columns)
 
     @work
     async def post_display_hook(self) -> None:
