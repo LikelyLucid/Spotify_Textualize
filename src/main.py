@@ -162,7 +162,9 @@ class Main_Page(Widget):
     def compose(self):
         with Container(id="main_page_container"):
             # yield Static("Main Page", id="main_page_header")
-            yield Playlist_Track_View(playlist_id="liked_songs", id="playlist_tracks")
+            yield Playlist_Track_View(
+                playlist_id="3yE07D1ZglwRnCDMM3mq1V", id="playlist_tracks"
+            )
 
 
 class Playlist_Track_View(Widget):
