@@ -22,7 +22,7 @@ class Spotify_Playback_Data:
         self.sp = sp
         self.update()
 
-    async def update(self):
+    def update(self):
         """
         Update the playback data
 
@@ -35,39 +35,7 @@ class Spotify_Playback_Data:
         # If playback_data is None, set all fields to empty strings or defaults
         if playback_data is None:
             print("No playback data available.")
-            self.device_id = None
-            self.device_name = None
-            self.device_is_active = None
-            self.device_is_private_session = None
-            self.device_is_restricted = None
-            self.device_type = None
-            self.device_supports_volume = None
-            self.device_volume_percent = None
-            self.shuffle = None
-            self.smart_shuffle = None
-            self.repeat = None
-            self.timestamp = None
-            self.progress_ms = None
-            self.currently_playing_type = None
-            self.is_playing = None
-            self.external_url = None
-            self.context_href = None
-            self.context_type = None
-            self.context_uri = None
-            self.track = None
-            self.track_id = None
-            self.track_uri = None
-            self.track_explicit = None
-            self.track_popularity = None
-            self.track_preview_url = None
-            self.track_number = None
-            self.track_duration = None
-            self.album_name = None
-            self.album_id = None
-            self.album_release_date = None
-            self.album_total_tracks = None
-            self.artists = None
-            self.available_markets = None
+            self.new_method()
             return
 
         # Device Information
@@ -118,6 +86,41 @@ class Spotify_Playback_Data:
         # Artist Information
         self.artists = [artist["name"] for artist in playback_data["item"]["artists"]]
         self.available_markets = playback_data["item"]["available_markets"]
+
+    def new_method(self):
+        self.device_id = None
+        self.device_name = None
+        self.device_is_active = None
+        self.device_is_private_session = None
+        self.device_is_restricted = None
+        self.device_type = None
+        self.device_supports_volume = None
+        self.device_volume_percent = None
+        self.shuffle = None
+        self.smart_shuffle = None
+        self.repeat = None
+        self.timestamp = None
+        self.progress_ms = None
+        self.currently_playing_type = None
+        self.is_playing = None
+        self.external_url = None
+        self.context_href = None
+        self.context_type = None
+        self.context_uri = None
+        self.track = None
+        self.track_id = None
+        self.track_uri = None
+        self.track_explicit = None
+        self.track_popularity = None
+        self.track_preview_url = None
+        self.track_number = None
+        self.track_duration = None
+        self.album_name = None
+        self.album_id = None
+        self.album_release_date = None
+        self.album_total_tracks = None
+        self.artists = None
+        self.available_markets = None
 
     def playing_settings(self):
         """Creates the text above the progress bar"""
