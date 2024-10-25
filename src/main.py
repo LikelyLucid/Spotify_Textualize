@@ -254,6 +254,7 @@ class Playlist_Track_View(Widget):
         # table.zebra_stripes = True
         # table.styles.scrollbar_size_vertical = 0
         table.styles.scrollbar_size_horizontal = 0
+        table.disable
         # table.styles.border = ("heavy", "blue")
 
         height, width = table.size
