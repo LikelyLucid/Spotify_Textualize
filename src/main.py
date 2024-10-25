@@ -152,17 +152,7 @@ class Library_List(Widget):
         self.library_data = library_data
         super().__init__(id=id)
 
-    def on_list_view_selected(self, selected_item):
-        self.notify(f"item selected: {selected_item.item.name}")
-        # playlist_id = self.library_data[selected_item.item.name]["id"]
-        for item in self.library_data:
-            if item["name"] == selected_item.item.name:
-                playlist_id = item["id"]
-                self.notify(f"playlist_id: {playlist_id}")
-                break
 
-        table = self.query_one('#playlist_tracks')
-        table.change_playlist(playlist_id)
 
     def compose(self):
         items = [
@@ -375,6 +365,18 @@ class Playlist_Track_View(Widget):
 
 class Main_Screen(Screen):
     CSS_PATH = "main_page.tcss"
+
+    def on_list_view_selected(self, selected_item):
+        self.notify(f"item selected: {selected_item.item.name}")
+        # playlist_id = self.library_data[selected_item.item.name]["id"]
+        for item in self.library_data:
+            if item["name"] == selected_item.item.name:
+                playlist_id = item["id"]
+                self.notify(f"playlist_id: {playlist_id}")
+                break
+
+        table = self.query_one("#playlist_tracks")
+        table.change_playlist(playlist_id)
 
     def compose(self) -> ComposeResult:
         yield Placeholder("top_bar", id="top_bar")
