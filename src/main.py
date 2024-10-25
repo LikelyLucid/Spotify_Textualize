@@ -164,7 +164,7 @@ class Main_Page(Widget):
         with Container(id="main_page_container"):
             # yield Static("Main Page", id="main_page_header")
             yield Playlist_Track_View(
-                playlist_id="3yE07D1ZglwRnCDMM3mq1V", id="playlist_tracks"
+                playlist_id="liked_songs", id="playlist_tracks"
             )
 
 
@@ -173,6 +173,7 @@ class Playlist_Track_View(Widget):
     # weighting
     track_weight, artist_weight, album_weight = 2, 1, 1
     old_size = (0, 0)
+    adjusting_size = False
 
     def __init__(self, playlist_id, max_title_length=40, id=None):
         self.playlist_id = playlist_id
@@ -180,9 +181,12 @@ class Playlist_Track_View(Widget):
         super().__init__(id=id)
 
     def on_resize(self):
-        if self.old_size == self.query_one(DataTable).size[0]:
+        current_size = self.query_one(DataTable).size[0]
+        if self.old_size == current_size:
             return
-        self.old_size = self.query_one(DataTable).size[0]
+        elif self.adjusting_size:
+            return
+        self.old_size = current_size
         self.post_display_hook()
 
     def compose(self) -> ComposeResult:
@@ -280,6 +284,7 @@ class Playlist_Track_View(Widget):
 
     @work
     async def post_display_hook(self) -> None:
+        adjusting_size = True
         # This method adjusts the column widths based on the table size
         table = self.query_one(DataTable)
         size = table.container_size
@@ -340,6 +345,7 @@ class Playlist_Track_View(Widget):
             if str(c.label) in ["Title", "Artist", "Album"]:
                 c.width = int((size[0] - taken_chars) / (len(table.columns) - 3))+1
         table.refresh()
+        adjusting_size = False
 
 
 class Main_Screen(Screen):
