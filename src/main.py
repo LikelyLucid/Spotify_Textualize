@@ -270,8 +270,6 @@ class Playlist_Track_View(Widget):
         table = self.query_one(DataTable)
         size = table.container_size
 
-        total_tracks = table.rows_curren
-
         # If the size is not valid, try again later
         if not all([c for c in size]):
             self.call_later(self.post_display_hook)
@@ -307,7 +305,7 @@ class Playlist_Track_View(Widget):
 
             # --- try auto width
             if str(c.label) == "#":
-                c.auto_width = True
+                c.width = len(str(table.row_count))
                 self.notify(f"Hit Column: {c.label}, width: {c.width}")
             elif str(c.label) == "Duration":
                 c.auto_width = True
@@ -316,11 +314,10 @@ class Playlist_Track_View(Widget):
                 c.auto_width = True
                 self.notify(f"Hit Column: {c.label}, width: {c.width}")
 
-
             # else:
             #     c.percentage_width = None
             #     c.width = int((size[0]-5) / (len(table.columns)-3))
-                # self.notify(f"Hit Column: {c.label}, width: {c.width}")
+            # self.notify(f"Hit Column: {c.label}, width: {c.width}")
 
             # c.width = int(size[0] / len(table.columns))
             # self.notify(f"Column: {c.label}, width: {c.width}")
