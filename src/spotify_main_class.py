@@ -299,7 +299,7 @@ class Spotify_Playback_Data:
 
     def play_track(self, uri):
         """Play a song given its URI"""
-        self.sp.start_playback(uris=[uri])
+        self.sp.start_playback(uris=[f"spotify:track:{uri}"])
 
 
 if __name__ == "__main__":
@@ -313,3 +313,4 @@ if __name__ == "__main__":
     # print(sp.get_playlist_tracks("liked_songs"))
     # print()
     # print(sp.get_playlist_tracks("3yE07D1ZglwRnCDMM3mq1V"))
+    #sp.play_track("spotify:track:5GsJIVCBFjhCcUwJaTW2sB")
