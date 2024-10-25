@@ -298,13 +298,13 @@ class Playlist_Track_View(Widget):
                 c.auto_width = True
             elif str(c.label) == "Duration":
                 c.percentage_width = None
-                c.width = 5
+                c.width = 8
             elif str(c.label) == "Liked":
                 c.percentage_width = None
                 c.width = 4
             else:
                 c.percentage_width = None
-                c.width = int(size[0] / len(table.columns))
+                c.width = int((size[0]-5) / (len(table.columns)-3))
                 # self.notify(f"Hit Column: {c.label}, width: {c.width}")
 
             # c.width = int(size[0] / len(table.columns))
