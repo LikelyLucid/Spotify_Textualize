@@ -266,7 +266,7 @@ class Playlist_Track_View(Widget):
     def post_display_hook(self) -> None:
         # This method adjusts the column widths based on the table size
         table = self.query_one(DataTable)
-        size = self.size
+        size = table.container_size
 
         self.notify(f"size: {size[0]}")
 
