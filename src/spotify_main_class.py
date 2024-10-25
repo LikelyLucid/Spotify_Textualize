@@ -68,25 +68,29 @@ class Spotify_Playback_Data:
             print(e)
             pass
 
-        # Track Information
-        self.track = playback_data["item"]["name"]
-        self.track_id = playback_data["item"]["id"]
-        self.track_uri = playback_data["item"]["uri"]
-        self.track_explicit = playback_data["item"]["explicit"]
-        self.track_popularity = playback_data["item"]["popularity"]
-        self.track_preview_url = playback_data["item"]["preview_url"]
-        self.track_number = playback_data["item"]["track_number"]
-        self.track_duration = playback_data["item"]["duration_ms"]
+        try:
+            # Track Information
+            self.track = playback_data["item"]["name"]
+            self.track_id = playback_data["item"]["id"]
+            self.track_uri = playback_data["item"]["uri"]
+            self.track_explicit = playback_data["item"]["explicit"]
+            self.track_popularity = playback_data["item"]["popularity"]
+            self.track_preview_url = playback_data["item"]["preview_url"]
+            self.track_number = playback_data["item"]["track_number"]
+            self.track_duration = playback_data["item"]["duration_ms"]
 
-        # Album Information
-        self.album_name = playback_data["item"]["album"]["name"]
-        self.album_id = playback_data["item"]["album"]["id"]
-        self.album_release_date = playback_data["item"]["album"]["release_date"]
-        self.album_total_tracks = playback_data["item"]["album"]["total_tracks"]
+            # Album Information
+            self.album_name = playback_data["item"]["album"]["name"]
+            self.album_id = playback_data["item"]["album"]["id"]
+            self.album_release_date = playback_data["item"]["album"]["release_date"]
+            self.album_total_tracks = playback_data["item"]["album"]["total_tracks"]
 
-        # Artist Information
-        self.artists = [artist["name"] for artist in playback_data["item"]["artists"]]
-        self.available_markets = playback_data["item"]["available_markets"]
+            # Artist Information
+            self.artists = [artist["name"] for artist in playback_data["item"]["artists"]]
+            self.available_markets = playback_data["item"]["available_markets"]
+        except Exception as e:
+            print(e)
+            pass
 
     def reset_playback_data(self):
         self.device_id = None
