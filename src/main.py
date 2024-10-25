@@ -148,19 +148,25 @@ class Side_Bar(Widget):
 
 class Library_List(Widget):
 
-
-
     def __init__(self, library_data, id=None):
         self.library_data = library_data
         super().__init__(id=id)
 
     def on_list_view_selected(self, item):
         self.notify(f"item selected: {item.item.name}")
+        # playlist_id = self.library_data[item.item.name]["id"]
+        for item in self.library_data:
+            if item['name'] == item.item.name:
+                playlist_id = item['id']
+                break
 
+        datatable = self.query_one(Playlist_Track_View)
+        datatable.playlist_id = playlist_id
+        datatable.set_tracks()
 
     def compose(self):
         items = [
-            ListItem(Label(f"{item['name']} ({item['type'].capitalize()})"))
+            ListItem(Label(f"{item['name']} ({item['type'].capitalize()})"), name=item['name'])
             for item in self.library_data
         ]
         yield ListView(*items)
