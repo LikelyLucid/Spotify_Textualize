@@ -293,18 +293,31 @@ class Playlist_Track_View(Widget):
             # 'Duration' should be 5 characters wide
             # 'Liked' should be 4 characters wide
 
+            # if str(c.label) == "#":
+            #     c.percentage_width = None
+            #     c.auto_width = True
+            # elif str(c.label) == "Duration":
+            #     c.percentage_width = None
+            #     c.width = 8
+            # elif str(c.label) == "Liked":
+            #     c.percentage_width = None
+            #     c.width = 4
+
+            # --- try auto width
             if str(c.label) == "#":
-                c.percentage_width = None
                 c.auto_width = True
+                self.notify(f"Hit Column: {c.label}, width: {c.width}")
             elif str(c.label) == "Duration":
-                c.percentage_width = None
-                c.width = 8
+                c.auto_width = True
+                self.notify(f"Hit Column: {c.label}, width: {c.width}")
             elif str(c.label) == "Liked":
-                c.percentage_width = None
-                c.width = 4
-            else:
-                c.percentage_width = None
-                c.width = int((size[0]-5) / (len(table.columns)-3))
+                c.auto_width = True
+                self.notify(f"Hit Column: {c.label}, width: {c.width}")
+
+
+            # else:
+            #     c.percentage_width = None
+            #     c.width = int((size[0]-5) / (len(table.columns)-3))
                 # self.notify(f"Hit Column: {c.label}, width: {c.width}")
 
             # c.width = int(size[0] / len(table.columns))
