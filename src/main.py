@@ -182,6 +182,7 @@ class Playlist_Track_View(Widget):
 
     def on_data_table_row_selected(self, row):
         self.notify(f"Row selected: {row}")
+        selected_track = 
 
     def adjust_columns(self):
         current_size = self.query_one(DataTable).size[0]
