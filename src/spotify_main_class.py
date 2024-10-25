@@ -19,6 +19,7 @@ class Spotify_Playback_Data:
             if attempts > 3:
                 print("Failed to authenticate after 3 attempts.")
                 Exception("Failed to authenticate after 3 attempts  - exiting.")
+        self.reset_playback_data()
         self.sp = sp
         self.update()
 
@@ -35,7 +36,7 @@ class Spotify_Playback_Data:
         # If playback_data is None, set all fields to empty strings or defaults
         if playback_data is None:
             print("No playback data available.")
-            self.new_method()
+            self.reset_playback_data()
             return
 
         # Device Information
@@ -87,7 +88,7 @@ class Spotify_Playback_Data:
         self.artists = [artist["name"] for artist in playback_data["item"]["artists"]]
         self.available_markets = playback_data["item"]["available_markets"]
 
-    def new_method(self):
+    def reset_playback_data(self):
         self.device_id = None
         self.device_name = None
         self.device_is_active = None
