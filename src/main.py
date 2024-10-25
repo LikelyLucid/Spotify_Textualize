@@ -188,7 +188,7 @@ class Playlist_Track_View(Widget):
         # table.styles.width = "100%"
         table.clear()
 
-        columns = table.add_columns("#", "Title", "Artist", "Album", "Duration", "Liked")
+        columns = table.add_columns("#", "Title", "Artist", "Album", "Duration", "Liked", "       ")
 
         tracks = playback.get_playlist_tracks(self.playlist_id)
 
