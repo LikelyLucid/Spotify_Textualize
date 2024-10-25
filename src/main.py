@@ -366,10 +366,10 @@ class Playlist_Track_View(Widget):
 class Main_Screen(Screen):
     CSS_PATH = "main_page.tcss"
 
-    def on_list_view_selected(self, selected_item):
+    def on_list_view_selected(self, selected_item, list_view):
         self.notify(f"item selected: {selected_item.item.name}")
         # playlist_id = self.library_data[selected_item.item.name]["id"]
-        for item in self.library_data:
+        for item in list_view.library_data:
             if item["name"] == selected_item.item.name:
                 playlist_id = item["id"]
                 self.notify(f"playlist_id: {playlist_id}")
