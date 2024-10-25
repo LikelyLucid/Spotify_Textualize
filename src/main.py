@@ -291,6 +291,7 @@ class Playlist_Track_View(Widget):
             # '#' should be 4 characters wide
             # 'Duration' should be 5 characters wide
             # 'Liked' should be 4 characters wide
+
             if c.label == "#":
                 c.width = 4
             elif c.label == "Duration":
