@@ -270,6 +270,8 @@ class Playlist_Track_View(Widget):
         table = self.query_one(DataTable)
         size = table.container_size
 
+        total_tracks = table.rows_curren
+
         # If the size is not valid, try again later
         if not all([c for c in size]):
             self.call_later(self.post_display_hook)
