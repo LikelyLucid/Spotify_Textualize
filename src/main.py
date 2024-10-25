@@ -155,7 +155,7 @@ class Library_List(Widget):
         super().__init__(id=id)
 
     def on_list_view_selected(self, item):
-        self.notify("List item selected: " + item.name)
+        self.notify(f"item selected: {item}")
 
 
     def compose(self):
