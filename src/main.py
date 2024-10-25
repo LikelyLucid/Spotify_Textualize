@@ -276,7 +276,7 @@ class Playlist_Track_View(Widget):
             return
 
         self.notify(f"size: {str(size)}, {self.is_mounted}")  # Debugging output
-        taken_chars = 0
+        taken_chars = 1
         for c in table.columns.values():
             # self.notify(f"Column: {c}")
             # exit()
