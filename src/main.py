@@ -182,7 +182,7 @@ class Playlist_Track_View(Widget):
 
     def on_data_table_row_selected(self, row):
         self.notify(f"Row selected: {row}")
-        selected_track = 
+        selected_track =
 
     def adjust_columns(self):
         current_size = self.query_one(DataTable).size[0]
@@ -207,28 +207,28 @@ class Playlist_Track_View(Widget):
 
         tracks = playback.get_playlist_tracks(self.playlist_id)
 
-        if lengths is None:
-            h, width = table.size()
-            max_length = width
+        # if lengths is None:
+        #     h, width = table.size()
+        #     max_length = width
 
-            # calculate max lengths according to the weights
-            max_track_length = (
-                max_length
-                * self.track_weight
-                // (self.track_weight + self.artist_weight + self.album_weight)
-            )
-            max_artist_length = (
-                max_length
-                * self.artist_weight
-                // (self.track_weight + self.artist_weight + self.album_weight)
-            )
-            max_album_length = (
-                max_length
-                * self.album_weight
-                // (self.track_weight + self.artist_weight + self.album_weight)
-            )
-        else:
-            max_track_length, max_artist_length, max_album_length = lengths
+        #     # calculate max lengths according to the weights
+        #     max_track_length = (
+        #         max_length
+        #         * self.track_weight
+        #         // (self.track_weight + self.artist_weight + self.album_weight)
+        #     )
+        #     max_artist_length = (
+        #         max_length
+        #         * self.artist_weight
+        #         // (self.track_weight + self.artist_weight + self.album_weight)
+        #     )
+        #     max_album_length = (
+        #         max_length
+        #         * self.album_weight
+        #         // (self.track_weight + self.artist_weight + self.album_weight)
+        #     )
+        # else:
+        #     max_track_length, max_artist_length, max_album_length = lengths
 
         for i, track in enumerate(tracks):
             track_name = str(track["name"])
