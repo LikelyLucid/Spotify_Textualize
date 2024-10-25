@@ -178,7 +178,7 @@ class Playlist_Track_View(Widget):
         self.max_title_length = max_title_length
         super().__init__(id=id)
 
-    def on_size(self):
+    def on_size_changed(self):
         self.post_display_hook()
 
     def compose(self) -> ComposeResult:
