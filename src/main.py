@@ -264,22 +264,26 @@ class Playlist_Track_View(Widget):
         # Call the async method to set tracks
         self.set_tracks()
 
-    def post_display_hook(self) -> None:
+    @work
+    async def post_display_hook(self) -> None:
         # This method adjusts the column widths based on the table size
         table = self.query_one(DataTable)
         size = table.container_size
 
-        self.notify(f"size: {str(size)}, {self.is_mounted}")
+        # If the size is not valid, try again later
+        if not all([c for c in size]):
+            self.call_later(self.post_display_hook)
+            return
 
-        if all([c for c in size]):  # Ensure we have a valid size
+        self.notify(f"size: {str(size)}, {self.is_mounted}")  # Debugging output
 
-            for c in table.columns.values():
-                c.auto_width = False
-                if not hasattr(c, "percentage_width") or (c.percentage_width is None):
-                    c.percentage_width = c.width
+        for c in table.columns.values():
+            c.auto_width = False
+            if not hasattr(c, "percentage_width") or (c.percentage_width is None):
+                c.percentage_width = c.width
 
-                # Adjust width based on the percentage of table size
-                c.width = int(self.size[0] * (c.percentage_width / 100))
+            # Adjust width based on the percentage of table size
+            c.width = int(size[0] * (c.percentage_width / 100))
 
         # Refresh the table display
         table.refresh()
