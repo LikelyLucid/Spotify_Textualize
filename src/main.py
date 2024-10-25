@@ -12,6 +12,7 @@ from textual.widgets import (
     Label,
     DataTable,
     # Lazy,
+    LoadingIndicator
 )
 from textual.reactive import reactive
 from spotify_main_class import Spotify_Playback_Data
