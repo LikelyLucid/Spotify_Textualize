@@ -282,6 +282,9 @@ class Playlist_Track_View(Widget):
             c.auto_width = False
             if c.label in ["Title", "Artist", "Album"]:
                 c.percentage_width = 100 / 3
+            elif c.label in ["Duration"]:
+                c.width = 4
+                continue
             if not hasattr(c, "percentage_width") or (c.percentage_width is None):
                 c.percentage_width = c.width
 
