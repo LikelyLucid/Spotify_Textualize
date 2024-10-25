@@ -180,6 +180,10 @@ class Playlist_Track_View(Widget):
         self.max_title_length = max_title_length
         super().__init__(id=id)
 
+    def on_row_selected(self, row):
+        self.notify(f"Row selected: {row}")
+
+
     def adjust_columns(self):
         current_size = self.query_one(DataTable).size[0]
         if self.old_size == current_size:
@@ -254,7 +258,6 @@ class Playlist_Track_View(Widget):
         # table.zebra_stripes = True
         # table.styles.scrollbar_size_vertical = 0
         table.styles.scrollbar_size_horizontal = 0
-        table.disable
         # table.styles.border = ("heavy", "blue")
 
         height, width = table.size
