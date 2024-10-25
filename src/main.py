@@ -161,9 +161,10 @@ class Library_List(Widget):
                 self.notify(f"playlist_id: {playlist_id}")
                 break
 
-        datatable = self.query(Playlist_Track_View)
-        datatable.playlist_id = playlist_id
-        datatable.set_tracks()
+        table = self.query(Playlist_Track_View).last()
+        table.playlist_id = playlist_id
+        table.set_tracks()
+
 
     def compose(self):
         items = [
