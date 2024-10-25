@@ -252,6 +252,7 @@ class Playlist_Track_View(Widget):
             * self.artist_weight
             // (self.track_weight + self.artist_weight + self.album_weight)
         )
+
         max_album_length = (
             max_length
             * self.album_weight
@@ -268,7 +269,7 @@ class Playlist_Track_View(Widget):
         table = self.query_one(DataTable)
         size = table.container_size
 
-        self.notify(f"size: {str(size)}")
+        self.notify(f"size: {str(size)}, {self.is_mounted}")
 
         if all([c for c in size]):  # Ensure we have a valid size
 
