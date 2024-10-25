@@ -297,7 +297,7 @@ class Spotify_Playback_Data:
 
         return set(liked_songs)
 
-    def play_song(self, uri):
+    def play_track(self, uri):
         """Play a song given its URI"""
         self.sp.start_playback(uris=[uri])
 
