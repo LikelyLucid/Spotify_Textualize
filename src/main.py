@@ -278,7 +278,8 @@ class Playlist_Track_View(Widget):
         self.notify(f"size: {str(size)}, {self.is_mounted}")  # Debugging output
 
         for c in table.columns.values():
-            self.notify(f"Column: {c.label}")
+            # self.notify(f"Column: {c}")
+            # exit()
             c.auto_width = False
             # if c.label in ["Title", "Artist", "Album"]:
             #     c.percentage_width = 100 / 3
@@ -292,21 +293,22 @@ class Playlist_Track_View(Widget):
             # 'Duration' should be 5 characters wide
             # 'Liked' should be 4 characters wide
 
-            if c.label == "#":
+            if str(c.label) == "#":
                 c.percentage_width = None
                 c.auto_width = True
-            elif c.label == "Duration":
+            elif str(c.label) == "Duration":
                 c.percentage_width = None
                 c.width = 5
-            elif c.label == "Liked":
+            elif str(c.label) == "Liked":
                 c.percentage_width = None
                 c.width = 4
             else:
                 c.percentage_width = None
                 c.width = int(size[0] / len(table.columns))
+                # self.notify(f"Hit Column: {c.label}, width: {c.width}")
 
             # c.width = int(size[0] / len(table.columns))
-            self.notify(f"Column: {c.label}, width: {c.width}")
+            # self.notify(f"Column: {c.label}, width: {c.width}")
         # Refresh the table display
         table.refresh()
 
