@@ -242,7 +242,7 @@ class Playlist_Track_View(Widget):
         table.cursor_type = "row"
         # table.styles.scrollbar_size_vertical = 0
         table.styles.scrollbar_size_horizontal = 0
-        table.styles.border = ("hkey", "blue")
+        table.styles.border = ("heavy", "blue")
 
         height, width = table.size
         max_length = width - 5
