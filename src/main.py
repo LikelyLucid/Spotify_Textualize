@@ -180,7 +180,7 @@ class Playlist_Track_View(Widget):
         self.max_title_length = max_title_length
         super().__init__(id=id)
 
-    def on_resize(self):
+    def adjust_columns(self):
         current_size = self.query_one(DataTable).size[0]
         if self.old_size == current_size:
             return
@@ -281,6 +281,7 @@ class Playlist_Track_View(Widget):
 
         # Call the async method to set tracks
         self.set_tracks()
+        self.set_interval(5, self.adjust_columns)
 
     @work
     async def post_display_hook(self) -> None:
