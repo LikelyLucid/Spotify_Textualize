@@ -161,8 +161,8 @@ class Library_List(Widget):
                 self.notify(f"playlist_id: {playlist_id}")
                 break
 
-        
-
+        table = self.query_one('#playlist_tracks')
+        table.change_playlist(playlist_id)
 
     def compose(self):
         items = [
@@ -193,6 +193,10 @@ class Playlist_Track_View(Widget):
         self.max_title_length = max_title_length
         self.tracks = []
         super().__init__(id=id)
+
+    def change_playlist(self, playlist_id):
+        self.playlist_id = playlist_id
+        self.set_tracks()
 
     def on_data_table_row_selected(self, row):
         self.notify(f"Row selected: {row}")
