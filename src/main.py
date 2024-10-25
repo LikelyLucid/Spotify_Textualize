@@ -280,16 +280,28 @@ class Playlist_Track_View(Widget):
         for c in table.columns.values():
             # self.notify(f"Column: {c.label}")
             c.auto_width = False
-            if c.label in ["Title", "Artist", "Album"]:
-                c.percentage_width = 100 / 3
-            elif c.label in ["Duration"]:
-                c.width = 4
-                continue
+            # if c.label in ["Title", "Artist", "Album"]:
+            #     c.percentage_width = 100 / 3
+            # elif c.label in ["Duration"]:
+            #     c.width = 4
+            #     continue
             if not hasattr(c, "percentage_width") or (c.percentage_width is None):
                 c.percentage_width = c.width
 
-            c.width = int(size[0] * c.percentage_width / 100)
-            self.notify(f"Column: {c.label}, width: {c.width}")
+            # '#' should be 4 characters wide
+            # 'Duration' should be 5 characters wide
+            # 'Liked' should be 4 characters wide
+            if c.label == "#":
+                c.width = 4
+            elif c.label == "Duration":
+                c.width = 5
+            elif c.label == "Liked":
+                c.width = 4
+            else:
+                c.width = int(size[0] / len(table.columns))
+
+            # c.width = int(size[0] / len(table.columns))
+            # self.notify(f"Column: {c.label}, width: {c.width}")
         # Refresh the table display
         table.refresh()
 
