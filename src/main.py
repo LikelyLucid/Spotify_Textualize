@@ -172,6 +172,7 @@ class Playlist_Track_View(Widget):
 
     # weighting
     track_weight, artist_weight, album_weight = 2, 1, 1
+    old_size = (0, 0)
 
     def __init__(self, playlist_id, max_title_length=40, id=None):
         self.playlist_id = playlist_id
@@ -179,6 +180,9 @@ class Playlist_Track_View(Widget):
         super().__init__(id=id)
 
     def on_resize(self):
+        if self.old_size == self.query_one(DataTable).size[0]:
+            return
+        self.old_size = self.query_one(DataTable).size[0]
         self.post_display_hook()
 
     def compose(self) -> ComposeResult:
