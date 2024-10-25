@@ -276,7 +276,7 @@ class Playlist_Track_View(Widget):
             return
 
         self.notify(f"size: {str(size)}, {self.is_mounted}")  # Debugging output
-
+        taken_chars = 0
         for c in table.columns.values():
             # self.notify(f"Column: {c}")
             # exit()
@@ -306,14 +306,14 @@ class Playlist_Track_View(Widget):
             # --- try auto width
             if str(c.label) == "#":
                 c.width = len(str(table.row_count))
-                self.notify(f"Hit Column: {c.label}, width: {c.width}")
             elif str(c.label) == "Duration":
                 c.auto_width = True
-                self.notify(f"Hit Column: {c.label}, width: {c.width}")
+
             elif str(c.label) == "Liked":
                 c.auto_width = True
-                self.notify(f"Hit Column: {c.label}, width: {c.width}")
-
+            else:
+                pass
+            taken_chars += c.width
             # else:
             #     c.percentage_width = None
             #     c.width = int((size[0]-5) / (len(table.columns)-3))
@@ -322,6 +322,9 @@ class Playlist_Track_View(Widget):
             # c.width = int(size[0] / len(table.columns))
             # self.notify(f"Column: {c.label}, width: {c.width}")
         # Refresh the table display
+        for c in table.columns.values():
+            if str(c.label) in ["Title", "Artist", "Album"]:
+                c.width = int((size[0] - taken_chars) / (len(table.columns) - 3))
         table.refresh()
 
 
