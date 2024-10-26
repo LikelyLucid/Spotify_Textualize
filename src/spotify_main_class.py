@@ -365,15 +365,15 @@ class Spotify_Playback_Data:
             self.sp.start_playback(uris=[f"spotify:track:{uri}"])
 
 
-if __name__ == "__main__":
-    sp = Spotify_Playback_Data()
-    # for key, value in sp.__dict__.items():
-    #     print(f"{key}: {value}")
-    # print()
-    # # test playlist items with liked songs
-    # library = sp.get_user_library()
-    # print(library)
-    # print(sp.get_playlist_tracks("liked_songs"))
-    # print()
-    # print(sp.get_playlist_tracks("3yE07D1ZglwRnCDMM3mq1V"))
-    #sp.play_track("spotify:track:5GsJIVCBFjhCcUwJaTW2sB")
+# if __name__ == "__main__":
+#     sp = Spotify_Playback_Data()
+#     for key, value in sp.__dict__.items():
+#         print(f"{key}: {value}")
+#     print()
+#     # test playlist items with liked songs
+#     library = sp.get_user_library()
+#     print(library)
+#     print(sp.get_playlist_tracks("liked_songs"))
+#     print()
+#     print(sp.get_playlist_tracks("3yE07D1ZglwRnCDMM3mq1V"))
+#     sp.play_track("spotify:track:5GsJIVCBFjhCcUwJaTW2sB")
