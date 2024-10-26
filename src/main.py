@@ -174,7 +174,8 @@ class Library_List(Widget):
             self.playlist_id = playlist_id
             super().__init__()
 
-    def on_list_view_selected(self, selected_item):
+    @work
+    async def on_list_view_selected(self, selected_item):
         """Handle playlist selection."""
         playlist_id = None
         for item in self.library_data:
@@ -205,7 +206,7 @@ class Main_Page(Widget):
         with Container(id="main_page_container"):
             # yield Static("Main Page", id="main_page_header")
             yield Playlist_Track_View(
-                playlist_id="saved_episodes", id="playlist_tracks"
+                playlist_id="liked_songs", id="playlist_tracks"
             )
 
 
