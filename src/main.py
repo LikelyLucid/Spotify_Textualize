@@ -164,6 +164,8 @@ class Library_List(Widget):
         # table = self.query_one("#playlist_tracks")
         # table.change_playlist(playlist_id)
 
+        for i in self.query(Playlist_Track_View):
+            self.notify(f"i: {i}")
 
     def compose(self):
         items = [
