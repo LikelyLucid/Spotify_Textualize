@@ -258,12 +258,16 @@ class Playlist_Track_View(Widget):
             self.tracks = playback.get_saved_episodes()
             
             for i, episode in enumerate(self.tracks):
+                description = episode.get("description", "")
+                if description:
+                    description = description[:50] + "..."
+                
                 table.add_row(
                     str(i + 1),
                     episode["name"],
                     episode["show"],
                     ms_to_time(episode.get("duration_ms", 0)),
-                    episode.get("description", "")[:50] + "..." if episode.get("description") else ""
+                    description
                 )
         else:
             columns = table.add_columns(
