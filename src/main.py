@@ -154,15 +154,16 @@ class Library_List(Widget):
 
     def on_list_view_selected(self, selected_item):
         self.notify(f"item selected: {selected_item.item.name}")
-        playlist_id = self.library_data[selected_item.item.id]["id"]
+        # playlist_id = self.library_data[selected_item.item.name]["id"]
         for item in self.library_data:
             if item["name"] == selected_item.item.name:
                 playlist_id = item["id"]
                 self.notify(f"playlist_id: {playlist_id}")
                 break
 
-        table = self.query_one("#playlist_tracks")
-        table.change_playlist(playlist_id)
+        # table = self.query_one("#playlist_tracks")
+        # table.change_playlist(playlist_id)
+
 
     def compose(self):
         items = [
