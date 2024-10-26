@@ -1,6 +1,7 @@
 from textual.app import App, ComposeResult
 from textual.screen import Screen
 from textual.widget import Widget
+from textual.message import Message
 from textual.containers import Container, Center, Vertical, ScrollableContainer
 from textual.lazy import Lazy
 from textual.widgets import (
