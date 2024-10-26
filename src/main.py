@@ -12,7 +12,6 @@ from textual.widgets import (
     ListItem,
     Label,
     DataTable,
-    # Lazy,
     LoadingIndicator,
 )
 from textual.reactive import reactive
@@ -20,9 +19,11 @@ from spotify_main_class import Spotify_Playback_Data
 import time
 from textual import work
 
+# Initialize Spotify playback data
 playback = Spotify_Playback_Data()
 
 
+# Function to cut a string if it exceeds the specified max length
 def cut_string_if_long(string: str, max_length: int) -> str:
     return (
         string[: abs(max_length)].strip() + "..."
@@ -31,9 +32,8 @@ def cut_string_if_long(string: str, max_length: int) -> str:
     )
 
 
+# Function to convert milliseconds to time in minutes:seconds format
 def ms_to_time(ms: int) -> str:
-    # if ms is None:
-    #     return "0:00"
     try:
         seconds, ms = divmod(ms, 1000)
         minutes, seconds = divmod(seconds, 60)
@@ -42,15 +42,16 @@ def ms_to_time(ms: int) -> str:
         return ""
 
 
+# Function to get the current time in the track with an offset
 def get_current_time_with_offset() -> int:
     if playback.progress_ms is None:
         return 0
-    # Only calculate offset if track is playing
-
+    # Calculate the offset based on the current system time and the playback timestamp
     offset = int(time.time() * 1000) - playback.timestamp
     return playback.progress_ms + offset
 
 
+# Widget to display the current time in the track
 class Current_Time_In_Track(Widget):
     current_time = reactive(get_current_time_with_offset())
 
@@ -58,6 +59,7 @@ class Current_Time_In_Track(Widget):
         return ms_to_time(self.current_time) if playback.progress_ms is not None else ""
 
 
+# Widget to display the track duration
 class Track_Duration(Widget):
     track_duration = reactive(playback.track_duration)
 
@@ -67,6 +69,7 @@ class Track_Duration(Widget):
         )
 
 
+# Widget to display the current track name
 class Current_Track(Widget):
     current_track = reactive(playback.track)
 
@@ -74,6 +77,7 @@ class Current_Track(Widget):
         return self.current_track
 
 
+# Widget to display the current volume level
 class Current_Volume(Widget):
     current_volume = reactive(playback.device_volume_percent)
 
@@ -81,6 +85,7 @@ class Current_Volume(Widget):
         return f"{self.current_volume}%"
 
 
+# Widget to display the current device name
 class Current_Device(Widget):
     current_device = reactive(playback.device_name)
 
@@ -88,7 +93,9 @@ class Current_Device(Widget):
         return self.current_device
 
 
+# Widget to display the bottom bar with track and artist information
 class Bottom_Bar(Widget):
+    # Get the artist and track information
     def get_artist_info(self):
         if playback.track is not None:
             artist_information = f"[b][italic]{playback.track}[/italic][/b] | "
@@ -96,22 +103,20 @@ class Bottom_Bar(Widget):
             return artist_information
         return ""
 
+    # Compose the bottom bar with track information, progress bar, and times
     def compose(self):
         yield Vertical(
             Static(self.get_artist_info(), id="artist_info"),
             Container(
                 Current_Time_In_Track(),
-                Center(
-                    ProgressBar(
-                        id="bar", show_percentage=False, show_eta=False
-                    )
-                ),
+                Center(ProgressBar(id="bar", show_percentage=False, show_eta=False)),
                 Track_Duration(),
                 id="bar_with_times",
             ),
             id="bottom_bar_collection",
         )
 
+    # Update the progress bar based on the current playback progress
     def update_progress(self, progress=None):
         current_time_widget = self.query_one(Current_Time_In_Track)
 
@@ -127,6 +132,7 @@ class Bottom_Bar(Widget):
         else:
             current_time_widget.current_time = progress
 
+    # Handle changes in the current song
     def song_change(self):
         self.query_one(Track_Duration).track_duration = playback.track_duration
         self.query_one(Current_Time_In_Track).current_time = (
@@ -135,18 +141,20 @@ class Bottom_Bar(Widget):
         self.update_progress()
         self.query_one("#artist_info").update(self.get_artist_info())
 
+    # Update playback settings like the border title
     def update_playback_settings(self):
         self.border_title = playback.playing_settings()
         if playback.is_playing:
-            # self.update_progress()
             self.update_progress(playback.progress_ms)
 
+    # Mount the widget and set up the update interval
     def on_mount(self):
         self.styles.border = ("hkey", "blue")
         self.update_playback_settings()
         self.set_interval(1, self.update_progress)
 
 
+# Widget to display the side bar with featured playlists and user library
 class Side_Bar(Widget):
     def compose(self):
         with ScrollableContainer(id="sidebar_container"):
@@ -159,14 +167,14 @@ class Side_Bar(Widget):
             )
 
 
+# Widget to display a list of playlists in the library
 class Library_List(Widget):
-
-    # selected_playlist_id = reactive(None)
 
     def __init__(self, library_data, id=None):
         self.library_data = library_data
         super().__init__(id=id)
 
+    # Message to notify when a playlist is selected
     class PlaylistSelected(Message):
         """Sent when a playlist is selected."""
 
@@ -174,9 +182,9 @@ class Library_List(Widget):
             self.playlist_id = playlist_id
             super().__init__()
 
+    # Handle the selection of a playlist in the list view
     @work
     async def on_list_view_selected(self, selected_item):
-        """Handle playlist selection."""
         playlist_id = None
         for item in self.library_data:
             if item["name"] == selected_item.item.name:
@@ -190,6 +198,7 @@ class Library_List(Widget):
         # Post a message to the app about the playlist selection
         self.post_message(self.PlaylistSelected(str(playlist_id)))
 
+    # Compose the list of playlists
     def compose(self):
         items = [
             ListItem(
@@ -201,18 +210,17 @@ class Library_List(Widget):
         yield ListView(*items)
 
 
+# Widget to display the main page with playlist track view
 class Main_Page(Widget):
     def compose(self):
         with Container(id="main_page_container"):
-            # yield Static("Main Page", id="main_page_header")
-            yield Playlist_Track_View(
-                playlist_id="liked_songs", id="playlist_tracks"
-            )
+            yield Playlist_Track_View(playlist_id="liked_songs", id="playlist_tracks")
 
 
+# Widget to display the tracks of a selected playlist
 class Playlist_Track_View(Widget):
 
-    # weighting
+    # Weighting for track, artist, and album columns
     track_weight, artist_weight, album_weight = 2, 1, 1
     old_size = (0, 0)
     adjusting_size = False
@@ -223,17 +231,18 @@ class Playlist_Track_View(Widget):
         self.tracks = []
         super().__init__(id=id)
 
+    # Change the playlist being displayed
     @work
     async def change_playlist(self, playlist_id):
         self.playlist_id = playlist_id
         self.set_tracks()
 
+    # Handle row selection in the data table
     def on_data_table_row_selected(self, row):
-        self.notify(f"Row selected: {row}")
         selected_track = self.tracks[row.cursor_row]["id"]
-        self.notify(f"Selected track: {selected_track}")
         playback.play_track(selected_track, self.playlist_id)
 
+    # Adjust the column sizes based on the current table size
     def adjust_columns(self):
         current_size = self.query_one(DataTable).size[0]
         if self.old_size == current_size:
@@ -243,20 +252,20 @@ class Playlist_Track_View(Widget):
         self.old_size = current_size
         self.post_display_hook()
 
+    # Compose the data table for displaying tracks
     def compose(self) -> ComposeResult:
         yield DataTable()
 
+    # Set the tracks for the current playlist
     @work
     async def set_tracks(self, lengths=[100, 100, 100]):
         table = self.query_one(DataTable)
         table.loading = True
-        # table.styles.width = "100%"
         table = table.clear(columns=True)
 
+        # Set columns based on playlist type (saved episodes or general playlist)
         if self.playlist_id == "saved_episodes":
-            columns = table.add_columns(
-                "#", "Title", "Show", "Duration", "Description"
-            )
+            columns = table.add_columns("#", "Title", "Show", "Duration", "Description")
             self.tracks = playback.get_saved_episodes()
 
             for i, episode in enumerate(self.tracks):
@@ -269,7 +278,7 @@ class Playlist_Track_View(Widget):
                     episode["name"],
                     episode["show"],
                     ms_to_time(episode.get("duration_ms", 0)),
-                    description
+                    description,
                 )
         else:
             columns = table.add_columns(
@@ -277,37 +286,11 @@ class Playlist_Track_View(Widget):
             )
             self.tracks = playback.get_playlist_tracks(self.playlist_id)
 
-        # if lengths is None:
-        #     h, width = table.size()
-        #     max_length = width
-
-        #     # calculate max lengths according to the weights
-        #     max_track_length = (
-        #         max_length
-        #         * self.track_weight
-        #         // (self.track_weight + self.artist_weight + self.album_weight)
-        #     )
-        #     max_artist_length = (
-        #         max_length
-        #         * self.artist_weight
-        #         // (self.track_weight + self.artist_weight + self.album_weight)
-        #     )
-        #     max_album_length = (
-        #         max_length
-        #         * self.album_weight
-        #         // (self.track_weight + self.artist_weight + self.album_weight)
-        #     )
-        # else:
-        #     max_track_length, max_artist_length, max_album_length = lengths
-
+        # Add rows to the data table for each track
         for i, track in enumerate(self.tracks):
             track_name = str(track["name"])
             artist_string = str(", ".join(track.get("artists", [])))
             album_name = str(track.get("album", ""))
-
-            # track_name = cut_string_if_long(track_name, max_track_length)
-            # artist_string = cut_string_if_long(artist_string, max_artist_length)
-            # album_name = cut_string_if_long(album_name, max_album_length)
 
             table.add_row(
                 str(i + 1),
@@ -322,18 +305,16 @@ class Playlist_Track_View(Widget):
         # After setting the tracks, apply the auto-resizing hook
         self.post_display_hook()
 
+    # Mount the widget and set up the data table
     def on_mount(self) -> None:
         table = self.query_one(DataTable)
         table.cursor_type = "row"
-        # table.zebra_stripes = True
-        # table.styles.scrollbar_size_vertical = 0
         table.styles.scrollbar_size_horizontal = 0
-        # table.styles.border = ("heavy", "blue")
 
+        # Calculate column lengths based on weights
         height, width = table.size
         max_length = width - 5
 
-        # calculate max lengths according to the weights
         max_track_length = (
             max_length
             * self.track_weight
@@ -355,12 +336,12 @@ class Playlist_Track_View(Widget):
 
         # Call the async method to set tracks
         self.set_tracks()
-        # self.set_interval(5, self.adjust_columns)
 
+    # Adjust column widths after display
     @work
     async def post_display_hook(self) -> None:
         adjusting_size = True
-        # This method adjusts the column widths based on the table size
+        # Adjust the column widths based on the table size
         table = self.query_one(DataTable)
         size = table.container_size
 
@@ -369,79 +350,44 @@ class Playlist_Track_View(Widget):
             self.call_later(self.post_display_hook)
             return
 
-        self.notify(f"size: {str(size)}, {self.is_mounted}")  # Debugging output
         taken_chars = -1
         for c in table.columns.values():
-            # self.notify(f"Column: {c}")
-            # exit()
             c.auto_width = False
-            # if c.label in ["Title", "Artist", "Album"]:
-            #     c.percentage_width = 100 / 3
-            # elif c.label in ["Duration"]:
-            #     c.width = 4
-            #     continue
-            if not hasattr(c, "percentage_width") or (c.percentage_width is None):
-                c.percentage_width = c.width
-
-            # '#' should be 4 characters wide
-            # 'Duration' should be 5 characters wide
-            # 'Liked' should be 4 characters wide
-
-            # if str(c.label) == "#":
-            #     c.percentage_width = None
-            #     c.auto_width = True
-            # elif str(c.label) == "Duration":
-            #     c.percentage_width = None
-            #     c.width = 8
-            # elif str(c.label) == "Liked":
-            #     c.percentage_width = None
-            #     c.width = 4
-
-            # --- try auto width
             if str(c.label) == "#":
                 c.width = len(str(table.row_count))
             elif str(c.label) == "Duration":
                 c.auto_width = True
-
             elif str(c.label) == "Liked":
                 c.auto_width = True
-            else:
-                pass
             taken_chars += c.width
-            # else:
-            #     c.percentage_width = None
-            #     c.width = int((size[0]-5) / (len(table.columns)-3)
 
-            # self.notify(f"Hit Column: {c.label}, width: {c.width}")
-
-            # c.width = int(size[0] / len(table.columns))
-            # self.notify(f"Column: {c.label}, width: {c.width}")
-        # Refresh the table display
+        # Set width for Title, Artist, Album columns
         for c in table.columns.values():
             if str(c.label) in ["Title", "Artist", "Album"]:
                 c.width = int((size[0] - taken_chars) / (len(table.columns) - 3)) + 1
         table.refresh()
-        self.notify(str(self.id))
         adjusting_size = False
 
 
+# Main screen to display different widgets
 class Main_Screen(Screen):
     CSS_PATH = "main_page.tcss"
 
+    # Handle playlist selection messages
     def on_library_list_playlist_selected(
         self, message: Library_List.PlaylistSelected
     ) -> None:
-        """Handle playlist selection messages."""
         playlist_view = self.query_one("#playlist_tracks", Playlist_Track_View)
         playlist_view.change_playlist(message.playlist_id)
 
+    # Compose the main screen with different widgets
     def compose(self) -> ComposeResult:
         yield Placeholder("top_bar", id="top_bar")
         yield Side_Bar(id="sidebar")
         yield Main_Page(id="main_page")
-        # yield Placeholder("Main Page", id="main_page")
         yield Bottom_Bar(id="bottom_bar")
 
+    # Update playback statistics periodically
     async def update_stats(self):
         old_song = playback.track
         try:
@@ -456,16 +402,20 @@ class Main_Screen(Screen):
 
         self.query_one(Bottom_Bar).update_playback_settings()
 
+    # Set up periodic updates for playback statistics
     def on_mount(self) -> None:
         self.set_interval(2, self.update_stats)
 
 
+# Main app class
 class MainApp(App):
+    # Mount the main screen
     def on_mount(self) -> None:
         self.install_screen(Main_Screen(), "main")
         self.push_screen("main")
 
 
+# Run the app if the script is executed directly
 if __name__ == "__main__":
     app = MainApp(ansi_color=True)
     app.run()
