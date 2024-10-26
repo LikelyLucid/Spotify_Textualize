@@ -164,7 +164,7 @@ class Library_List(Widget):
                 break
         try:
             table = self.query(DataTable)
-            table.change_playlist(playlist_id)
+            table.change_playlist(str(playlist_id))
         except Exception as e:
             self.notify("Error changing playlist: " + str(e))
 
