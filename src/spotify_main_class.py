@@ -206,8 +206,8 @@ class Spotify_Playback_Data:
         """Play a playlist given its ID"""
         self.sp.start_playback(context_uri=f"spotify:playlist:{playlist_id}")
 
-    def get_playlist_tracks(self, playlist_id):
-        """Get tracks from a playlist"""
+    def get_playlist_tracks(self, playlist_id: str) -> list[dict]:
+        """Get tracks from a playlist with efficient caching"""
         playlist_items = []
         offset = 0
         limit = 100 if playlist_id != "liked_songs" else 20
@@ -217,22 +217,27 @@ class Spotify_Playback_Data:
             else self.sp.current_user_saved_tracks
         )
 
-        # Check and update liked songs cache
-        liked_songs = self._get_liked_songs()
+        # Use memory cache first
+        if hasattr(self, '_playlist_cache') and playlist_id in self._playlist_cache:
+            return self._playlist_cache[playlist_id]
 
+        # Initialize memory cache if needed
+        if not hasattr(self, '_playlist_cache'):
+            self._playlist_cache = {}
+
+        # Check disk cache
         directory = get_cache_directory()
         playlist_cache = os.path.join(directory, f"{playlist_id}.cache")
+        cache_valid = False
 
-        # Check if the playlist is cached and up-to-date
-        if os.path.exists(playlist_cache):
-            with open(playlist_cache, "r") as cache_file:
-                cached_items = json.load(cache_file)
-                if playlist_id == "liked_songs":
-                    total_items = self.sp.current_user_saved_tracks(limit=1)["total"]
-                else:
-                    total_items = fetch_function(playlist_id)["total"]
-                if len(cached_items) == total_items:
-                    return cached_items
+        try:
+            if os.path.exists(playlist_cache):
+                cache_time = os.path.getmtime(playlist_cache)
+                if time.time() - cache_time < 300:  # 5 minute cache validity
+                    with open(playlist_cache, "r") as cache_file:
+                        cached_items = json.load(cache_file)
+                        self._playlist_cache[playlist_id] = cached_items
+                        return cached_items
 
         while True:
             if playlist_id == "liked_songs":
