@@ -167,7 +167,7 @@ class Library_List(Widget):
             self.notify("Error: Playlist ID not found")
             return
         try:
-            table = self.query(DataTable)[0]
+            table = self.query(Main_Page)[0]
             table.change_playlist(str(playlist_id))
         except Exception as e:
             self.notify("Error changing playlist: " + str(e))
