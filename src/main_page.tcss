@@ -99,28 +99,3 @@ Track_Duration {
     content-align: right middle;
     padding: 1 1;
 }
-
-#sidebar {
-    dock: left;
-    width: 25%;
-    height: 100%;
-    border: solid $accent;
-}
-
-
-
-#main_page {
-    dock: right;
-    width: 75%;
-    height: 100%;
-    border: solid $accent;
-}
-
-
-
-#bottom_bar {
-    dock: bottom;
-    height: auto;
-    border: solid $accent;
-}
-
