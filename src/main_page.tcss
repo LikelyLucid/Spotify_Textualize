@@ -1,5 +1,3 @@
-
-
 Screen {
     layout: grid;
     grid-size: 2;
@@ -100,16 +98,16 @@ Track_Duration {
 #Current_Volume {
     content-align: right middle;
     padding: 1 1;
-}#sidebar {
+}
+
+#sidebar {
     dock: left;
     width: 25%;
     height: 100%;
     border: solid $accent;
 }
 
-#sidebar:focus-within {
-    border: solid $success;
-}
+
 
 #main_page {
     dock: right;
@@ -118,9 +116,7 @@ Track_Duration {
     border: solid $accent;
 }
 
-#main_page:focus-within {
-    border: solid $success;
-}
+
 
 #bottom_bar {
     dock: bottom;
@@ -128,18 +124,3 @@ Track_Duration {
     border: solid $accent;
 }
 
-ListView {
-    border: solid $accent;
-}
-
-ListView:focus {
-    border: solid $success;
-}
-
-DataTable {
-    border: solid $accent;
-}
-
-DataTable:focus {
-    border: solid $success;
-}
