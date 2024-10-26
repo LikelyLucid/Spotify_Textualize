@@ -34,9 +34,12 @@ def cut_string_if_long(string: str, max_length: int) -> str:
 def ms_to_time(ms: int) -> str:
     # if ms is None:
     #     return "0:00"
-    seconds, ms = divmod(ms, 1000)
-    minutes, seconds = divmod(seconds, 60)
-    return f"{minutes}:{seconds:02d}"
+    try:
+        seconds, ms = divmod(ms, 1000)
+        minutes, seconds = divmod(seconds, 60)
+        return f"{minutes}:{seconds:02d}"
+    except:
+        return
 
 
 def get_current_time_with_offset() -> int:
