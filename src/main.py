@@ -366,8 +366,8 @@ class Playlist_Track_View(Widget):
             )
         table.loading = False
 
-        # After setting the tracks, apply the auto-resizing hook
-        self.post_display_hook()
+        # After setting the tracks, schedule a resize
+        self.schedule_resize()
 
     def on_mount(self) -> None:
         """Initialize the table on mount"""
