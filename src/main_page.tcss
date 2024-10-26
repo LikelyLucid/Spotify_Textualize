@@ -42,8 +42,7 @@ Screen {
 
 #bottom_bar_collection {
     width: 100%;
-    row-span: 10;
-    height: 5;
+    height: auto;
 }
 
 #bottom_bar {
@@ -59,8 +58,10 @@ Screen {
 }
 
 #artist_info {
-    height: 1;
+    height: auto;
     overflow-x: auto;
+    padding: 0;
+    margin: 0;
 }
 
 #bar {
