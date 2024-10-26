@@ -396,32 +396,11 @@ class MainApp(App):
         
     def load_keybindings(self):
         """Load keybindings from config file"""
-        config_dir = get_config_directory()
-        config_file = os.path.join(config_dir, "binds.config")
-        
-        # Create default config if it doesn't exist
-        if not os.path.exists(config_file):
-            with open(config_file, "w") as f:
-                f.write("""# Navigation
-focus_left: h
-focus_right: l
-focus_up: k
-focus_down: j
-
-# Playback controls
-play_pause: space
-next_track: n
-previous_track: p
-volume_up: +
-volume_down: -""")
-        
-        # Read config
-        bindings = read_config("binds.config")
-        if bindings:
-            self.BINDINGS = [
-                Binding(key, f"handle_{action}", action.replace("_", " ").title())
-                for action, key in bindings.items()
-            ]
+        bindings = setup_keybindings()
+        self.BINDINGS = [
+            Binding(key, f"handle_{action}", action.replace("_", " ").title())
+            for action, key in bindings.items()
+        ]
 
     def handle_focus_left(self):
         """Handle left focus movement"""

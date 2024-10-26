@@ -93,7 +93,7 @@ def read_config(config_filename: str):
         with config_file_path.open("r") as config_file:
             for line in config_file:
                 line = line.strip()  # Remove any leading/trailing whitespace
-                if line:
+                if line and not line.startswith("#"):  # Skip comments
                     key, value = line.split(
                         ":", 1
                     )  # Split at the first occurrence of ":" only
@@ -104,3 +104,40 @@ def read_config(config_filename: str):
     else:
         print(f"Configuration file not found: {config_file_path}")
         return None
+
+def get_default_keybindings():
+    """Return the default keybinding configuration"""
+    return {
+        "focus_left": "h",
+        "focus_right": "l", 
+        "focus_up": "k",
+        "focus_down": "j",
+        "play_pause": "space",
+        "next_track": "n",
+        "previous_track": "p",
+        "volume_up": "+",
+        "volume_down": "-"
+    }
+
+def setup_keybindings():
+    """Setup default keybindings if they don't exist"""
+    config_dir = get_config_directory()
+    binds_file = config_dir / "binds.config"
+    
+    if not binds_file.exists():
+        default_binds = """# Navigation
+focus_left: h
+focus_right: l
+focus_up: k
+focus_down: j
+
+# Playback controls
+play_pause: space
+next_track: n
+previous_track: p
+volume_up: +
+volume_down: -"""
+        
+        save_config("binds.config", default_binds)
+    
+    return read_config("binds.config") or get_default_keybindings()
