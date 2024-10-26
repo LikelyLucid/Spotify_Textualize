@@ -222,7 +222,7 @@ class Playlist_Track_View(Widget):
         self.notify(f"Row selected: {row}")
         selected_track = self.tracks[row.cursor_row]["id"]
         self.notify(f"Selected track: {selected_track}")
-        playback.play_track(selected_track)
+        playback.play_track(selected_track, self.playlist_id)
 
     def adjust_columns(self):
         current_size = self.query_one(DataTable).size[0]
