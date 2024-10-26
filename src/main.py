@@ -25,21 +25,14 @@ playback = Spotify_Playback_Data()
 
 # Function to cut a string if it exceeds the specified max length
 def cut_string_if_long(string: str, max_length: int) -> str:
-    return (
-        string[: abs(max_length)].strip() + "..."
-        if len(string) > abs(max_length)
-        else string
-    )
+    return string[:max_length].strip() + "..." if len(string) > max_length else string
 
 
 # Function to convert milliseconds to time in minutes:seconds format
 def ms_to_time(ms: int) -> str:
-    try:
-        seconds, ms = divmod(ms, 1000)
-        minutes, seconds = divmod(seconds, 60)
-        return f"{minutes}:{seconds:02d}"
-    except:
-        return ""
+    seconds, ms = divmod(ms, 1000)
+    minutes, seconds = divmod(seconds, 60)
+    return f"{minutes}:{seconds:02d}"
 
 
 # Function to get the current time in the track with an offset
@@ -119,27 +112,30 @@ class Bottom_Bar(Widget):
     # Update the progress bar based on the current playback progress
     def update_progress(self, progress=None):
         current_time_widget = self.query_one(Current_Time_In_Track)
+        progress_bar = self.query_one(ProgressBar)
 
-        try:
-            self.query_one(ProgressBar).update(
-                progress=current_time_widget.current_time,
-                total=playback.track_duration,
-            )
-        except:
-            return
         if playback.is_playing and progress is None:
-            current_time_widget.current_time += int(1000 * self.app.timer.interval)
+            current_time_widget.current_time += 1000
         else:
             current_time_widget.current_time = progress
 
+        # Update progress bar only if necessary to reduce rendering overhead
+        if current_time_widget.current_time != progress_bar.progress:
+            progress_bar.update(
+                progress=current_time_widget.current_time,
+                total=playback.track_duration,
+            )
+
     # Handle changes in the current song
     def song_change(self):
-        self.query_one(Track_Duration).track_duration = playback.track_duration
-        self.query_one(Current_Time_In_Track).current_time = (
-            get_current_time_with_offset()
-        )
+        track_duration_widget = self.query_one(Track_Duration)
+        current_time_widget = self.query_one(Current_Time_In_Track)
+        artist_info_widget = self.query_one("#artist_info")
+
+        track_duration_widget.track_duration = playback.track_duration
+        current_time_widget.current_time = get_current_time_with_offset()
         self.update_progress()
-        self.query_one("#artist_info").update(self.get_artist_info())
+        artist_info_widget.update(self.get_artist_info())
 
     # Update playback settings like the border title
     def update_playback_settings(self):
@@ -185,11 +181,14 @@ class Library_List(Widget):
     # Handle the selection of a playlist in the list view
     @work
     async def on_list_view_selected(self, selected_item):
-        playlist_id = None
-        for item in self.library_data:
-            if item["name"] == selected_item.item.name:
-                playlist_id = item["id"]
-                break
+        playlist_id = next(
+            (
+                item["id"]
+                for item in self.library_data
+                if item["name"] == selected_item.item.name
+            ),
+            None,
+        )
 
         if playlist_id is None:
             self.notify("Error: Playlist ID not found")
@@ -245,9 +244,7 @@ class Playlist_Track_View(Widget):
     # Adjust the column sizes based on the current table size
     def adjust_columns(self):
         current_size = self.query_one(DataTable).size[0]
-        if self.old_size == current_size:
-            return
-        elif self.adjusting_size:
+        if self.old_size == current_size or self.adjusting_size:
             return
         self.old_size = current_size
         self.post_display_hook()
@@ -258,10 +255,10 @@ class Playlist_Track_View(Widget):
 
     # Set the tracks for the current playlist
     @work
-    async def set_tracks(self, lengths=[100, 100, 100]):
+    async def set_tracks(self):
         table = self.query_one(DataTable)
         table.loading = True
-        table = table.clear(columns=True)
+        table.clear(columns=True)
 
         # Set columns based on playlist type (saved episodes or general playlist)
         if self.playlist_id == "saved_episodes":
@@ -270,8 +267,7 @@ class Playlist_Track_View(Widget):
 
             for i, episode in enumerate(self.tracks):
                 description = episode.get("description", "")
-                if description:
-                    description = description[:50] + "..."
+                description = description[:50] + "..." if description else ""
 
                 table.add_row(
                     str(i + 1),
@@ -286,20 +282,21 @@ class Playlist_Track_View(Widget):
             )
             self.tracks = playback.get_playlist_tracks(self.playlist_id)
 
-        # Add rows to the data table for each track
-        for i, track in enumerate(self.tracks):
-            track_name = str(track["name"])
-            artist_string = str(", ".join(track.get("artists", [])))
-            album_name = str(track.get("album", ""))
+            # Add rows to the data table for each track
+            add_row = table.add_row
+            for i, track in enumerate(self.tracks):
+                track_name = str(track["name"])
+                artist_string = ", ".join(track.get("artists", []))
+                album_name = track.get("album", "")
 
-            table.add_row(
-                str(i + 1),
-                track_name,
-                artist_string,
-                album_name,
-                ms_to_time(track.get("duration_ms", 0)),
-                "♥" if track.get("is_liked", False) else "",
-            )
+                add_row(
+                    str(i + 1),
+                    track_name,
+                    artist_string,
+                    album_name,
+                    ms_to_time(track.get("duration_ms", 0)),
+                    "♥" if track.get("is_liked", False) else "",
+                )
         table.loading = False
 
         # After setting the tracks, apply the auto-resizing hook
@@ -310,29 +307,6 @@ class Playlist_Track_View(Widget):
         table = self.query_one(DataTable)
         table.cursor_type = "row"
         table.styles.scrollbar_size_horizontal = 0
-
-        # Calculate column lengths based on weights
-        height, width = table.size
-        max_length = width - 5
-
-        max_track_length = (
-            max_length
-            * self.track_weight
-            // (self.track_weight + self.artist_weight + self.album_weight)
-        )
-        max_artist_length = (
-            max_length
-            * self.artist_weight
-            // (self.track_weight + self.artist_weight + self.album_weight)
-        )
-
-        max_album_length = (
-            max_length
-            * self.album_weight
-            // (self.track_weight + self.artist_weight + self.album_weight)
-        )
-
-        lengths = (max_track_length, max_artist_length, max_album_length)
 
         # Call the async method to set tracks
         self.set_tracks()
@@ -346,7 +320,7 @@ class Playlist_Track_View(Widget):
         size = table.container_size
 
         # If the size is not valid, try again later
-        if not all([c for c in size]):
+        if not all(size):
             self.call_later(self.post_display_hook)
             return
 
@@ -355,9 +329,7 @@ class Playlist_Track_View(Widget):
             c.auto_width = False
             if str(c.label) == "#":
                 c.width = len(str(table.row_count))
-            elif str(c.label) == "Duration":
-                c.auto_width = True
-            elif str(c.label) == "Liked":
+            elif str(c.label) in ["Duration", "Liked"]:
                 c.auto_width = True
             taken_chars += c.width
 
