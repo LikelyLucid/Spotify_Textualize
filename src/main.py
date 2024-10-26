@@ -251,11 +251,25 @@ class Playlist_Track_View(Widget):
         # table.styles.width = "100%"
         table = table.clear(columns=True)
 
-        columns = table.add_columns(
-            "#", "Title", "Artist", "Album", "Duration", "Liked"
-        )
-
-        self.tracks = playback.get_playlist_tracks(self.playlist_id)
+        if self.playlist_id == "saved_episodes":
+            columns = table.add_columns(
+                "#", "Title", "Show", "Duration", "Description"
+            )
+            self.tracks = playback.get_saved_episodes()
+            
+            for i, episode in enumerate(self.tracks):
+                table.add_row(
+                    str(i + 1),
+                    episode["name"],
+                    episode["show"],
+                    ms_to_time(episode.get("duration_ms", 0)),
+                    episode.get("description", "")[:50] + "..." if episode.get("description") else ""
+                )
+        else:
+            columns = table.add_columns(
+                "#", "Title", "Artist", "Album", "Duration", "Liked"
+            )
+            self.tracks = playback.get_playlist_tracks(self.playlist_id)
 
         # if lengths is None:
         #     h, width = table.size()
