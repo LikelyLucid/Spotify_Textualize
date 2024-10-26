@@ -128,7 +128,7 @@ class Bottom_Bar(Widget):
         except:
             return
         if playback.is_playing and progress is None:
-            current_time_widget.current_time += 1000
+            current_time_widget.current_time += int(1000 * self.app.timer.interval)
         else:
             current_time_widget.current_time = progress
 
