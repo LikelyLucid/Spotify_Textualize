@@ -139,8 +139,8 @@ class Bottom_Bar(Widget):
     def update_playback_settings(self):
         self.border_title = playback.playing_settings()
         if playback.is_playing:
-            self.update_progress()
-        # self.update_progress(playback.progress_ms)
+            # self.update_progress()
+            self.update_progress(playback.progress_ms)
 
     def on_mount(self):
         self.styles.border = ("hkey", "blue")
