@@ -157,16 +157,20 @@ class Library_List(Widget):
     def on_list_view_selected(self, selected_item):
         self.notify(f"item selected: {selected_item.item.name}")
         # playlist_id = self.library_data[selected_item.item.name]["id"]
+        playlist_id = None
         for item in self.library_data:
             if item["name"] == selected_item.item.name:
                 playlist_id = item["id"]
                 self.notify(f"playlist_id: {playlist_id}")
                 break
-        try:
-            table = self.query(DataTable)
-            table.change_playlist(str(playlist_id))
-        except Exception as e:
-            self.notify("Error changing playlist: " + str(e))
+        if playlist_id is None:
+            self.notify("Error: Playlist ID not found")
+            return
+        # try:
+        #     table = self.query(DataTable)
+        #     table.change_playlist(str(playlist_id))
+        # except Exception as e:
+        #     self.notify("Error changing playlist: " + str(e))
 
         # self.selected_playlist_id = playlist_id
         # self.post_message(playlist_id)
