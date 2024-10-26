@@ -167,7 +167,7 @@ class Library_List(Widget):
         # table.change_playlist(playlist_id)
 
         # self.selected_playlist_id = playlist_id
-        self.post_message()
+        self.post_message(playlist_id)
 
     def compose(self):
         items = [
@@ -381,7 +381,8 @@ class Playlist_Track_View(Widget):
 class Main_Screen(Screen):
     CSS_PATH = "main_page.tcss"
 
-    # def on_list_view_selected(self, item):
+    def on_list_view_selected(self, playlist_id):
+        self.query_one(Playlist_Track_View).change_playlist(playlist_id)
     #     self.notify(f"item selected: {item.list_view.id}")
     #     # playlist_id = self.library_data[selected_item.item.name]["id"]
     #     # for item in list_view.library_data:
