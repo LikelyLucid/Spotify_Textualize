@@ -305,8 +305,33 @@ class Spotify_Playback_Data:
 
         return set(liked_songs)
 
+    def get_saved_episodes(self):
+        """Get user's saved episodes"""
+        episodes = []
+        offset = 0
+        limit = 20
+
+        while True:
+            results = self.sp.current_user_saved_episodes(limit=limit, offset=offset)
+            items = results["items"]
+            for item in items:
+                episode = item["episode"]
+                episodes.append({
+                    "name": episode["name"],
+                    "id": episode["id"],
+                    "duration_ms": episode["duration_ms"],
+                    "show": episode["show"]["name"],
+                    "description": episode["description"],
+                    "type": "episode"
+                })
+            if len(items) < limit:
+                break
+            offset += limit
+
+        return episodes
+
     def play_track(self, uri, playlist_id=None):
-        """Play a song given its URI, optionally within a playlist context"""
+        """Play a song or episode given its URI, optionally within a playlist context"""
         if playlist_id == "liked_songs":
             # For liked songs, we need to get the user's collection URI
             self.sp.start_playback(
@@ -315,6 +340,9 @@ class Spotify_Playback_Data:
                 ),
                 offset={"uri": f"spotify:track:{uri}"}
             )
+        elif playlist_id == "saved_episodes":
+            # For episodes, we play directly with the episode URI
+            self.sp.start_playback(uris=[f"spotify:episode:{uri}"])
         elif playlist_id:
             # Play the track within the playlist context
             self.sp.start_playback(
