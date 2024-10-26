@@ -213,7 +213,8 @@ class Playlist_Track_View(Widget):
         self.tracks = []
         super().__init__(id=id)
 
-    def change_playlist(self, playlist_id):
+    @work
+    async def change_playlist(self, playlist_id):
         self.playlist_id = playlist_id
         self.set_tracks()
 
