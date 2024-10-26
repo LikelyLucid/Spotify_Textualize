@@ -157,9 +157,11 @@ class Side_Bar(Widget):
             yield Library_List(
                 library_data=playback.get_featured_playlists(limit=5),
                 id="featured_playlists_list",
+                can_focus=True,
             )
             yield Library_List(
-                library_data=playback.get_user_library(), id="user_library_list"
+                library_data=playback.get_user_library(), id="user_library_list",
+                can_focus=True,
             )
 
 
@@ -218,6 +220,7 @@ class Main_Page(Widget):
 
 # Widget to display the tracks of a selected playlist
 class Playlist_Track_View(Widget):
+    can_focus = True
 
     # Weighting for track, artist, and album columns
     track_weight, artist_weight, album_weight = 2, 1, 1
@@ -379,8 +382,106 @@ class Main_Screen(Screen):
         self.set_interval(2, self.update_stats)
 
 
+from textual.binding import Binding
+from config_helper import read_config, get_config_directory
+import os
+
 # Main app class
 class MainApp(App):
+    BINDINGS = []
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.load_keybindings()
+        
+    def load_keybindings(self):
+        """Load keybindings from config file"""
+        config_dir = get_config_directory()
+        config_file = os.path.join(config_dir, "binds.config")
+        
+        # Create default config if it doesn't exist
+        if not os.path.exists(config_file):
+            with open(config_file, "w") as f:
+                f.write("""# Navigation
+focus_left: h
+focus_right: l
+focus_up: k
+focus_down: j
+
+# Playback controls
+play_pause: space
+next_track: n
+previous_track: p
+volume_up: +
+volume_down: -""")
+        
+        # Read config
+        bindings = read_config("binds.config")
+        if bindings:
+            self.BINDINGS = [
+                Binding(key, f"handle_{action}", action.replace("_", " ").title())
+                for action, key in bindings.items()
+            ]
+
+    def handle_focus_left(self):
+        """Handle left focus movement"""
+        self.screen.focus_previous_widget()
+
+    def handle_focus_right(self):
+        """Handle right focus movement"""
+        self.screen.focus_next_widget()
+
+    def handle_focus_up(self):
+        """Handle up focus movement"""
+        current = self.focused
+        if hasattr(current, "cursor_up"):
+            current.cursor_up()
+        else:
+            self.screen.focus_previous_widget()
+
+    def handle_focus_down(self):
+        """Handle down focus movement"""
+        current = self.focused
+        if hasattr(current, "cursor_down"):
+            current.cursor_down()
+        else:
+            self.screen.focus_next_widget()
+
+    def handle_play_pause(self):
+        """Toggle play/pause"""
+        if playback.sp:
+            if playback.is_playing:
+                playback.sp.pause_playback()
+            else:
+                playback.sp.start_playback()
+            playback.update()
+
+    def handle_next_track(self):
+        """Play next track"""
+        if playback.sp:
+            playback.sp.next_track()
+            playback.update()
+
+    def handle_previous_track(self):
+        """Play previous track"""
+        if playback.sp:
+            playback.sp.previous_track()
+            playback.update()
+
+    def handle_volume_up(self):
+        """Increase volume"""
+        if playback.sp and playback.device_volume_percent is not None:
+            new_volume = min(100, playback.device_volume_percent + 5)
+            playback.sp.volume(new_volume)
+            playback.update()
+
+    def handle_volume_down(self):
+        """Decrease volume"""
+        if playback.sp and playback.device_volume_percent is not None:
+            new_volume = max(0, playback.device_volume_percent - 5)
+            playback.sp.volume(new_volume)
+            playback.update()
+
     # Mount the main screen
     def on_mount(self) -> None:
         self.install_screen(Main_Screen(), "main")
