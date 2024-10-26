@@ -383,7 +383,7 @@ class Main_Screen(Screen):
 
 
 from textual.binding import Binding
-from config_helper import read_config, get_config_directory
+from config_helper import read_config, get_config_directory, setup_keybindings
 import os
 
 # Main app class
