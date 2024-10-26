@@ -46,13 +46,10 @@ def get_current_time_with_offset() -> int:
     if playback.progress_ms is None:
         return 0
     # Only calculate offset if track is playing
-    if playback.is_playing:
-        offset = int(time.time() * 1000) - playback.timestamp
-        return playback.progress_ms + offset
-    else:
-        return playback.progress_ms
-    # Return exact progress when paused
-    return playback.progress_ms
+
+    offset = int(time.time() * 1000) - playback.timestamp
+    return playback.progress_ms + offset
+
 
 
 class Current_Time_In_Track(Widget):
