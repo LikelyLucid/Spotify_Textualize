@@ -51,7 +51,6 @@ def get_current_time_with_offset() -> int:
     return playback.progress_ms + offset
 
 
-
 class Current_Time_In_Track(Widget):
     current_time = reactive(get_current_time_with_offset())
 
@@ -205,7 +204,9 @@ class Main_Page(Widget):
     def compose(self):
         with Container(id="main_page_container"):
             # yield Static("Main Page", id="main_page_header")
-            yield Playlist_Track_View(playlist_id="liked_songs", id="playlist_tracks")
+            yield Playlist_Track_View(
+                playlist_id="saved_episodes", id="playlist_tracks"
+            )
 
 
 class Playlist_Track_View(Widget):
@@ -256,12 +257,12 @@ class Playlist_Track_View(Widget):
                 "#", "Title", "Show", "Duration", "Description"
             )
             self.tracks = playback.get_saved_episodes()
-            
+
             for i, episode in enumerate(self.tracks):
                 description = episode.get("description", "")
                 if description:
                     description = description[:50] + "..."
-                
+
                 table.add_row(
                     str(i + 1),
                     episode["name"],
