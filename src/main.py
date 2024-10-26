@@ -167,7 +167,7 @@ class Library_List(Widget):
         # table.change_playlist(playlist_id)
 
         # self.selected_playlist_id = playlist_id
-        self.post_message
+        self.post_message()
 
     def compose(self):
         items = [
