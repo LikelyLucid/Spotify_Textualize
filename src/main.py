@@ -162,12 +162,14 @@ class Library_List(Widget):
                 playlist_id = item["id"]
                 self.notify(f"playlist_id: {playlist_id}")
                 break
-
-        # table = self.query_one("#playlist_tracks")
-        # table.change_playlist(playlist_id)
+        try:
+            table = self.query(DataTable)
+            table.change_playlist(playlist_id)
+        except Exception as e:
+            self.notify("Error changing playlist: " + str(e))
 
         # self.selected_playlist_id = playlist_id
-        self.post_message(playlist_id)
+        # self.post_message(playlist_id)
 
     def compose(self):
         items = [
@@ -366,7 +368,7 @@ class Playlist_Track_View(Widget):
             # else:
             #     c.percentage_width = None
             #     c.width = int((size[0]-5) / (len(table.columns)-3)
-            
+
             # self.notify(f"Hit Column: {c.label}, width: {c.width}")
 
             # c.width = int(size[0] / len(table.columns))
