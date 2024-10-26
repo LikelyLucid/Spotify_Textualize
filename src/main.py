@@ -212,10 +212,19 @@ class Main_Page(Widget):
 
 class Playlist_Track_View(Widget):
 
-    # weighting
-    track_weight, artist_weight, album_weight = 2, 1, 1
-    old_size = (0, 0)
-    adjusting_size = False
+    # Column configuration
+    COLUMN_WEIGHTS = {
+        "#": 0.05,
+        "Title": 0.35,
+        "Artist": 0.25,
+        "Album": 0.25,
+        "Duration": 0.05,
+        "Liked": 0.05,
+        "Show": 0.3,
+        "Description": 0.35
+    }
+    _last_width = 0
+    _resize_scheduled = False
 
     def __init__(self, playlist_id, max_title_length=40, id=None):
         self.playlist_id = playlist_id
@@ -234,14 +243,52 @@ class Playlist_Track_View(Widget):
         self.notify(f"Selected track: {selected_track}")
         playback.play_track(selected_track, self.playlist_id)
 
-    def adjust_columns(self):
-        current_size = self.query_one(DataTable).size[0]
-        if self.old_size == current_size:
+    def schedule_resize(self) -> None:
+        """Schedule a resize if one isn't already pending"""
+        if not self._resize_scheduled:
+            self._resize_scheduled = True
+            self.call_later(self._resize_columns)
+
+    def _resize_columns(self) -> None:
+        """Efficiently resize columns based on weights"""
+        self._resize_scheduled = False
+        table = self.query_one(DataTable)
+        width = table.size.width
+
+        if width == self._last_width:
             return
-        elif self.adjusting_size:
-            return
-        self.old_size = current_size
-        self.post_display_hook()
+        
+        self._last_width = width
+        
+        # Calculate available width (excluding borders and scrollbar)
+        available_width = max(0, width - 2)
+        
+        # First pass: set fixed-width columns
+        used_width = 0
+        remaining_weights = 0
+        
+        for col in table.columns.values():
+            weight = self.COLUMN_WEIGHTS.get(col.label, 0)
+            if col.label in ("#", "Duration", "Liked"):
+                if col.label == "#":
+                    col.width = len(str(table.row_count)) + 1
+                elif col.label == "Duration":
+                    col.width = 7
+                elif col.label == "Liked":
+                    col.width = 4
+                used_width += col.width
+            else:
+                remaining_weights += weight
+        
+        # Second pass: distribute remaining width proportionally
+        remaining_width = max(0, available_width - used_width)
+        
+        for col in table.columns.values():
+            if col.label not in ("#", "Duration", "Liked"):
+                weight = self.COLUMN_WEIGHTS.get(col.label, 0)
+                col.width = int((weight / remaining_weights) * remaining_width)
+        
+        table.refresh()
 
     def compose(self) -> ComposeResult:
         yield DataTable()
@@ -323,106 +370,18 @@ class Playlist_Track_View(Widget):
         self.post_display_hook()
 
     def on_mount(self) -> None:
+        """Initialize the table on mount"""
         table = self.query_one(DataTable)
         table.cursor_type = "row"
-        # table.zebra_stripes = True
-        # table.styles.scrollbar_size_vertical = 0
         table.styles.scrollbar_size_horizontal = 0
-        # table.styles.border = ("heavy", "blue")
-
-        height, width = table.size
-        max_length = width - 5
-
-        # calculate max lengths according to the weights
-        max_track_length = (
-            max_length
-            * self.track_weight
-            // (self.track_weight + self.artist_weight + self.album_weight)
-        )
-        max_artist_length = (
-            max_length
-            * self.artist_weight
-            // (self.track_weight + self.artist_weight + self.album_weight)
-        )
-
-        max_album_length = (
-            max_length
-            * self.album_weight
-            // (self.track_weight + self.artist_weight + self.album_weight)
-        )
-
-        lengths = (max_track_length, max_artist_length, max_album_length)
-
-        # Call the async method to set tracks
+        
+        # Initial setup
         self.set_tracks()
-        # self.set_interval(5, self.adjust_columns)
+        self.schedule_resize()
 
-    @work
-    async def post_display_hook(self) -> None:
-        adjusting_size = True
-        # This method adjusts the column widths based on the table size
-        table = self.query_one(DataTable)
-        size = table.container_size
-
-        # If the size is not valid, try again later
-        if not all([c for c in size]):
-            self.call_later(self.post_display_hook)
-            return
-
-        self.notify(f"size: {str(size)}, {self.is_mounted}")  # Debugging output
-        taken_chars = -1
-        for c in table.columns.values():
-            # self.notify(f"Column: {c}")
-            # exit()
-            c.auto_width = False
-            # if c.label in ["Title", "Artist", "Album"]:
-            #     c.percentage_width = 100 / 3
-            # elif c.label in ["Duration"]:
-            #     c.width = 4
-            #     continue
-            if not hasattr(c, "percentage_width") or (c.percentage_width is None):
-                c.percentage_width = c.width
-
-            # '#' should be 4 characters wide
-            # 'Duration' should be 5 characters wide
-            # 'Liked' should be 4 characters wide
-
-            # if str(c.label) == "#":
-            #     c.percentage_width = None
-            #     c.auto_width = True
-            # elif str(c.label) == "Duration":
-            #     c.percentage_width = None
-            #     c.width = 8
-            # elif str(c.label) == "Liked":
-            #     c.percentage_width = None
-            #     c.width = 4
-
-            # --- try auto width
-            if str(c.label) == "#":
-                c.width = len(str(table.row_count))
-            elif str(c.label) == "Duration":
-                c.auto_width = True
-
-            elif str(c.label) == "Liked":
-                c.auto_width = True
-            else:
-                pass
-            taken_chars += c.width
-            # else:
-            #     c.percentage_width = None
-            #     c.width = int((size[0]-5) / (len(table.columns)-3)
-
-            # self.notify(f"Hit Column: {c.label}, width: {c.width}")
-
-            # c.width = int(size[0] / len(table.columns))
-            # self.notify(f"Column: {c.label}, width: {c.width}")
-        # Refresh the table display
-        for c in table.columns.values():
-            if str(c.label) in ["Title", "Artist", "Album"]:
-                c.width = int((size[0] - taken_chars) / (len(table.columns) - 3)) + 1
-        table.refresh()
-        self.notify(str(self.id))
-        adjusting_size = False
+    def watch_size(self) -> None:
+        """React to size changes"""
+        self.schedule_resize()
 
 
 class Main_Screen(Screen):
