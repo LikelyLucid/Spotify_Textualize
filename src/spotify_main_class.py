@@ -308,9 +308,12 @@ class Spotify_Playback_Data:
     def play_track(self, uri, playlist_id=None):
         """Play a song given its URI, optionally within a playlist context"""
         if playlist_id == "liked_songs":
-            # Play the track from liked songs
+            # For liked songs, we need to get the user's collection URI
             self.sp.start_playback(
-                uris=[f"spotify:track:{uri}"]
+                context_uri="spotify:user:{}:collection".format(
+                    self.sp.current_user()["id"]
+                ),
+                offset={"uri": f"spotify:track:{uri}"}
             )
         elif playlist_id:
             # Play the track within the playlist context
