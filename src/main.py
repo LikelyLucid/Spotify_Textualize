@@ -13,7 +13,7 @@ from textual.widgets import (
     Label,
     DataTable,
     # Lazy,
-    LoadingIndicator
+    LoadingIndicator,
 )
 from textual.reactive import reactive
 from spotify_main_class import Spotify_Playback_Data
@@ -22,8 +22,14 @@ from textual import work
 
 playback = Spotify_Playback_Data()
 
+
 def cut_string_if_long(string: str, max_length: int) -> str:
-    return string[:abs(max_length)].strip() + "..." if len(string) > abs(max_length) else string
+    return (
+        string[: abs(max_length)].strip() + "..."
+        if len(string) > abs(max_length)
+        else string
+    )
+
 
 def ms_to_time(ms: int) -> str:
     if ms is None:
@@ -116,7 +122,6 @@ class Bottom_Bar(Widget):
         else:
             current_time_widget.current_time = progress
 
-
     def song_change(self):
         self.query_one(Track_Duration).track_duration = playback.track_duration
         # self.query_one(Current_Time_In_Track).current_time = (
@@ -157,6 +162,7 @@ class Library_List(Widget):
 
     class PlaylistSelected(Message):
         """Sent when a playlist is selected."""
+
         def __init__(self, playlist_id: str) -> None:
             self.playlist_id = playlist_id
             super().__init__()
@@ -168,17 +174,20 @@ class Library_List(Widget):
             if item["name"] == selected_item.item.name:
                 playlist_id = item["id"]
                 break
-                
+
         if playlist_id is None:
             self.notify("Error: Playlist ID not found")
             return
-            
+
         # Post a message to the app about the playlist selection
         self.post_message(self.PlaylistSelected(str(playlist_id)))
 
     def compose(self):
         items = [
-            ListItem(Label(f"{item['name']} ({item['type'].capitalize()})"), name=item['name'])
+            ListItem(
+                Label(f"{item['name']} ({item['type'].capitalize()})"),
+                name=item["name"],
+            )
             for item in self.library_data
         ]
         yield ListView(*items)
@@ -188,9 +197,7 @@ class Main_Page(Widget):
     def compose(self):
         with Container(id="main_page_container"):
             # yield Static("Main Page", id="main_page_header")
-            yield Playlist_Track_View(
-                playlist_id="liked_songs", id="playlist_tracks"
-            )
+            yield Playlist_Track_View(playlist_id="liked_songs", id="playlist_tracks")
 
 
 class Playlist_Track_View(Widget):
@@ -212,7 +219,7 @@ class Playlist_Track_View(Widget):
 
     def on_data_table_row_selected(self, row):
         self.notify(f"Row selected: {row}")
-        selected_track = self.tracks[row.cursor_row]['id']
+        selected_track = self.tracks[row.cursor_row]["id"]
         self.notify(f"Selected track: {selected_track}")
         playback.play_track(selected_track)
 
@@ -233,9 +240,11 @@ class Playlist_Track_View(Widget):
         table = self.query_one(DataTable)
         table.loading = True
         # table.styles.width = "100%"
-        table.clear()
+        table = table.clear()
 
-        columns = table.add_columns("#", "Title", "Artist", "Album", "Duration", "Liked")
+        columns = table.add_columns(
+            "#", "Title", "Artist", "Album", "Duration", "Liked"
+        )
 
         self.tracks = playback.get_playlist_tracks(self.playlist_id)
 
@@ -381,7 +390,7 @@ class Playlist_Track_View(Widget):
         # Refresh the table display
         for c in table.columns.values():
             if str(c.label) in ["Title", "Artist", "Album"]:
-                c.width = int((size[0] - taken_chars) / (len(table.columns) - 3))+1
+                c.width = int((size[0] - taken_chars) / (len(table.columns) - 3)) + 1
         table.refresh()
         self.notify(str(self.id))
         adjusting_size = False
@@ -390,7 +399,9 @@ class Playlist_Track_View(Widget):
 class Main_Screen(Screen):
     CSS_PATH = "main_page.tcss"
 
-    def on_library_list_playlist_selected(self, message: Library_List.PlaylistSelected) -> None:
+    def on_library_list_playlist_selected(
+        self, message: Library_List.PlaylistSelected
+    ) -> None:
         """Handle playlist selection messages."""
         playlist_view = self.query_one("#playlist_tracks", Playlist_Track_View)
         playlist_view.change_playlist(message.playlist_id)
