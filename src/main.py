@@ -110,7 +110,8 @@ class Bottom_Bar(Widget):
         )
 
     # Update the progress bar based on the current playback progress
-    def update_progress(self, progress=None):
+    @work
+    async def update_progress(self, progress=None):
         current_time_widget = self.query_one(Current_Time_In_Track)
         progress_bar = self.query_one(ProgressBar)
 
@@ -127,7 +128,8 @@ class Bottom_Bar(Widget):
             )
 
     # Handle changes in the current song
-    def song_change(self):
+    @work
+    async def song_change(self):
         track_duration_widget = self.query_one(Track_Duration)
         current_time_widget = self.query_one(Current_Time_In_Track)
         artist_info_widget = self.query_one("#artist_info")
@@ -138,7 +140,8 @@ class Bottom_Bar(Widget):
         artist_info_widget.update(self.get_artist_info())
 
     # Update playback settings like the border title
-    def update_playback_settings(self):
+    @work
+    async def update_playback_settings(self):
         self.border_title = playback.playing_settings()
         if playback.is_playing:
             self.update_progress(playback.progress_ms)
