@@ -154,20 +154,19 @@ class Library_List(Widget):
         self.library_data = library_data
         super().__init__(id=id)
 
-    # def on_list_view_selected(self, selected_item):
-    #     self.notify(f"item selected: {selected_item.item.name}")
-    #     # playlist_id = self.library_data[selected_item.item.name]["id"]
-    #     for item in self.library_data:
-    #         if item["name"] == selected_item.item.name:
-    #             playlist_id = item["id"]
-    #             self.notify(f"playlist_id: {playlist_id}")
-    #             break
+    def on_list_view_selected(self, selected_item):
+        self.notify(f"item selected: {selected_item.item.name}")
+        # playlist_id = self.library_data[selected_item.item.name]["id"]
+        for item in self.library_data:
+            if item["name"] == selected_item.item.name:
+                playlist_id = item["id"]
+                self.notify(f"playlist_id: {playlist_id}")
+                break
 
-    #     # table = self.query_one("#playlist_tracks")
-    #     # table.change_playlist(playlist_id)
+        # table = self.query_one("#playlist_tracks")
+        # table.change_playlist(playlist_id)
 
-    #     for i in self.query(Playlist_Track_View):
-    #         self.notify(f"i: {i}")
+        self.selected_playlist_id = playlist_id
 
     def compose(self):
         items = [
@@ -416,6 +415,13 @@ class Main_Screen(Screen):
 
     def on_mount(self) -> None:
         self.set_interval(2, self.update_stats)
+
+    def watch_selected_playlist_id(self, playlist_id):
+        self.notify(f"playlist_id: {playlist_id}")
+        try:
+            self.query_one(Playlist_Track_View).change_playlist(playlist_id)
+        except Exception as e:
+            self.notify(f"Error changing playlist: {e}")
 
 
 class MainApp(App):
