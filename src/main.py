@@ -157,11 +157,11 @@ class Side_Bar(Widget):
             yield Library_List(
                 library_data=playback.get_featured_playlists(limit=5),
                 id="featured_playlists_list",
-                can_focus=True,
+                # can_focus=True,
             )
             yield Library_List(
                 library_data=playback.get_user_library(), id="user_library_list",
-                can_focus=True,
+                # can_focus=True,
             )
 
 
@@ -393,7 +393,7 @@ class MainApp(App):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.load_keybindings()
-        
+
     def load_keybindings(self):
         """Load keybindings from config file"""
         bindings = setup_keybindings()
