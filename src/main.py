@@ -39,7 +39,7 @@ def ms_to_time(ms: int) -> str:
         minutes, seconds = divmod(seconds, 60)
         return f"{minutes}:{seconds:02d}"
     except:
-        return
+        return ""
 
 
 def get_current_time_with_offset() -> int:
