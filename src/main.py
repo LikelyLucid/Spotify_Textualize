@@ -154,26 +154,26 @@ class Library_List(Widget):
         self.library_data = library_data
         super().__init__(id=id)
 
+    class PlaylistSelected(Message):
+        """Sent when a playlist is selected."""
+        def __init__(self, playlist_id: str) -> None:
+            self.playlist_id = playlist_id
+            super().__init__()
+
     def on_list_view_selected(self, selected_item):
-        self.notify(f"item selected: {selected_item.item.name}")
-        # playlist_id = self.library_data[selected_item.item.name]["id"]
+        """Handle playlist selection."""
         playlist_id = None
         for item in self.library_data:
             if item["name"] == selected_item.item.name:
                 playlist_id = item["id"]
-                self.notify(f"playlist_id: {playlist_id}")
                 break
+                
         if playlist_id is None:
             self.notify("Error: Playlist ID not found")
             return
-        try:
-            table = self.query("#playlist_tracks")
-            table.change_playlist(str(playlist_id))
-        except Exception as e:
-            self.notify("Error changing playlist: " + str(e))
-
-        # self.selected_playlist_id = playlist_id
-        # self.post_message(playlist_id)
+            
+        # Post a message to the app about the playlist selection
+        self.post_message(self.PlaylistSelected(str(playlist_id)))
 
     def compose(self):
         items = [
@@ -389,18 +389,10 @@ class Playlist_Track_View(Widget):
 class Main_Screen(Screen):
     CSS_PATH = "main_page.tcss"
 
-    # def on_list_view_selected(self, playlist_id):
-    #     self.query_one(Playlist_Track_View).change_playlist(playlist_id)
-    #     self.notify(f"item selected: {item.list_view.id}")
-    #     # playlist_id = self.library_data[selected_item.item.name]["id"]
-    #     # for item in list_view.library_data:
-    #     #     if item["name"] == selected_item.item.name:
-    #     #         playlist_id = item["id"]
-    #     #         self.notify(f"playlist_id: {playlist_id}")
-    #     #         break
-
-    #     # table = self.query_one("#playlist_tracks")
-    #     # table.change_playlist(playlist_id)
+    def on_library_list_playlist_selected(self, message: Library_List.PlaylistSelected) -> None:
+        """Handle playlist selection messages."""
+        playlist_view = self.query_one("#playlist_tracks", Playlist_Track_View)
+        playlist_view.change_playlist(message.playlist_id)
 
     def compose(self) -> ComposeResult:
         yield Placeholder("top_bar", id="top_bar")
