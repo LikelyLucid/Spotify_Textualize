@@ -365,7 +365,8 @@ class Playlist_Track_View(Widget):
             taken_chars += c.width
             # else:
             #     c.percentage_width = None
-            #     c.width = int((size[0]-5) / (len(table.columns)-3))
+            #     c.width = int((size[0]-5) / (len(table.columns)-3)
+            
             # self.notify(f"Hit Column: {c.label}, width: {c.width}")
 
             # c.width = int(size[0] / len(table.columns))
@@ -375,7 +376,7 @@ class Playlist_Track_View(Widget):
             if str(c.label) in ["Title", "Artist", "Album"]:
                 c.width = int((size[0] - taken_chars) / (len(table.columns) - 3))+1
         table.refresh()
-        self.notify(str(self))
+        self.notify(str(self.id))
         adjusting_size = False
 
 
