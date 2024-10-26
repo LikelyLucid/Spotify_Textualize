@@ -43,7 +43,7 @@ Screen {
 #bottom_bar_collection {
     width: 100%;
     row-span: 10;
-    height: auto;
+    height: 5;
 }
 
 #bottom_bar {
@@ -59,7 +59,8 @@ Screen {
 }
 
 #artist_info {
-    height: auto;
+    height: 1;
+    overflow-x: auto;
 }
 
 #bar {
