@@ -238,6 +238,11 @@ class Spotify_Playback_Data:
                         cached_items = json.load(cache_file)
                         self._playlist_cache[playlist_id] = cached_items
                         return cached_items
+        except Exception as e:
+            print(f"Error reading cache: {e}")
+
+        # Check and update liked songs cache
+        liked_songs = self._get_liked_songs()
 
         while True:
             if playlist_id == "liked_songs":
