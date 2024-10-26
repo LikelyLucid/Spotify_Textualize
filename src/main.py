@@ -107,7 +107,7 @@ class Bottom_Bar(Widget):
                 Current_Time_In_Track(),
                 Center(
                     ProgressBar(
-                        total=100, id="bar", show_percentage=False, show_eta=False
+                        id="bar", show_percentage=False, show_eta=False
                     )
                 ),
                 Track_Duration(),
