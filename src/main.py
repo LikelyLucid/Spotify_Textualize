@@ -216,7 +216,17 @@ class Playlist_Track_View(Widget):
     @work
     async def change_playlist(self, playlist_id):
         self.playlist_id = playlist_id
-        self.set_tracks()
+        self.old_size = (0, 0)
+        self.adjusting_size = False
+        
+        # Reset and reinitialize the table
+        table = self.query_one(DataTable)
+        table.clear()
+        table.cursor_type = "row"
+        table.styles.scrollbar_size_horizontal = 0
+        
+        # Call set_tracks to populate with new data
+        await self.set_tracks()
 
     def on_data_table_row_selected(self, row):
         self.notify(f"Row selected: {row}")
