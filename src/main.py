@@ -211,25 +211,11 @@ class Main_Page(Widget):
 
 
 class Playlist_Track_View(Widget):
-    """Display playlist tracks with optimized rendering"""
-    
-    # Column configuration
-    COLUMN_WEIGHTS = {
-        "#": 0.05,
-        "Title": 0.35,
-        "Artist": 0.25,
-        "Album": 0.20,
-        "Duration": 0.10,
-        "Liked": 0.05
-    }
-    
-    # Debounce delay for resize (ms)
-    RESIZE_DELAY = 100
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._resize_timer = None
-        self._last_size = (0, 0)
+
+    # weighting
+    track_weight, artist_weight, album_weight = 2, 1, 1
+    old_size = (0, 0)
+    adjusting_size = False
 
     def __init__(self, playlist_id, max_title_length=40, id=None):
         self.playlist_id = playlist_id
@@ -248,26 +234,14 @@ class Playlist_Track_View(Widget):
         self.notify(f"Selected track: {selected_track}")
         playback.play_track(selected_track, self.playlist_id)
 
-    def schedule_resize(self) -> None:
-        """Schedule a resize with debouncing"""
-        if self._resize_timer:
-            self._resize_timer.stop()
-        self._resize_timer = self.set_timer(self.RESIZE_DELAY / 1000, self._resize_columns)
-
-    def _resize_columns(self) -> None:
-        """Efficiently resize columns based on weights"""
-        table = self.query_one(DataTable)
-        current_size = table.size
-        
-        if current_size == self._last_size:
+    def adjust_columns(self):
+        current_size = self.query_one(DataTable).size[0]
+        if self.old_size == current_size:
             return
-            
-        self._last_size = current_size
-        total_width = current_size.width
-        
-        for column in table.columns.values():
-            weight = self.COLUMN_WEIGHTS.get(column.label, 0.1)
-            column.width = max(int(total_width * weight), 3)
+        elif self.adjusting_size:
+            return
+        self.old_size = current_size
+        self.post_display_hook()
 
     def compose(self) -> ComposeResult:
         yield DataTable()
