@@ -375,6 +375,7 @@ class Playlist_Track_View(Widget):
             if str(c.label) in ["Title", "Artist", "Album"]:
                 c.width = int((size[0] - taken_chars) / (len(table.columns) - 3))+1
         table.refresh()
+        self.notify(str(self))
         adjusting_size = False
 
 
@@ -417,8 +418,6 @@ class Main_Screen(Screen):
 
     def on_mount(self) -> None:
         self.set_interval(2, self.update_stats)
-        self.notify("Mounted")
-        self.notify(str(self.children))
 
 
 class MainApp(App):
