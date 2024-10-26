@@ -381,11 +381,6 @@ class Main_Screen(Screen):
     def on_mount(self) -> None:
         self.set_interval(2, self.update_stats)
 
-
-from textual.binding import Binding
-from config_helper import read_config, get_config_directory, setup_keybindings
-import os
-
 # Main app class
 class MainApp(App):
     BINDINGS = []

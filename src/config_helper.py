@@ -105,25 +105,27 @@ def read_config(config_filename: str):
         print(f"Configuration file not found: {config_file_path}")
         return None
 
+
 def get_default_keybindings():
     """Return the default keybinding configuration"""
     return {
         "focus_left": "h",
-        "focus_right": "l", 
+        "focus_right": "l",
         "focus_up": "k",
         "focus_down": "j",
         "play_pause": "space",
         "next_track": "n",
         "previous_track": "p",
         "volume_up": "+",
-        "volume_down": "-"
+        "volume_down": "-",
     }
+
 
 def setup_keybindings():
     """Setup default keybindings if they don't exist"""
     config_dir = get_config_directory()
     binds_file = config_dir / "binds.config"
-    
+
     if not binds_file.exists():
         default_binds = """# Navigation
 focus_left: h
@@ -137,7 +139,7 @@ next_track: n
 previous_track: p
 volume_up: +
 volume_down: -"""
-        
+
         save_config("binds.config", default_binds)
-    
+
     return read_config("binds.config") or get_default_keybindings()
