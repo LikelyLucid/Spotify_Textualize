@@ -148,7 +148,7 @@ class Side_Bar(Widget):
 
 class Library_List(Widget):
 
-    selected_playlist_id = reactive(None)
+    # selected_playlist_id = reactive(None)
 
     def __init__(self, library_data, id=None):
         self.library_data = library_data
@@ -166,7 +166,8 @@ class Library_List(Widget):
         # table = self.query_one("#playlist_tracks")
         # table.change_playlist(playlist_id)
 
-        self.selected_playlist_id = playlist_id
+        # self.selected_playlist_id = playlist_id
+        self.post_message
 
     def compose(self):
         items = [
@@ -415,16 +416,6 @@ class Main_Screen(Screen):
 
     def on_mount(self) -> None:
         self.set_interval(2, self.update_stats)
-
-        def watch_selected_playlist_id(self, playlist_id):
-            # self.notify(f"playlist_id: {playlist_id}")
-            try:
-                self.query_one(Playlist_Track_View).change_playlist(playlist_id)
-            except Exception as e:
-                # self.notify(f"Error changing playlist: {e}")
-                pass
-
-        self.watch(self.query_one(Library_List), "selected_playlist_id", watch_selected_playlist_id)
 
 
 class MainApp(App):
