@@ -157,12 +157,11 @@ class Side_Bar(Widget):
             yield Library_List(
                 library_data=playback.get_featured_playlists(limit=5),
                 id="featured_playlists_list",
-                can_focus=True,
+
             )
             yield Library_List(
-                library_data=playback.get_user_library(), 
-                id="user_library_list",
-                can_focus=True,
+                library_data=playback.get_user_library(), id="user_library_list",
+
             )
 
 
