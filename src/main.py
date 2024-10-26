@@ -417,6 +417,7 @@ class Main_Screen(Screen):
 
     def on_mount(self) -> None:
         self.set_interval(2, self.update_stats)
+        self.log(self.tree)
 
 
 class MainApp(App):
