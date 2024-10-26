@@ -42,7 +42,7 @@ Screen {
 
 #bottom_bar_collection {
     width: 100%;
-    height: auto;
+    height: 2;
 }
 
 #bottom_bar {
