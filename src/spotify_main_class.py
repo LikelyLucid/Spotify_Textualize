@@ -165,10 +165,10 @@ class Spotify_Playback_Data:
         # Add Liked Songs
         library.append({"name": "Liked Songs", "id": "liked_songs", "type": "playlist"})
 
-        # Add Saved Episodes
-        library.append(
-            {"name": "Your Episodes", "id": "saved_episodes", "type": "playlist"}
-        )
+        # # Add Saved Episodes
+        # library.append(
+        #     {"name": "Your Episodes", "id": "saved_episodes", "type": "playlist"}
+        # )
 
         # Add user's playlists
         user_playlists = self.sp.current_user_playlists()
