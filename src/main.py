@@ -367,7 +367,7 @@ class Main_Screen(Screen):
     CSS_PATH = "main_page.tcss"
 
     def on_list_view_selected(self, item):
-        self.notify(f"item selected: {item}")
+        self.notify(f"item selected: {item.list_view}")
         # playlist_id = self.library_data[selected_item.item.name]["id"]
         # for item in list_view.library_data:
         #     if item["name"] == selected_item.item.name:
