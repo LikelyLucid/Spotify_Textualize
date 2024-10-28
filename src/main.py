@@ -260,8 +260,8 @@ class Playlist_Track_View(Widget):
         yield DataTable()
 
     # Set the tracks for the current playlist
-
-    def set_tracks(self):
+    @work
+    async def set_tracks(self):
         table = self.query_one(DataTable)
         table.loading = True
         table.clear(columns=True)
