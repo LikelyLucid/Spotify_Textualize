@@ -7,5 +7,5 @@ requires-python = ">=3.11"
 dependencies = [
     "pymemcache>=4.0.0",
     "spotipy[pymemcache]>=2.24.0",
-    "textual>=0.83.0",
+    "textual==0.85.1",
 ]

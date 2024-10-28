@@ -6,7 +6,7 @@ Requires-Python: >=3.11
 Description-Content-Type: text/markdown
 Requires-Dist: pymemcache>=4.0.0
 Requires-Dist: spotipy[pymemcache]>=2.24.0
-Requires-Dist: textual>=0.83.0
+Requires-Dist: textual==0.85.1
 
 # Credential setup:
 1. Go to the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
