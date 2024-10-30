@@ -8,17 +8,19 @@ from spotify_main_class import Spotify_Playback_Data
 async def test_play_pause():
     """Test the play/pause functionality using key presses."""
     app = MainApp()
+    playback = app.playback
+    playback.is_playing = False  # Ensure playback starts as paused
     async with app.run_test() as pilot:
         # Initially, playback should be paused
-        assert not app.playback.is_playing
+        assert not playback.is_playing
 
         # Press space to play
         await pilot.press("space")
-        assert app.playback.is_playing
+        assert playback.is_playing
 
         # Press space to pause
         await pilot.press("space")
-        assert not app.playback.is_playing
+        assert not playback.is_playing
 
 @pytest.mark.asyncio
 async def test_next_track():
@@ -54,11 +56,13 @@ async def test_ui_snapshot(snap_compare):
         # Take another snapshot after interactions
         assert snap_compare("main.py")
 
-@patch.object(Spotify_Playback_Data, 'update')
+@patch.object(Spotify_Playback_Data, 'get_playlist_tracks', return_value=[
+    {"name": "Test Track 1", "id": "track1"},
+    {"name": "Test Track 2", "id": "track2"}
+])
 @pytest.mark.asyncio
-async def test_select_playlist(mock_update):
+async def test_select_playlist(mock_get_tracks):
     """Test selecting a playlist from the sidebar."""
-    mock_update.return_value = None
     app = MainApp()
     async with app.run_test() as pilot:
         # Select the first playlist in the sidebar
@@ -81,20 +85,21 @@ async def test_select_track(mock_play_track):
         # Verify that play_track was called with the correct track ID
         mock_play_track.assert_called_once()
 
-@patch.object(Spotify_Playback_Data, 'update')
 @pytest.mark.asyncio
-async def test_adjust_volume(mock_update):
+async def test_adjust_volume():
     """Test adjusting the volume using keyboard shortcuts."""
-    mock_update.return_value = None
-    app = MainApp()
-    async with app.run_test() as pilot:
-        initial_volume = app.playback.device_volume_percent
-        # Simulate increasing volume
-        await pilot.press("ctrl+up")
-        assert app.playback.device_volume_percent > initial_volume
-        # Simulate decreasing volume
-        await pilot.press("ctrl+down")
-        assert app.playback.device_volume_percent == initial_volume
+    with patch.object(Spotify_Playback_Data, 'update') as mock_update:
+        mock_update.return_value = None
+        app = MainApp()
+        app.playback.device_volume_percent = 50  # Initialize volume below 100
+        async with app.run_test() as pilot:
+            initial_volume = app.playback.device_volume_percent
+            # Simulate increasing volume
+            await pilot.press("ctrl+up")
+            assert app.playback.device_volume_percent > initial_volume
+            # Simulate decreasing volume
+            await pilot.press("ctrl+down")
+            assert app.playback.device_volume_percent == initial_volume
 
 @patch.object(Spotify_Playback_Data, 'get_playlist_tracks', return_value=[])
 @pytest.mark.asyncio
@@ -107,16 +112,17 @@ async def test_empty_playlist(mock_get_tracks):
         # Verify that no tracks are displayed
         assert len(app.playback.get_playlist_tracks(app.playback.track_id)) == 0
         # Optionally, verify that a message or placeholder is shown
-        empty_message = app.query_one("#playlist_tracks DataTable").render()
+        empty_message_panel = app.query_one("#playlist_tracks DataTable").render()
+        empty_message = empty_message_panel.renderable.renderable if hasattr(empty_message_panel.renderable, 'renderable') else ""
         assert "No tracks available" in empty_message
 
-@patch.object(Spotify_Playback_Data, 'update', side_effect=Exception("Playback data unavailable"))
 @pytest.mark.asyncio
-async def test_error_handling(mock_update):
+async def test_error_handling():
     """Test app's response when playback data is unavailable."""
-    app = MainApp()
-    async with app.run_test() as pilot:
-        with patch('builtins.print') as mock_print:
-            screen: Main_Screen = app.query_one(Main_Screen)  # Access Main_Screen
-            await screen.on_mount()
-            mock_print.assert_called_with("Error updating playback data: Playback data unavailable")
+    with patch.object(Spotify_Playback_Data, 'update', side_effect=Exception("Playback data unavailable")):
+        app = MainApp()
+        async with app.run_test() as pilot:
+            with patch('builtins.print') as mock_print:
+                screen: Main_Screen = app.query_one(Main_Screen)  # Access Main_Screen
+                await pilot.run_test_coroutine(screen.on_mount())
+                mock_print.assert_called_with("Error updating playback data: Playback data unavailable")

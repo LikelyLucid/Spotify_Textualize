@@ -386,7 +386,7 @@ class Main_Screen(Screen):
         self.query_one(Bottom_Bar).update_playback_settings()
 
     # Set up periodic updates for playback statistics
-    def on_mount(self) -> None:
+    async def on_mount(self) -> None:
         self.set_interval(2, self.update_stats)
 
 # Main app class
