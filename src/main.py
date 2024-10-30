@@ -118,7 +118,7 @@ class Bottom_Bar(Widget):
         if playback.is_playing and progress is None:
             current_time_widget.current_time += 1000
         else:
-            current_time_widget.current_time = progress
+            current_time_widget.current_time = progress if progress is not None else 0
 
         # Ensure track_duration is not None
         total = playback.track_duration if playback.track_duration is not None else 1
