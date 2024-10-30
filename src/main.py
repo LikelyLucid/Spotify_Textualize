@@ -411,14 +411,18 @@ class MainApp(App):
             playback.sp.start_playback()
 
     def action_next_track(self):
+        # Skip to the next track and update UI
         playback.sp.next_track()
         playback.update()
         self.query_one(Bottom_Bar).update_playback_settings()
+        self.query_one(Bottom_Bar).song_change()
 
     def action_previous_track(self):
+        # Go back to the previous track and update UI
         playback.sp.previous_track()
         playback.update()
         self.query_one(Bottom_Bar).update_playback_settings()
+        self.query_one(Bottom_Bar).song_change()
 
     # Mount the main screen
     def on_mount(self) -> None:
