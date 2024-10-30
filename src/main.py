@@ -18,10 +18,13 @@ from textual.reactive import reactive
 from spotify_main_class import Spotify_Playback_Data
 import time
 from textual import work
+import logging
 
 # Initialize Spotify playback data
 playback = Spotify_Playback_Data()
 
+# Configure logging
+logging.basicConfig(level=logging.DEBUG)
 
 # Function to cut a string if it exceeds the specified max length
 def cut_string_if_long(string: str, max_length: int) -> str:
@@ -412,17 +415,22 @@ class MainApp(App):
             playback.sp.start_playback()
 
     def action_next_track(self):
-        # Skip to the next track
+        logging.debug("Next track action triggered.")
         playback.sp.next_track()
+        playback.update()
+        self.query_one(Bottom_Bar).update_playback_settings()
 
     def action_previous_track(self):
-        # Go back to the previous track
+        logging.debug("Previous track action triggered.")
         playback.sp.previous_track()
+        playback.update()
+        self.query_one(Bottom_Bar).update_playback_settings()
 
     # Mount the main screen
     def on_mount(self) -> None:
         self.install_screen(Main_Screen(), "main")
         self.push_screen("main")
+
 
 
 # Run the app if the script is executed directly
