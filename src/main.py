@@ -386,10 +386,29 @@ class Main_Screen(Screen):
 
 # Main app class
 class MainApp(App):
-    BINDINGS = []
+    BINDINGS = [
+        ("space", "play_pause", "Play/Pause"),
+        (">", "next_track", "Next Track"),
+        ("<", "previous_track", "Previous Track"),
+    ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+    def action_play_pause(self):
+        # Toggle play/pause
+        if playback.is_playing:
+            playback.sp.pause_playback()
+        else:
+            playback.sp.start_playback()
+
+    def action_next_track(self):
+        # Skip to the next track
+        playback.sp.next_track()
+
+    def action_previous_track(self):
+        # Go back to the previous track
+        playback.sp.previous_track()
 
     # Mount the main screen
     def on_mount(self) -> None:
