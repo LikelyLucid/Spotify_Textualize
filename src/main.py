@@ -402,10 +402,13 @@ class MainApp(App):
         super().__init__(*args, **kwargs)
 
     def action_play_pause(self):
-        # Toggle play/pause
+        # Toggle play/pause and update playback state immediately
         if playback.is_playing:
+            playback.is_playing = False  # Immediately set to paused
+            self.query_one(Bottom_Bar).update_progress(progress=playback.progress_ms)  # Keep progress the same
             playback.sp.pause_playback()
         else:
+            playback.is_playing = True  # Immediately set to playing
             playback.sp.start_playback()
 
     def action_next_track(self):
