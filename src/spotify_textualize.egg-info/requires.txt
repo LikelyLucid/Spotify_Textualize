@@ -1,3 +1,4 @@
 pymemcache>=4.0.0
 spotipy[pymemcache]>=2.24.0
 textual==0.85.1
+pytest>=8.3.3

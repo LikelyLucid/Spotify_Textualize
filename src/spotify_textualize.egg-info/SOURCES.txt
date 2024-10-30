@@ -4,6 +4,7 @@ src/config_helper.py
 src/main.py
 src/spotify_functions.py
 src/spotify_main_class.py
+src/test.py
 src/spotify_textualize.egg-info/PKG-INFO
 src/spotify_textualize.egg-info/SOURCES.txt
 src/spotify_textualize.egg-info/dependency_links.txt
