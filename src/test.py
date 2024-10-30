@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import patch
 from textual.app import App
-from main import MainApp
+from main import MainApp, Main_Screen  # Import Main_Screen
 from spotify_main_class import Spotify_Playback_Data
 
 @pytest.mark.asyncio
@@ -117,5 +117,6 @@ async def test_error_handling(mock_update):
     app = MainApp()
     async with app.run_test() as pilot:
         with patch('builtins.print') as mock_print:
-            await app.query_one(Main_Screen).on_mount()
+            screen: Main_Screen = app.query_one(Main_Screen)  # Access Main_Screen
+            await screen.on_mount()
             mock_print.assert_called_with("Error updating playback data: Playback data unavailable")

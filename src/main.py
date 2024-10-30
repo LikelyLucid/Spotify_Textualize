@@ -399,6 +399,7 @@ class MainApp(App):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.playback = playback  # Expose playback as an attribute
 
     def action_play_pause(self):
         # Toggle play/pause and update playback state immediately
