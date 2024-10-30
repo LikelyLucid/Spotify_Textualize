@@ -386,7 +386,11 @@ class Main_Screen(Screen):
 
 # Main app class
 class MainApp(App):
-    BINDINGS = []
+    BINDINGS = [
+        (" ", "toggle_play_pause", "Pause/Play"),
+        (">", "next_track", "Next Track"),
+        ("<", "previous_track", "Previous Track"),
+    ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -395,6 +399,20 @@ class MainApp(App):
     def on_mount(self) -> None:
         self.install_screen(Main_Screen(), "main")
         self.push_screen("main")
+
+    async def action_toggle_play_pause(self) -> None:
+        if playback.is_playing:
+            playback.sp.pause_playback()
+        else:
+            playback.sp.start_playback()
+
+    async def action_next_track(self) -> None:
+        playback.sp.next_track()
+        playback.update()
+
+    async def action_previous_track(self) -> None:
+        playback.sp.previous_track()
+        playback.update()
 
 
 # Run the app if the script is executed directly
