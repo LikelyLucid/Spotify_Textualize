@@ -3,6 +3,7 @@ from unittest.mock import patch, AsyncMock
 from textual.app import App
 from main import MainApp, Main_Screen  # Import Main_Screen
 from spotify_main_class import Spotify_Playback_Data
+import asyncio  # Added import for asyncio
 
 @pytest.mark.asyncio
 async def test_play_pause():
@@ -25,7 +26,6 @@ async def test_play_pause():
 
             # Press space to pause
             await pilot.press("space")
-            playback.is_playing = False  # Simulate pause state
             assert not playback.is_playing
             mock_pause.assert_called_once()
 

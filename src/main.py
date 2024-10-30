@@ -18,7 +18,7 @@ from textual.reactive import reactive
 from spotify_main_class import Spotify_Playback_Data
 import time
 from textual import work
-import asyncio  # Added import for asyncio
+import asyncio  # Ensure asyncio is imported
 
 # Initialize Spotify playback data
 playback = Spotify_Playback_Data()

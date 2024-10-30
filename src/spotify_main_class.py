@@ -20,7 +20,7 @@ class Spotify_Playback_Data:
             attempts += 1
             if attempts > 3:
                 print("Failed to authenticate after 3 attempts.")
-                Exception("Failed to authenticate after 3 attempts  - exiting.")
+                raise Exception("Failed to authenticate after 3 attempts  - exiting.")
         self.reset_playback_data()
         self.sp = sp
         self.update()
