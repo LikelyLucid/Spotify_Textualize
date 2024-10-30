@@ -18,6 +18,7 @@ from textual.reactive import reactive
 from spotify_main_class import Spotify_Playback_Data
 import time
 from textual import work
+import asyncio  # Added import for asyncio
 
 # Initialize Spotify playback data
 playback = Spotify_Playback_Data()
@@ -401,34 +402,34 @@ class MainApp(App):
         super().__init__(*args, **kwargs)
         self.playback = playback  # Expose playback as an attribute
 
-    def action_play_pause(self):
+    async def action_play_pause(self):
         # Toggle play/pause and update playback state immediately
         if playback.is_playing:
             playback.is_playing = False  # Immediately set to paused
             self.query_one(Bottom_Bar).update_progress(progress=playback.progress_ms)  # Keep progress the same
-            playback.sp.pause_playback()
+            await playback.sp.pause_playback()  # Await the asynchronous pause_playback
         else:
             playback.is_playing = True  # Immediately set to playing
-            playback.sp.start_playback()
+            await playback.sp.start_playback()  # Await the asynchronous start_playback
 
-    def action_next_track(self):
+    async def action_next_track(self):
         # Skip to the next track and update UI
-        playback.sp.next_track()
+        await playback.sp.next_track()  # Await the asynchronous next_track
         playback.update()
         self.query_one(Bottom_Bar).update_playback_settings()
         self.query_one(Bottom_Bar).song_change()
 
-    def action_previous_track(self):
+    async def action_previous_track(self):
         # Go back to the previous track and update UI
-        playback.sp.previous_track()
+        await playback.sp.previous_track()  # Await the asynchronous previous_track
         playback.update()
         self.query_one(Bottom_Bar).update_playback_settings()
         self.query_one(Bottom_Bar).song_change()
 
     # Mount the main screen
-    def on_mount(self) -> None:
-        self.install_screen(Main_Screen(), "main")
-        self.push_screen("main")
+    async def on_mount(self) -> None:
+        await self.install_screen(Main_Screen(), "main")  # Await the install_screen if it's async
+        await self.push_screen("main")  # Await the push_screen if it's async
 
 # Run the app if the script is executed directly
 if __name__ == "__main__":

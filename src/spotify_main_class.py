@@ -3,6 +3,7 @@ from config_helper import get_config_directory, get_cache_directory
 import os
 import json
 import time
+import asyncio
 
 class Spotify_Playback_Data:
     def __init__(self):
@@ -203,9 +204,9 @@ class Spotify_Playback_Data:
             for playlist in featured["playlists"]["items"]
         ]
 
-    def play_playlist(self, playlist_id):
+    async def play_playlist(self, playlist_id):
         """Play a playlist given its ID"""
-        self.sp.start_playback(context_uri=f"spotify:playlist:{playlist_id}")
+        await self.start_playback(context_uri=f"spotify:playlist:{playlist_id}")
 
     def get_playlist_tracks(self, playlist_id: str) -> list[dict]:
         """Get tracks from a playlist with efficient caching"""
@@ -341,29 +342,53 @@ class Spotify_Playback_Data:
 
         return episodes
 
-    def play_track(self, uri, playlist_id=None):
+    async def play_track(self, uri, playlist_id=None):
         """Play a song or episode given its URI, optionally within a playlist context"""
         if playlist_id == "liked_songs":
             # For liked songs, we need to get the user's collection URI
-            self.sp.start_playback(
-                context_uri="spotify:user:{}:collection".format(
-                    self.sp.current_user()["id"]
-                ),
+            user_id = self.sp.current_user()["id"]
+            await self.start_playback(
+                context_uri=f"spotify:user:{user_id}:collection",
                 offset={"uri": f"spotify:track:{uri}"}
             )
         elif playlist_id == "saved_episodes":
             # For episodes, we play directly with the episode URI
-            self.sp.start_playback(uris=[f"spotify:episode:{uri}"])
+            await self.start_playback(uris=[f"spotify:episode:{uri}"])
         elif playlist_id:
             # Play the track within the playlist context
-            self.sp.start_playback(
+            await self.start_playback(
                 context_uri=f"spotify:playlist:{playlist_id}",
                 offset={"uri": f"spotify:track:{uri}"}
             )
         else:
             # Play just the single track
-            self.sp.start_playback(uris=[f"spotify:track:{uri}"])
+            await self.start_playback(uris=[f"spotify:track:{uri}"])
 
+    async def start_playback(self, **kwargs):
+        """Asynchronously start playback."""
+        # Wrap the synchronous start_playback in a coroutine
+        loop = asyncio.get_event_loop()
+        await loop.run_in_executor(None, self.sp.start_playback, **kwargs)
+
+    async def pause_playback(self, **kwargs):
+        """Asynchronously pause playback."""
+        loop = asyncio.get_event_loop()
+        await loop.run_in_executor(None, self.sp.pause_playback, **kwargs)
+
+    async def next_track(self, **kwargs):
+        """Asynchronously skip to the next track."""
+        loop = asyncio.get_event_loop()
+        await loop.run_in_executor(None, self.sp.next_track, **kwargs)
+
+    async def previous_track(self, **kwargs):
+        """Asynchronously go back to the previous track."""
+        loop = asyncio.get_event_loop()
+        await loop.run_in_executor(None, self.sp.previous_track, **kwargs)
+
+    async def set_volume(self, volume_percent: int):
+        """Asynchronously set the device volume."""
+        loop = asyncio.get_event_loop()
+        await loop.run_in_executor(None, self.sp.volume, volume_percent)
 
 # if __name__ == "__main__":
 #     sp = Spotify_Playback_Data()
