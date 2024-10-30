@@ -120,11 +120,14 @@ class Bottom_Bar(Widget):
         else:
             current_time_widget.current_time = progress
 
+        # Ensure track_duration is not None
+        total = playback.track_duration if playback.track_duration is not None else 1
+
         # Update progress bar only if necessary to reduce rendering overhead
         if current_time_widget.current_time != progress_bar.progress:
             progress_bar.update(
                 progress=current_time_widget.current_time,
-                total=playback.track_duration,
+                total=total,
             )
 
     # Handle changes in the current song
