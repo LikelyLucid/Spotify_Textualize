@@ -390,6 +390,7 @@ class Main_Screen(Screen):
     async def on_mount(self) -> None:
         self.set_interval(2, self.update_stats)
 
+
 # Main app class
 class MainApp(App):
     BINDINGS = [
@@ -428,8 +429,9 @@ class MainApp(App):
 
     # Mount the main screen
     async def on_mount(self) -> None:
-        await self.install_screen(Main_Screen(), "main")  # Await the install_screen if it's async
-        await self.push_screen("main")  # Await the push_screen if it's async
+        self.install_screen(Main_Screen(), "main")  # Removed await
+        await self.push_screen("main")  # Keep await
+
 
 # Run the app if the script is executed directly
 if __name__ == "__main__":
