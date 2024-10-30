@@ -39,6 +39,9 @@ def ms_to_time(ms: int) -> str:
 def get_current_time_with_offset() -> int:
     if playback.progress_ms is None:
         return 0
+    # If playback is not playing, return progress_ms without offset
+    if not playback.is_playing:
+        return playback.progress_ms
     # Calculate the offset based on the current system time and the playback timestamp
     offset = int(time.time() * 1000) - playback.timestamp
     return playback.progress_ms + offset
