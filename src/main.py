@@ -400,27 +400,27 @@ class MainApp(App):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def action_play_pause(self):
+    async def action_play_pause(self):
         # Toggle play/pause and update playback state immediately
         if playback.is_playing:
             playback.is_playing = False  # Immediately set to paused
             self.query_one(Bottom_Bar).update_progress(progress=playback.progress_ms)  # Keep progress the same
-            playback.sp.pause_playback()
+            await self.run_in_executor(None, playback.sp.pause_playback)
         else:
             playback.is_playing = True  # Immediately set to playing
-            playback.sp.start_playback()
+            await self.run_in_executor(None, playback.sp.start_playback)
 
-    def action_next_track(self):
+    async def action_next_track(self):
         # Skip to the next track and update UI
-        playback.sp.next_track()
-        playback.update()
+        await self.run_in_executor(None, playback.sp.next_track)
+        await self.run_in_executor(None, playback.update)
         self.query_one(Bottom_Bar).update_playback_settings()
         self.query_one(Bottom_Bar).song_change()
 
-    def action_previous_track(self):
+    async def action_previous_track(self):
         # Go back to the previous track and update UI
-        playback.sp.previous_track()
-        playback.update()
+        await self.run_in_executor(None, playback.sp.previous_track)
+        await self.run_in_executor(None, playback.update)
         self.query_one(Bottom_Bar).update_playback_settings()
         self.query_one(Bottom_Bar).song_change()
 
