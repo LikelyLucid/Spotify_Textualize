@@ -404,27 +404,24 @@ class MainApp(App):
         self.playback = playback  # Expose playback as an attribute
 
     async def action_play_pause(self):
-        # Toggle play/pause and update playback state immediately
         if playback.is_playing:
-            playback.is_playing = False  # Immediately set to paused
+            playback.is_playing = False
             self.query_one(Bottom_Bar).update_progress(
                 progress=playback.progress_ms
-            )  # Keep progress the same
-            await playback.sp.pause_playback()  # Await the asynchronous pause_playback
+            )
+            await playback.pause_playback()  # Changed from playback.sp.pause_playback()
         else:
-            playback.is_playing = True  # Immediately set to playing
-            await playback.sp.start_playback()  # Await the asynchronous start_playback
+            playback.is_playing = True
+            await playback.start_playback()  # Changed from playback.sp.start_playback()
 
     async def action_next_track(self):
-        # Skip to the next track and update UI
-        await playback.sp.next_track()  # Await the asynchronous next_track
+        await playback.next_track()  # Changed from playback.sp.next_track()
         playback.update()
         self.query_one(Bottom_Bar).update_playback_settings()
         self.query_one(Bottom_Bar).song_change()
 
     async def action_previous_track(self):
-        # Go back to the previous track and update UI
-        await playback.sp.previous_track()  # Await the asynchronous previous_track
+        await playback.previous_track()  # Changed from playback.sp.previous_track()
         playback.update()
         self.query_one(Bottom_Bar).update_playback_settings()
         self.query_one(Bottom_Bar).song_change()
