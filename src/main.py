@@ -441,13 +441,13 @@ class MainApp(App):
         current_volume = playback.device_volume_percent or 0
         new_volume = min(current_volume + self.volume_step, 100)
         await playback.set_volume(new_volume)
-        self.query_one(Current_Volume).current_volume = new_volume  # Update reactive value
+        # self.query_one(Current_Volume).current_volume = new_volume  # Update reactive value
 
     async def action_volume_down(self):
         current_volume = playback.device_volume_percent or 0
         new_volume = max(current_volume - self.volume_step, 0)
         await playback.set_volume(new_volume)
-        self.query_one(Current_Volume).current_volume = new_volume  # Update reactive value
+        # self.query_one(Current_Volume).current_volume = new_volume  # Update reactive value
 
     # Mount the main screen
     async def on_mount(self) -> None:
