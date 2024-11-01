@@ -19,9 +19,16 @@ from spotify_main_class import Spotify_Playback_Data
 import time
 from textual import work
 import asyncio  # Ensure asyncio is imported
+from config_helper import setup_keybindings, setup_settings  # Import setup_settings
+import json  # Ensure JSON is imported for handling settings
 
 # Initialize Spotify playback data
 playback = Spotify_Playback_Data()
+
+# Initialize settings
+settings = setup_settings()
+keybindings = setup_keybindings()
+volume_step = settings.get("volume_step", 5)  # Default to 5 if not set
 
 
 # Function to cut a string if it exceeds the specified max length
@@ -397,11 +404,15 @@ class MainApp(App):
         ("space", "play_pause", "Play/Pause"),
         (">", "next_track", "Next Track"),
         ("<", "previous_track", "Previous Track"),
+        # Add bindings for volume_up and volume_down
+        (keybindings.get("volume_up", "+"), "volume_up", "Volume Up"),
+        (keybindings.get("volume_down", "-"), "volume_down", "Volume Down"),
     ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.playback = playback  # Expose playback as an attribute
+        self.volume_step = volume_step  # Set volume step from config
 
     async def action_play_pause(self):
         if playback.is_playing:
@@ -425,6 +436,18 @@ class MainApp(App):
         playback.update()
         self.query_one(Bottom_Bar).update_playback_settings()
         self.query_one(Bottom_Bar).song_change()
+
+    async def action_volume_up(self):
+        current_volume = playback.device_volume_percent or 0
+        new_volume = min(current_volume + self.volume_step, 100)
+        await playback.set_volume(new_volume)
+        self.query_one(Current_Volume).current_volume = new_volume  # Update reactive value
+
+    async def action_volume_down(self):
+        current_volume = playback.device_volume_percent or 0
+        new_volume = max(current_volume - self.volume_step, 0)
+        await playback.set_volume(new_volume)
+        self.query_one(Current_Volume).current_volume = new_volume  # Update reactive value
 
     # Mount the main screen
     async def on_mount(self) -> None:
