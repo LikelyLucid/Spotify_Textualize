@@ -107,7 +107,7 @@ class Bottom_Bar(Widget):
             return artist_information
         return ""
 
-    # Compose the bottom bar with track information, progress bar, and times
+    # Compose the bottom bar with track information, progress bar, times, and volume
     def compose(self):
         yield Vertical(
             Static(self.get_artist_info(), id="artist_info"),
@@ -115,6 +115,7 @@ class Bottom_Bar(Widget):
                 Current_Time_In_Track(),
                 Center(ProgressBar(id="bar", show_percentage=False, show_eta=False)),
                 Track_Duration(),
+                # Current_Volume(id="current_volume"),  # Added Current_Volume widget
                 id="bar_with_times",
             ),
             id="bottom_bar_collection",
@@ -441,13 +442,13 @@ class MainApp(App):
         current_volume = playback.device_volume_percent or 0
         new_volume = min(current_volume + self.volume_step, 100)
         await playback.set_volume(new_volume)
-        # self.query_one(Current_Volume).current_volume = new_volume  # Update reactive value
+        # self.query_one("#current_volume").current_volume = new_volume  # Update reactive value
 
     async def action_volume_down(self):
         current_volume = playback.device_volume_percent or 0
         new_volume = max(current_volume - self.volume_step, 0)
         await playback.set_volume(new_volume)
-        # self.query_one(Current_Volume).current_volume = new_volume  # Update reactive value
+        # self.query_one("#current_volume").current_volume = new_volume  # Update reactive value
 
     # Mount the main screen
     async def on_mount(self) -> None:
