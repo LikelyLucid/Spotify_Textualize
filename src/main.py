@@ -393,39 +393,65 @@ class Main_Screen(Screen):
 
 # Main app class
 class MainApp(App):
+    """Main application class."""
+
     BINDINGS = [
         ("space", "play_pause", "Play/Pause"),
         (">", "next_track", "Next Track"),
         ("<", "previous_track", "Previous Track"),
+        ("+", "volume_up", "Volume Up"),
+        ("-", "volume_down", "Volume Down"),
     ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.playback = playback  # Expose playback as an attribute
+        self.playback = playback
 
-    async def action_play_pause(self):
-        # Toggle play/pause and update playback state immediately
-        if playback.is_playing:
-            playback.is_playing = False  # Immediately set to paused
-            self.query_one(Bottom_Bar).update_progress(progress=playback.progress_ms)  # Keep progress the same
-            await playback.sp.pause_playback()  # Await the asynchronous pause_playback
+    async def action_play_pause(self) -> None:
+        """Toggle play/pause state."""
+        if self.playback.is_playing:
+            await self.playback.pause_playback()
         else:
-            playback.is_playing = True  # Immediately set to playing
-            await playback.sp.start_playback()  # Await the asynchronous start_playback
+            await self.playback.start_playback()
 
-    async def action_next_track(self):
-        # Skip to the next track and update UI
-        await playback.sp.next_track()  # Await the asynchronous next_track
-        playback.update()
-        self.query_one(Bottom_Bar).update_playback_settings()
-        self.query_one(Bottom_Bar).song_change()
+        self.playback.update()
+        bottom_bar = self.query_one(Bottom_Bar)
+        await bottom_bar.update_playback_settings()
+        await bottom_bar.song_change()
 
-    async def action_previous_track(self):
-        # Go back to the previous track and update UI
-        await playback.sp.previous_track()  # Await the asynchronous previous_track
-        playback.update()
-        self.query_one(Bottom_Bar).update_playback_settings()
-        self.query_one(Bottom_Bar).song_change()
+    async def action_next_track(self) -> None:
+        """Skip to next track."""
+        await self.playback.next_track()
+        self.playback.update()
+        bottom_bar = self.query_one(Bottom_Bar)
+        await bottom_bar.update_playback_settings()
+        await bottom_bar.song_change()
+
+    async def action_previous_track(self) -> None:
+        """Go back to previous track."""
+        await self.playback.previous_track()
+        self.playback.update()
+        bottom_bar = self.query_one(Bottom_Bar)
+        await bottom_bar.update_playback_settings()
+        await bottom_bar.song_change()
+
+    async def action_volume_up(self) -> None:
+        """Increase volume by 5%."""
+        if self.playback.device_volume_percent is not None:
+            new_volume = min(100, self.playback.device_volume_percent + 5)
+            await self.playback.set_volume(new_volume)
+            self.playback.update()
+            bottom_bar = self.query_one(Bottom_Bar)
+            await bottom_bar.update_playback_settings()
+
+    async def action_volume_down(self) -> None:
+        """Decrease volume by 5%."""
+        if self.playback.device_volume_percent is not None:
+            new_volume = max(0, self.playback.device_volume_percent - 5)
+            await self.playback.set_volume(new_volume)
+            self.playback.update()
+            bottom_bar = self.query_one(Bottom_Bar)
+            await bottom_bar.update_playback_settings()
 
     # Mount the main screen
     async def on_mount(self) -> None:
