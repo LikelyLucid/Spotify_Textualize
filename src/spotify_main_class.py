@@ -386,7 +386,8 @@ class Spotify_Playback_Data:
         await loop.run_in_executor(None, self.sp.previous_track, **kwargs)
 
     async def set_volume(self, volume_percent: int):
-        """Asynchronously set the device volume."""
+        """Asynchronously set the device volume, ensuring it's between 0 and 100."""
+        volume_percent = max(0, min(100, volume_percent))  # Clamp volume
         loop = asyncio.get_event_loop()
         await loop.run_in_executor(None, self.sp.volume, volume_percent)
 
