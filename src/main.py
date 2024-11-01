@@ -407,51 +407,66 @@ class MainApp(App):
         super().__init__(*args, **kwargs)
         self.playback = playback
 
-    async def action_play_pause(self) -> None:
+    def action_play_pause(self) -> None:
         """Toggle play/pause state."""
-        if self.playback.is_playing:
-            await self.playback.pause_playback()
-        else:
-            await self.playback.start_playback()
+        async def toggle():
+            if self.playback.is_playing:
+                await self.playback.pause_playback()
+            else:
+                await self.playback.start_playback()
 
-        self.playback.update()
-        bottom_bar = self.query_one(Bottom_Bar)
-        await bottom_bar.update_playback_settings()
-        await bottom_bar.song_change()
+            self.playback.update()
+            bottom_bar = self.query_one(Bottom_Bar)
+            await bottom_bar.update_playback_settings()
+            await bottom_bar.song_change()
 
-    async def action_next_track(self) -> None:
+        asyncio.create_task(toggle())
+
+    def action_next_track(self) -> None:
         """Skip to next track."""
-        await self.playback.next_track()
-        self.playback.update()
-        bottom_bar = self.query_one(Bottom_Bar)
-        await bottom_bar.update_playback_settings()
-        await bottom_bar.song_change()
+        async def next_track():
+            await self.playback.next_track()
+            self.playback.update()
+            bottom_bar = self.query_one(Bottom_Bar)
+            await bottom_bar.update_playback_settings()
+            await bottom_bar.song_change()
 
-    async def action_previous_track(self) -> None:
+        asyncio.create_task(next_track())
+
+    def action_previous_track(self) -> None:
         """Go back to previous track."""
-        await self.playback.previous_track()
-        self.playback.update()
-        bottom_bar = self.query_one(Bottom_Bar)
-        await bottom_bar.update_playback_settings()
-        await bottom_bar.song_change()
+        async def previous_track():
+            await self.playback.previous_track()
+            self.playback.update()
+            bottom_bar = self.query_one(Bottom_Bar)
+            await bottom_bar.update_playback_settings()
+            await bottom_bar.song_change()
 
-    async def action_volume_up(self) -> None:
+        asyncio.create_task(previous_track())
+
+    def action_volume_up(self) -> None:
         """Increase volume by 5%."""
-        if self.playback.device_volume_percent is not None:
-            new_volume = min(100, self.playback.device_volume_percent + 5)
-            await self.playback.set_volume(new_volume)
-            self.playback.update()
-            bottom_bar = self.query_one(Bottom_Bar)
-            await bottom_bar.update_playback_settings()
+        async def volume_up():
+            if self.playback.device_volume_percent is not None:
+                new_volume = min(100, self.playback.device_volume_percent + 5)
+                await self.playback.set_volume(new_volume)
+                self.playback.update()
+                bottom_bar = self.query_one(Bottom_Bar)
+                await bottom_bar.update_playback_settings()
 
-    async def action_volume_down(self) -> None:
+        asyncio.create_task(volume_up())
+
+    def action_volume_down(self) -> None:
         """Decrease volume by 5%."""
-        if self.playback.device_volume_percent is not None:
-            new_volume = max(0, self.playback.device_volume_percent - 5)
-            await self.playback.set_volume(new_volume)
-            self.playback.update()
-            bottom_bar = self.query_one(Bottom_Bar)
-            await bottom_bar.update_playback_settings()
+        async def volume_down():
+            if self.playback.device_volume_percent is not None:
+                new_volume = max(0, self.playback.device_volume_percent - 5)
+                await self.playback.set_volume(new_volume)
+                self.playback.update()
+                bottom_bar = self.query_one(Bottom_Bar)
+                await bottom_bar.update_playback_settings()
+
+        asyncio.create_task(volume_down())
 
     # Mount the main screen
     async def on_mount(self) -> None:
