@@ -4,6 +4,7 @@ import os
 import json
 import time
 import asyncio
+import spotipy.exceptions
 
 class Spotify_Playback_Data:
     def __init__(self):
@@ -13,17 +14,27 @@ class Spotify_Playback_Data:
         Returns:
         - None
         """
-        sp = authenticate_user()
+        self.sp = None
+        self.authentication_successful = False # Initialize
+        self.reset_playback_data() # Reset data initially
+
         attempts = 0
-        while sp is None:
-            sp = authenticate_user()
+        temp_sp = authenticate_user()
+        while temp_sp is None and attempts < 3:
+            print(f"Authentication attempt {attempts + 1} failed. Retrying...") # Keep console log for now
+            # Potentially add a small delay here if desired, e.g., time.sleep(1)
+            temp_sp = authenticate_user()
             attempts += 1
-            if attempts > 3:
-                print("Failed to authenticate after 3 attempts.")
-                raise Exception("Failed to authenticate after 3 attempts  - exiting.")
-        self.reset_playback_data()
-        self.sp = sp
-        self.update()
+
+        if temp_sp is not None:
+            self.sp = temp_sp
+            self.authentication_successful = True
+            print("Authentication successful. Updating playback data...") # Keep console log
+            self.update() # Call update only if authenticated
+        else:
+            self.authentication_successful = False
+            print("Failed to authenticate after multiple attempts. Playback features will be unavailable.")
+            # self.reset_playback_data() # Already called at the beginning
 
     def update(self):
         """
@@ -32,12 +43,19 @@ class Spotify_Playback_Data:
         Returns:
         - None
         """
-        playback_data = self.sp.current_playback()
-        # print(playback_data)
-
-        # If playback_data is None, set all fields to empty strings or defaults
-        if playback_data is None:
-            print("No playback data available.")
+        try:
+            playback_data = self.sp.current_playback()
+            if playback_data is None:
+                # This case might be when Spotify is idle or no active device, not strictly an error.
+                # print("No playback data available (e.g. Spotify idle or no active device).") # Optional: more specific message
+                self.reset_playback_data()
+                return
+        except spotipy.exceptions.SpotifyException as e:
+            print(f"Error fetching current playback data: {e}")
+            self.reset_playback_data()
+            return # Important to return after reset if there was an exception
+        except Exception as e: # Catch any other unexpected error during fetch
+            print(f"Unexpected error fetching current playback data: {e}")
             self.reset_playback_data()
             return
 
@@ -167,42 +185,55 @@ class Spotify_Playback_Data:
         # Add Liked Songs
         library.append({"name": "Liked Songs", "id": "liked_songs", "type": "playlist"})
 
-        # # Add Saved Episodes
-        # library.append(
-        #     {"name": "Your Episodes", "id": "saved_episodes", "type": "playlist"}
-        # )
+        # Add Saved Episodes
+        library.append(
+            {"name": "Your Episodes", "id": "saved_episodes", "type": "playlist"}
+        )
 
         # Add user's playlists
-        user_playlists = self.sp.current_user_playlists()
-        library.extend(
-            [
-                {"name": playlist["name"], "id": playlist["id"], "type": "playlist"}
-                for playlist in user_playlists["items"]
-            ]
-        )
+        try:
+            user_playlists = self.sp.current_user_playlists()
+            library.extend(
+                [
+                    {"name": playlist["name"], "id": playlist["id"], "type": "playlist"}
+                    for playlist in user_playlists["items"]
+                ]
+            )
 
-        # Add Saved Albums
-        saved_albums = self.sp.current_user_saved_albums()
-        library.extend(
-            [
-                {
-                    "name": album["album"]["name"],
-                    "id": album["album"]["id"],
-                    "type": "album",
-                }
-                for album in saved_albums["items"]
-            ]
-        )
-
+            # Add Saved Albums
+            saved_albums = self.sp.current_user_saved_albums()
+            library.extend(
+                [
+                    {
+                        "name": album["album"]["name"],
+                        "id": album["album"]["id"],
+                        "type": "album",
+                    }
+                    for album in saved_albums["items"]
+                ]
+            )
+        except spotipy.exceptions.SpotifyException as e:
+            print(f"Error fetching user library data: {e}")
+            return []
+        except Exception as e:
+            print(f"Unexpected error fetching user library data: {e}")
+            return []
         return library
 
     def get_featured_playlists(self, limit=5):
         """Get featured playlists"""
-        featured = self.sp.featured_playlists(limit=limit)
-        return [
-            {"name": playlist["name"], "id": playlist["id"], "type": "playlist"}
-            for playlist in featured["playlists"]["items"]
-        ]
+        try:
+            featured = self.sp.featured_playlists(limit=limit)
+            return [
+                {"name": playlist["name"], "id": playlist["id"], "type": "playlist"}
+                for playlist in featured["playlists"]["items"]
+            ]
+        except spotipy.exceptions.SpotifyException as e:
+            print(f"Error fetching featured playlists: {e}")
+            return []
+        except Exception as e:
+            print(f"Unexpected error fetching featured playlists: {e}")
+            return []
 
     async def play_playlist(self, playlist_id):
         """Play a playlist given its ID"""
@@ -247,11 +278,19 @@ class Spotify_Playback_Data:
         liked_songs = self._get_liked_songs()
 
         while True:
-            if playlist_id == "liked_songs":
-                playlist = fetch_function(limit=limit, offset=offset)
-            else:
-                playlist = fetch_function(playlist_id, limit=limit, offset=offset)
-            items = playlist["items"]
+            try:
+                if playlist_id == "liked_songs":
+                    playlist = fetch_function(limit=limit, offset=offset)
+                else:
+                    playlist = fetch_function(playlist_id, limit=limit, offset=offset)
+                items = playlist["items"]
+            except spotipy.exceptions.SpotifyException as e:
+                print(f"Error fetching playlist tracks for {playlist_id}: {e}")
+                break # or return playlist_items
+            except Exception as e:
+                print(f"Unexpected error fetching playlist tracks for {playlist_id}: {e}")
+                break # or return playlist_items
+
 
             for item in items:
                 track = item["track"]
@@ -291,56 +330,69 @@ class Spotify_Playback_Data:
         liked_songs_file = os.path.join(config_dir, "liked_songs.json")
 
         # Check if liked songs cache exists and is up-to-date
-        if os.path.exists(liked_songs_file):
-            with open(liked_songs_file, "r") as f:
-                cached_liked_songs = json.load(f)
-            total_liked = self.sp.current_user_saved_tracks(limit=1)["total"]
-            if len(cached_liked_songs) == total_liked:
-                return set(cached_liked_songs)
+        try:
+            if os.path.exists(liked_songs_file):
+                with open(liked_songs_file, "r") as f:
+                    cached_liked_songs = json.load(f)
+                total_liked = self.sp.current_user_saved_tracks(limit=1)["total"]
+                if len(cached_liked_songs) == total_liked:
+                    return set(cached_liked_songs)
 
-        # Fetch all liked songs
-        liked_songs = []
-        offset = 0
-        limit = 20
+            # Fetch all liked songs
+            liked_songs = []
+            offset = 0
+            limit = 20
 
-        while True:
-            results = self.sp.current_user_saved_tracks(limit=limit, offset=offset)
-            items = results["items"]
-            liked_songs.extend([track["track"]["id"] for track in items])
-            if len(items) < limit:
-                break
-            offset += limit
+            while True:
+                results = self.sp.current_user_saved_tracks(limit=limit, offset=offset)
+                items = results["items"]
+                liked_songs.extend([track["track"]["id"] for track in items])
+                if len(items) < limit:
+                    break
+                offset += limit
 
-        # Cache the liked songs
-        with open(liked_songs_file, "w") as f:
-            json.dump(liked_songs, f)
+            # Cache the liked songs
+            with open(liked_songs_file, "w") as f:
+                json.dump(liked_songs, f)
+            return set(liked_songs)
+        except spotipy.exceptions.SpotifyException as e:
+            print(f"Error fetching liked songs: {e}")
+            return set()
+        except Exception as e:
+            print(f"Unexpected error fetching liked songs: {e}")
+            return set()
 
-        return set(liked_songs)
 
     def get_saved_episodes(self):
         """Get user's saved episodes"""
-        episodes = []
-        offset = 0
-        limit = 20
+        try:
+            episodes = []
+            offset = 0
+            limit = 20
 
-        while True:
-            results = self.sp.current_user_saved_episodes(limit=limit, offset=offset)
-            items = results["items"]
-            for item in items:
-                episode = item["episode"]
-                episodes.append({
-                    "name": episode["name"],
-                    "id": episode["id"],
-                    "duration_ms": episode["duration_ms"],
-                    "show": episode["show"]["name"],
-                    "description": episode["description"],
-                    "type": "episode"
-                })
-            if len(items) < limit:
-                break
-            offset += limit
-
-        return episodes
+            while True:
+                results = self.sp.current_user_saved_episodes(limit=limit, offset=offset)
+                items = results["items"]
+                for item in items:
+                    episode = item["episode"]
+                    episodes.append({
+                        "name": episode["name"],
+                        "id": episode["id"],
+                        "duration_ms": episode["duration_ms"],
+                        "show": episode["show"]["name"],
+                        "description": episode["description"],
+                        "type": "episode"
+                    })
+                if len(items) < limit:
+                    break
+                offset += limit
+            return episodes
+        except spotipy.exceptions.SpotifyException as e:
+            print(f"Error fetching saved episodes: {e}")
+            return []
+        except Exception as e:
+            print(f"Unexpected error fetching saved episodes: {e}")
+            return []
 
     async def play_track(self, uri, playlist_id=None):
         """Play a song or episode given its URI, optionally within a playlist context"""

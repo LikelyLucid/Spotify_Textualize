@@ -26,10 +26,12 @@ Screen {
     column-span: 4;
     row-span: 1;
 }
-#top_bar {
+#top_bar_title {
     dock: top;
     width: 100%;
     height: auto;
+    text-align: center;
+    padding: 1 0;
 }
 #Bottom {
     height: 100%;
@@ -52,8 +54,8 @@ Screen {
 #bar_with_times {
     column-span: 2;
     layout: grid;
-    grid-size: 3;
-    grid-columns: auto 5fr auto;
+    grid-size: 4;
+    grid-columns: auto 5fr auto auto;
     /* grid-rows: 1fr 1fr; */
 }
 

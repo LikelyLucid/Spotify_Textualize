@@ -2,7 +2,7 @@ from textual.app import App, ComposeResult
 from textual.screen import Screen
 from textual.widget import Widget
 from textual.message import Message
-from textual.containers import Container, Center, Vertical, ScrollableContainer
+from textual.containers import Container, Center, Vertical, ScrollableContainer, Center
 from textual.lazy import Lazy
 from textual.widgets import (
     Placeholder,
@@ -21,9 +21,22 @@ from textual import work
 import asyncio  # Ensure asyncio is imported
 from config_helper import setup_keybindings, setup_settings  # Import setup_settings
 import json  # Ensure JSON is imported for handling settings
+import spotipy.exceptions
 
 # Initialize Spotify playback data
 playback = Spotify_Playback_Data()
+
+# Screen to display if authentication fails
+class AuthFailureScreen(Screen):
+    def compose(self) -> ComposeResult:
+        yield Center(
+            Static(
+                "Spotify Authentication Failed.\n\n"
+                "Please ensure credentials are set up correctly as per README.md and restart the application.\n\n"
+                "Press Ctrl+C to exit.",
+                id="auth_failure_message",
+            )
+        )
 
 # Initialize settings
 settings = setup_settings()
@@ -115,7 +128,7 @@ class Bottom_Bar(Widget):
                 Current_Time_In_Track(),
                 Center(ProgressBar(id="bar", show_percentage=False, show_eta=False)),
                 Track_Duration(),
-                # Current_Volume(id="current_volume"),  # Added Current_Volume widget
+                Current_Volume(id="current_volume"),  # Added Current_Volume widget
                 id="bar_with_times",
             ),
             id="bottom_bar_collection",
@@ -374,7 +387,7 @@ class Main_Screen(Screen):
 
     # Compose the main screen with different widgets
     def compose(self) -> ComposeResult:
-        yield Placeholder("top_bar", id="top_bar")
+        yield Static("Spotify-Textualize", id="top_bar_title")
         yield Side_Bar(id="sidebar")
         yield Main_Page(id="main_page")
         yield Bottom_Bar(id="bottom_bar")
@@ -416,44 +429,119 @@ class MainApp(App):
         self.volume_step = volume_step  # Set volume step from config
 
     async def action_play_pause(self):
-        if playback.is_playing:
-            playback.is_playing = False
-            self.query_one(Bottom_Bar).update_progress(
-                progress=playback.progress_ms
-            )
-            await playback.pause_playback()  # Changed from playback.sp.pause_playback()
-        else:
-            playback.is_playing = True
-            await playback.start_playback()  # Changed from playback.sp.start_playback()
+        try:
+            if playback.is_playing:
+                # playback.is_playing = False # UI will update via periodic refresh
+                await playback.pause_playback()
+                # Update progress immediately after successful pause
+                self.query_one(Bottom_Bar).update_progress(progress=playback.progress_ms)
+            else:
+                # playback.is_playing = True # UI will update via periodic refresh
+                await playback.start_playback()
+            # It's good to call update after an action to get the true state
+            playback.update() 
+            self.query_one(Bottom_Bar).update_playback_settings() # Update UI based on new state
+            if playback.is_playing: # Ensure progress bar restarts if playing
+                 self.query_one(Bottom_Bar).update_progress()
+        except spotipy.exceptions.SpotifyException as e:
+            print(f"Error during play/pause: {e}")
+            self.notify(f"Spotify Error: {e}", severity="error", timeout=5)
+            playback.update() # Refresh state from Spotify after error
+            self.query_one(Bottom_Bar).update_playback_settings() # Update UI
+        except Exception as e:
+            print(f"Unexpected error during play/pause: {e}")
+            self.notify(f"Unexpected Error: {e}", severity="error", timeout=5)
+            playback.update() # Refresh state
+            self.query_one(Bottom_Bar).update_playback_settings() # Update UI
 
     async def action_next_track(self):
-        await playback.next_track()  # Changed from playback.sp.next_track()
+        try:
+            await playback.next_track()
+        except spotipy.exceptions.SpotifyException as e:
+            print(f"Error during next_track: {e}")
+            self.notify(f"Spotify Error: {e}", severity="error", timeout=5)
+        except Exception as e:
+            print(f"Unexpected error during next_track: {e}")
+            self.notify(f"Unexpected Error: {e}", severity="error", timeout=5)
+        
+        # These lines should run regardless of exception to reflect actual current state
         playback.update()
         self.query_one(Bottom_Bar).update_playback_settings()
         self.query_one(Bottom_Bar).song_change()
 
     async def action_previous_track(self):
-        await playback.previous_track()  # Changed from playback.sp.previous_track()
+        try:
+            await playback.previous_track()
+        except spotipy.exceptions.SpotifyException as e:
+            print(f"Error during previous_track: {e}")
+            self.notify(f"Spotify Error: {e}", severity="error", timeout=5)
+        except Exception as e:
+            print(f"Unexpected error during previous_track: {e}")
+            self.notify(f"Unexpected Error: {e}", severity="error", timeout=5)
+        
+        # These lines should run regardless of exception to reflect actual current state
         playback.update()
         self.query_one(Bottom_Bar).update_playback_settings()
         self.query_one(Bottom_Bar).song_change()
 
     async def action_volume_up(self):
-        current_volume = playback.device_volume_percent or 0
-        new_volume = min(current_volume + self.volume_step, 100)
-        await playback.set_volume(new_volume)
-        # self.query_one("#current_volume").current_volume = new_volume  # Update reactive value
+        try:
+            current_volume = playback.device_volume_percent or 0
+            new_volume = min(current_volume + self.volume_step, 100)
+            await playback.set_volume(new_volume)
+            # Update UI optimistically or wait for periodic update
+            # self.query_one("#current_volume").current_volume = new_volume 
+        except spotipy.exceptions.SpotifyException as e:
+            print(f"Error during volume_up: {e}")
+            self.notify(f"Spotify Error: {e}", severity="error", timeout=5)
+        except Exception as e:
+            print(f"Unexpected error during volume_up: {e}")
+            self.notify(f"Unexpected Error: {e}", severity="error", timeout=5)
+        
+        # Always update volume from source of truth
+        playback.update() # Get actual volume state
+        # The Current_Volume widget's update is handled by Main_Screen.update_stats calling
+        # playback.update() and then the widget reacting to playback.device_volume_percent.
+        # However, an explicit update to the Current_Volume widget can be done here if desired
+        # for immediate feedback, but ensure it's coordinated with the reactive update.
+        # For now, relying on the periodic update in update_stats for Current_Volume is fine
+        # after playback.update() is called here.
+        # The Bottom_Bar's border title also shows volume, so update that.
+        self.query_one(Bottom_Bar).update_playback_settings()
 
     async def action_volume_down(self):
-        current_volume = playback.device_volume_percent or 0
-        new_volume = max(current_volume - self.volume_step, 0)
-        await playback.set_volume(new_volume)
-        # self.query_one("#current_volume").current_volume = new_volume  # Update reactive value
+        try:
+            current_volume = playback.device_volume_percent or 0
+            new_volume = max(current_volume - self.volume_step, 0)
+            await playback.set_volume(new_volume)
+            # Update UI optimistically or wait for periodic update
+            # self.query_one("#current_volume").current_volume = new_volume 
+        except spotipy.exceptions.SpotifyException as e:
+            print(f"Error during volume_down: {e}")
+            self.notify(f"Spotify Error: {e}", severity="error", timeout=5)
+        except Exception as e:
+            print(f"Unexpected error during volume_down: {e}")
+            self.notify(f"Unexpected Error: {e}", severity="error", timeout=5)
+
+        # Always update volume from source of truth
+        playback.update() # Get actual volume state
+        # The Current_Volume widget's update is handled by Main_Screen.update_stats calling
+        # playback.update() and then the widget reacting to playback.device_volume_percent.
+        # However, an explicit update to the Current_Volume widget can be done here if desired
+        # for immediate feedback, but ensure it's coordinated with the reactive update.
+        # For now, relying on the periodic update in update_stats for Current_Volume is fine
+        # after playback.update() is called here.
+        # The Bottom_Bar's border title also shows volume, so update that.
+        self.query_one(Bottom_Bar).update_playback_settings()
 
     # Mount the main screen
     async def on_mount(self) -> None:
-        self.install_screen(Main_Screen(), "main")  # Removed await
-        await self.push_screen("main")  # Keep await
+        if not self.playback.authentication_successful:
+            self.install_screen(AuthFailureScreen(), "auth_failure_screen")
+            await self.push_screen("auth_failure_screen")
+        else:
+            self.install_screen(Main_Screen(), "main")
+            await self.push_screen("main")
 
 
 # Run the app if the script is executed directly

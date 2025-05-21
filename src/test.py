@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import patch, AsyncMock
 from textual.app import App
-from main import MainApp, Main_Screen  # Import Main_Screen
+from main import MainApp, Main_Screen, keybindings # Import Main_Screen and keybindings
 from spotify_main_class import Spotify_Playback_Data
 import asyncio  # Added import for asyncio
 
@@ -107,14 +107,14 @@ async def test_adjust_volume():
             initial_volume = app.playback.device_volume_percent
 
             # Simulate increasing volume
-            await pilot.press("ctrl+up")
+            await pilot.press(keybindings.get("volume_up", "+"))
             playback.set_volume = AsyncMock()
             app.playback.device_volume_percent = 60  # Simulate volume increase
             assert app.playback.device_volume_percent > initial_volume
             mock_set_volume.assert_awaited_with(60)
 
             # Simulate decreasing volume
-            await pilot.press("ctrl+down")
+            await pilot.press(keybindings.get("volume_down", "-"))
             playback.set_volume = AsyncMock()
             app.playback.device_volume_percent = 50  # Simulate volume decrease
             assert app.playback.device_volume_percent == initial_volume
