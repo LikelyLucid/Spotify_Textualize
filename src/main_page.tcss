@@ -31,6 +31,23 @@ Screen {
     width: 100%;
     height: auto;
 }
+
+#top_bar_container {
+    layout: horizontal;
+    height: auto;
+    padding: 0 1;
+    align-horizontal: center;
+}
+
+#top_bar Button {
+    margin: 0 1;
+}
+
+#now_playing {
+    content-align: left middle;
+    overflow-x: auto;
+    width: 1fr;
+}
 #Bottom {
     height: 100%;
     column-span: 3;
