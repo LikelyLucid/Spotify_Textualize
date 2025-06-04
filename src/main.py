@@ -334,7 +334,7 @@ class Playlist_Track_View(Widget):
     # Adjust column widths after display
     @work
     async def post_display_hook(self) -> None:
-        adjusting_size = True
+        self.adjusting_size = True
         # Adjust the column widths based on the table size
         table = self.query_one(DataTable)
         size = table.container_size
@@ -358,7 +358,7 @@ class Playlist_Track_View(Widget):
             if str(c.label) in ["Title", "Artist", "Album"]:
                 c.width = int((size[0] - taken_chars) / (len(table.columns) - 3)) + 1
         table.refresh()
-        adjusting_size = False
+        self.adjusting_size = False
 
 
 # Main screen to display different widgets
