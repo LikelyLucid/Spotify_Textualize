@@ -13,6 +13,7 @@ from textual.widgets import (
     Label,
     DataTable,
     LoadingIndicator,
+    Button,
 )
 from textual.reactive import reactive
 from spotify_main_class import Spotify_Playback_Data
@@ -95,6 +96,39 @@ class Current_Device(Widget):
 
     def render(self) -> str:
         return self.current_device
+
+
+# Simple control bar with playback buttons and now playing information
+class Top_Bar(Widget):
+    def compose(self) -> ComposeResult:
+        with Container(id="top_bar_container"):
+            yield Button("\u23ee", id="previous_button")
+            yield Button("\u23ef", id="play_pause_button")
+            yield Button("\u23ed", id="next_button")
+            yield Static(self.get_now_playing(), id="now_playing")
+
+    def get_now_playing(self) -> str:
+        if playback.track:
+            return f"{playback.track} - {', '.join(playback.artists)}"
+        return ""
+
+    async def on_button_pressed(self, event: Button.Pressed) -> None:
+        button_id = event.button.id
+        if button_id == "previous_button":
+            await self.app.action_previous_track()
+        elif button_id == "next_button":
+            await self.app.action_next_track()
+        elif button_id == "play_pause_button":
+            await self.app.action_play_pause()
+        self.update_controls()
+
+    def update_controls(self) -> None:
+        play_pause = self.query_one("#play_pause_button", Button)
+        play_pause.label = "\u23f8" if playback.is_playing else "\u25ba"
+        self.query_one("#now_playing", Static).update(self.get_now_playing())
+
+    def on_mount(self) -> None:
+        self.update_controls()
 
 
 # Widget to display the bottom bar with track and artist information
@@ -374,7 +408,7 @@ class Main_Screen(Screen):
 
     # Compose the main screen with different widgets
     def compose(self) -> ComposeResult:
-        yield Placeholder("top_bar", id="top_bar")
+        yield Top_Bar(id="top_bar")
         yield Side_Bar(id="sidebar")
         yield Main_Page(id="main_page")
         yield Bottom_Bar(id="bottom_bar")
@@ -393,6 +427,7 @@ class Main_Screen(Screen):
             self.query_one(Bottom_Bar).song_change()
 
         self.query_one(Bottom_Bar).update_playback_settings()
+        self.query_one(Top_Bar).update_controls()
 
     # Set up periodic updates for playback statistics
     async def on_mount(self) -> None:
@@ -425,18 +460,21 @@ class MainApp(App):
         else:
             playback.is_playing = True
             await playback.start_playback()  # Changed from playback.sp.start_playback()
+        self.query_one(Top_Bar).update_controls()
 
     async def action_next_track(self):
         await playback.next_track()  # Changed from playback.sp.next_track()
         playback.update()
         self.query_one(Bottom_Bar).update_playback_settings()
         self.query_one(Bottom_Bar).song_change()
+        self.query_one(Top_Bar).update_controls()
 
     async def action_previous_track(self):
         await playback.previous_track()  # Changed from playback.sp.previous_track()
         playback.update()
         self.query_one(Bottom_Bar).update_playback_settings()
         self.query_one(Bottom_Bar).song_change()
+        self.query_one(Top_Bar).update_controls()
 
     async def action_volume_up(self):
         current_volume = playback.device_volume_percent or 0
