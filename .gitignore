@@ -1,0 +1,12 @@
+/.venv
+__pycache__/
+.pytest_cache/
+.aider.chat.history.md
+.aider.input.history
+.aider.tags.cache.v3/
+src/spotify_textualize.egg-info/
+playlist.json
+tracks.txt
+testing.txt
+*.cache
+.env
